@@ -296,6 +296,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             if ('Choice' in dataList['Cluster']['EB']):
                 name_lineEdit.setText(dataList['Cluster']['EB']['Choice'][int(dataList['Cluster']['EB']['Val'])])
             if('SGL' in dataList['Cluster']):
+                print(len(dataList['Cluster']['SGL']))
                 for element in dataList['Cluster']['SGL']:
                     #print(element['Name'])
                     #print(element['Val'])
@@ -305,9 +306,13 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         elif(listElement3d == "empty"):
             for element in dataList['Cluster']['Cluster']:
                 if ('EB' in element):
-                    for EBelement in element['EB']:
-                        if(EBelement['Name'] == listElement2d):
-                            name_lineEdit.setText(EBelement['Choice'][int(EBelement['Val'])])
+                    print("Länge:",len(element['EB']))
+                    print(element['EB'])
+                    if(len(element['EB'])>3):
+                        for EBelement in element['EB']:
+                            if(EBelement['Name'] == listElement2d):
+                                name_lineEdit.setText(EBelement['Choice'][int(EBelement['Val'])])
+
                 if('U16' in element):
                     if("Name" in element['U16']):
                         name_lineEdit.setText(element['U16']['Val'])
@@ -382,6 +387,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                             else:
                                 name_btn_LED.setStyleSheet(
                                     'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
+                else:
+                    pass
                 """    for element2d in element['Boolean']:
                         #print(element2d)
                         if(listElement2d and 'Val' in element2d):
@@ -755,11 +762,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def recieve_Inverter(self, json_Inverter):
 
         #Inverter VR
-        """self.set_lineEdit(self.ui.lineEdit_AMK_Control_VR, json_Inverter, 'VR', listElement2d='AMK_Control[b]')
+        self.set_lineEdit(self.ui.lineEdit_AMK_Control_VR, json_Inverter, 'VR', listElement2d='AMK_Control[b]')
         self.set_lineEdit(self.ui.lineEdit_Drehzahlsollwert_VR, json_Inverter, 'VR',
-                          listElement2d='Drehzahlsollwert[1/min]
+                          listElement2d='Drehzahlsollwert[1/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentsollwert_VR, json_Inverter, 'VR', listElement2d='Momentsollwert[Nm]')
-        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_VR, json_Inverter, 'VR', listElement2d='Momentsollwert[Nm]')"""
+        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_VR, json_Inverter, 'VR', listElement2d='Momentsollwert[Nm]')
         self.set_btn_LED(self.ui.btn_LED_System_bereit_VR, json_Inverter, 'VR', listElement2d='System bereit')
         self.set_btn_LED(self.ui.btn_LED_Warnung_VR, json_Inverter, 'VR', listElement2d='Warnung')
         self.set_btn_LED(self.ui.btn_LED_Fehler_VR, json_Inverter, 'VR', listElement2d='Fehler')
@@ -770,7 +777,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                          listElement2d='Spiegel Regelerfeigabe')
         self.set_btn_LED(self.ui.btn_LED_Quit_Reglerfreigabe_VR, json_Inverter, 'VR',
                          listElement2d='Quit Reglerfreigabe')
-        """self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_VR, json_Inverter, 'VR',
+        self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_VR, json_Inverter, 'VR',
                           listElement2d='Drehzahlistwert[U/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentistwert_VR, json_Inverter, 'VR', listElement2d='Momentistwert[Nm]')
         self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_VR, json_Inverter, 'VR',
@@ -794,7 +801,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Drehzahlsollwert_VL, json_Inverter, 'VL',
                           listElement2d='Drehzahlsollwert[1/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentsollwert_VL, json_Inverter, 'VL', listElement2d='Momentsollwert[Nm]')
-        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_VL, json_Inverter, 'VL', listElement2d='Momentsollwert[Nm]')"""
+        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_VL, json_Inverter, 'VL', listElement2d='Momentsollwert[Nm]')
         self.set_btn_LED(self.ui.btn_LED_System_bereit_VL, json_Inverter, 'VL', listElement2d='System bereit')
         self.set_btn_LED(self.ui.btn_LED_Warnung_VL, json_Inverter, 'VL', listElement2d='Warnung')
         self.set_btn_LED(self.ui.btn_LED_Fehler_VL, json_Inverter, 'VL', listElement2d='Fehler')
@@ -805,7 +812,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                          listElement2d='Spiegel Regelerfeigabe')
         self.set_btn_LED(self.ui.btn_LED_Quit_Reglerfreigabe_VL, json_Inverter, 'VL',
                          listElement2d='Quit Reglerfreigabe')
-        """self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_VL, json_Inverter, 'VL',
+        self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_VL, json_Inverter, 'VL',
                           listElement2d='Drehzahlistwert[U/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentistwert_VL, json_Inverter, 'VL', listElement2d='Momentistwert[Nm]')
         self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_VL, json_Inverter, 'VL',
@@ -829,7 +836,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Drehzahlsollwert_HR, json_Inverter, 'HR',
                           listElement2d='Drehzahlsollwert[1/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentsollwert_HR, json_Inverter, 'HR', listElement2d='Momentsollwert[Nm]')
-        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_HR, json_Inverter, 'HR', listElement2d='Momentsollwert[Nm]')"""
+        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_HR, json_Inverter, 'HR', listElement2d='Momentsollwert[Nm]')
         self.set_btn_LED(self.ui.btn_LED_System_bereit_HR, json_Inverter, 'HR', listElement2d='System bereit')
         self.set_btn_LED(self.ui.btn_LED_Warnung_HR, json_Inverter, 'HR', listElement2d='Warnung')
         self.set_btn_LED(self.ui.btn_LED_Fehler_HR, json_Inverter, 'HR', listElement2d='Fehler')
@@ -840,7 +847,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                          listElement2d='Spiegel Regelerfeigabe')
         self.set_btn_LED(self.ui.btn_LED_Quit_Reglerfreigabe_HR, json_Inverter, 'HR',
                          listElement2d='Quit Reglerfreigabe')
-        """self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_HR, json_Inverter, 'HR',
+        self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_HR, json_Inverter, 'HR',
                           listElement2d='Drehzahlistwert[U/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentistwert_HR, json_Inverter, 'HR', listElement2d='Momentistwert[Nm]')
         self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_HR, json_Inverter, 'HR',
@@ -864,7 +871,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Drehzahlsollwert_HL, json_Inverter, 'HL',
                           listElement2d='Drehzahlsollwert[1/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentsollwert_HL, json_Inverter, 'HL', listElement2d='Momentsollwert[Nm]')
-        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_HL, json_Inverter, 'HL', listElement2d='Momentsollwert[Nm]')"""
+        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_HL, json_Inverter, 'HL', listElement2d='Momentsollwert[Nm]')
         self.set_btn_LED(self.ui.btn_LED_System_bereit_HL, json_Inverter, 'HL', listElement2d='System bereit')
         self.set_btn_LED(self.ui.btn_LED_Warnung_HL, json_Inverter, 'HL', listElement2d='Warnung')
         self.set_btn_LED(self.ui.btn_LED_Fehler_HL, json_Inverter, 'HL', listElement2d='Fehler')
@@ -875,7 +882,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                          listElement2d='Spiegel Regelerfeigabe')
         self.set_btn_LED(self.ui.btn_LED_Quit_Reglerfreigabe_HL, json_Inverter, 'HL',
                          listElement2d='Quit Reglerfreigabe')
-        """self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_HL, json_Inverter, 'HL',
+        self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_HL, json_Inverter, 'HL',
                           listElement2d='Drehzahlistwert[U/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentistwert_HL, json_Inverter, 'HL', listElement2d='Momentistwert[Nm]')
         self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_HL, json_Inverter, 'HL',
@@ -892,7 +899,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Blindleistung_HL, json_Inverter, 'HL', listElement2d='Blindleistung [kvar]')
         self.set_lineEdit(self.ui.lineEdit_Fehlerzusatznr_1_HL, json_Inverter, 'HL', listElement2d='Fehlerzusatznr. 1')
         self.set_lineEdit(self.ui.lineEdit_Fehlerzusatznr_2_HL, json_Inverter, 'HL', listElement2d='Fehlerzusatznr. 2')
-        self.set_lineEdit(self.ui.lineEdit_Fehlerzusatznr_3_HL, json_Inverter, 'HL', listElement2d='Fehlerzusatznr. 3')"""
+        self.set_lineEdit(self.ui.lineEdit_Fehlerzusatznr_3_HL, json_Inverter, 'HL', listElement2d='Fehlerzusatznr. 3')
 
         print(str(json_Inverter))
 
@@ -958,7 +965,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Gaspedal, json_Math, 'General', listElement2d='Gaspedal[%/100]')
         self.set_lineEdit(self.ui.lineEdit_Rekupedal, json_Math, 'General', listElement2d='Rekupedal[%/100]')
         self.set_lineEdit(self.ui.lineEdit_Implausibilitaet_APPS, json_Math, 'General',
-                          listElement2d='Implausibilität\nAPPS[%]')
+                          listElement2d='Implausibilitt\nAPPS[%]')
         self.set_lineEdit(self.ui.lineEdit_Bremsbal, json_Math, 'General', listElement2d='Bremsbal[Fr/Total]')
         self.set_lineEdit(self.ui.lineEdit_Accelbal, json_Math, 'General', listElement2d='Accelbal[Fr/Total]')
         self.set_lineEdit(self.ui.lineEdit_allowedPower_General, json_Math, 'General', listElement2d='allowedPower[kW]')
@@ -999,11 +1006,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                           listElement2d='SOC-Ist[%]')
         self.set_lineEdit(self.ui.lineEdit_SOC_Ist_Energy_Control, json_Math, 'Energy Control',
                           listElement2d='SOC-Ist[%]')
-        self.set_lineEdit(self.ui.lineEdit_Rundenlaenge, json_Math, 'Energy Control', listElement2d='Rundenlänge[m]')
+        self.set_lineEdit(self.ui.lineEdit_Rundenlaenge, json_Math, 'Energy Control', listElement2d='Rundenlnge[m]')
         self.set_lineEdit(self.ui.lineEdit_Reglerausgang_Energy_Control, json_Math, 'Energy Control',
                           listElement2d='Reglerausgang')
         self.set_lineEdit(self.ui.lineEdit_Toleranz_Rundenlaenge, json_Math, 'Energy Control',
-                          listElement2d='Toleranz Rundenlänge [%/100]')
+                          listElement2d='Toleranz Rundenlnge [%/100]')
         self.set_lineEdit(self.ui.lineEdit_Strecke, json_Math, 'Energy Control', listElement2d='Strecke')
         self.set_lineEdit(self.ui.lineEdit_Start_SOC, json_Math, 'Energy Control', listElement2d='Start-SOC[%]')
         self.set_lineEdit(self.ui.lineEdit_Ziel_SOC, json_Math, 'Energy Control', listElement2d='Ziel-SOC[%]')
