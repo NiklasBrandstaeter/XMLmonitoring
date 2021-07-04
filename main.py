@@ -90,7 +90,7 @@ class WorkerUDP(QObject):
 
             ready = select.select([sock], [], [], 2)
             if ready[0]:
-                data, addr = sock.recvfrom(4096)
+                data, addr = sock.recvfrom(4*4096)
                 #print("print data:",data)
                 #print("Type:",type(data))
                 str = data.decode("utf-8", errors="ignore")
@@ -122,15 +122,25 @@ class WorkerUDP(QObject):
                     doc = xmltodict.parse(str)
                     xmljson = json.dumps(xmltodict.parse(str))
                     xmljsonload = json.loads(xmljson)
-                    print("xmlJson:", xmljson)
+                    """print("xmlJson:", xmljson)
                     #print(xmljson["Cluster"]["Name"])
                     print("xmljsonload:", xmljsonload)
                     print(xmljsonload['Cluster']['Name'])
                     print("doc:", doc)
-                    print("doc1:", doc['Cluster']['Name'])
+                    print("doc1 name:", doc['Cluster']['Name'])
                     print("doc1:", doc['Cluster']['EB']['Name'])
                     print("doc1:", doc['Cluster']['EB']['Choice'][int(doc['Cluster']['EB']['Val'])])
+                    print("Type:",type(doc['Cluster']['EB']['Val']))
+                    print("Type:", type(doc['Cluster']['EB']['Val']))
+                    print("SGL:", doc['Cluster']['SGL'])
+                    print("SGL:", doc['Cluster']['SGL'][1]['Name'])
+                    for element in doc['Cluster']['SGL']:
+                        print("Check")
+                        print(element['Name'])
+                        #print("Name" ,doc['Cluster']['SGL'][i]['Name'])
                     print("doc:",doc.items())
+                    if(doc['Cluster']['Name']=='Config-Values'):
+                        print("yeahhhhhhhhhhhhhhhhhhhhh")
                     for key, value in doc.items():  # accessing keys
                         print("key")
                         print(key, end=',')
@@ -145,7 +155,7 @@ class WorkerUDP(QObject):
                         print("Name and attribute:",attrName + '=' + attrValue)
                     #testtest=list(root)
                     #print(type(testtest))
-                    #print(testtest)
+                    #print(testtest)"""
 
                     #for x in root.findall('Cluster'):
                     #    item = x.find('Val').text
@@ -156,14 +166,33 @@ class WorkerUDP(QObject):
                     #    print("Attribut: ",  child.attrib)
                     #print(root)
 
-                    """"#time.sleep(0.3)
-                    if ('Vehicle Mode' in recvData):
-                        self.signal_Config_Values.emit(recvData)
-                        self.signal_Config_Values_init.emit(recvData)
-                    elif('Analog' and 'Akku/HV' and 'SC' and 'Fuses' in recvData):
-                        self.signal_Sensors.emit(recvData)
-                        self.signal_Sensors_init.emit(recvData)
-                    elif('VR' and 'VL' and 'HR' and 'HL' in recvData):
+                    ##time.sleep(0.3)
+                    if (doc['Cluster']['Name']=='Config-Values'):
+                        print(doc)
+                        self.signal_Config_Values.emit(doc)
+                        self.signal_Config_Values_init.emit(doc)
+                    elif(doc['Cluster']['Name']=='Sensors'):
+                        print(doc)
+                        self.signal_Sensors.emit(doc)
+                        self.signal_Sensors_init.emit(doc)
+                    elif (doc['Cluster']['Name'] == 'Inverter'):
+                        print(doc)
+                        self.signal_Inverter.emit(doc)
+                    elif (doc['Cluster']['Name'] == 'Errors'):
+                        print(doc)
+                        self.signal_Errors.emit(doc)
+                    elif (doc['Cluster']['Name'] == 'Math'):
+                        print(doc)
+                        self.signal_Math.emit(doc)
+
+                    """elif (doc['Cluster']['Name'] == 'Controls'):
+                        print(doc)
+                        self.signal_Controls.emit(doc)"""
+                    """elif (doc['Cluster']['Name'] == 'FPGA Error'):
+                        print(doc)
+                        self.signal_FPGA_Error.emit(doc)"""
+
+                    """elif('VR' and 'VL' and 'HR' and 'HL' in recvData):
                         self.signal_Inverter.emit(recvData)
                     elif ('Timeout CAN' and 'Wert' and 'Latching' in recvData):
                         self.signal_Errors.emit(recvData)
@@ -245,13 +274,63 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         #    self.sensors_list_index = self.sensors_list_index + 1
 
 
+    #def set_lineEdit(self, name_lineEdit, dataList, listElement, listElement2d = 'empty', listElement3d = 'empty'):
+    #    if (listElement2d == 'empty'):
+    #        if (listElement in dataList):
+    #            name_lineEdit.setText(str(dataList[listElement]))
+    #        else:
+    #            name_lineEdit.setText('Element not in the Cluster')
+    #    elif(listElement3d == 'empty'):
+    #        if (listElement2d in dataList[listElement]):
+    #            name_lineEdit.setText(str(dataList[listElement][listElement2d]))
+    #        else:
+    #            name_lineEdit.setText('Element not in the Cluster')
+    #    else:
+    #        if (listElement3d in dataList[listElement][listElement2d]):
+    #            name_lineEdit.setText(str(dataList[listElement][listElement2d][listElement3d]))
+    #        else:
+    #            name_lineEdit.setText('Element not in the Cluster')
+
     def set_lineEdit(self, name_lineEdit, dataList, listElement, listElement2d = 'empty', listElement3d = 'empty'):
-        if (listElement2d == 'empty'):
-            if (listElement in dataList):
-                name_lineEdit.setText(str(dataList[listElement]))
-            else:
-                name_lineEdit.setText('Element not in the Cluster')
-        elif(listElement3d == 'empty'):
+        if(listElement2d == "empty"):
+            if ('Choice' in dataList['Cluster']['EB']):
+                name_lineEdit.setText(dataList['Cluster']['EB']['Choice'][int(dataList['Cluster']['EB']['Val'])])
+            if('SGL' in dataList['Cluster']):
+                for element in dataList['Cluster']['SGL']:
+                    #print(element['Name'])
+                    #print(element['Val'])
+                    if(listElement==element['Name']):
+                        newlistElement=element['Name']
+                        name_lineEdit.setText(element['Val'])
+        elif(listElement3d == "empty"):
+            for element in dataList['Cluster']['Cluster']:
+                if ('EB' in element):
+                    for EBelement in element['EB']:
+                        if(EBelement['Name'] == listElement2d):
+                            name_lineEdit.setText(EBelement['Choice'][int(EBelement['Val'])])
+                if('U16' in element):
+                    if("Name" in element['U16']):
+                        name_lineEdit.setText(element['U16']['Val'])
+                """name_lineEdit.setText(dataList['Cluster']['Cluster']['EB']['Choice'][int(dataList['Cluster']['Choice']['EB']['Val'])])"""
+                if('SGL' in element):
+                    for element2d in element['SGL']:
+                        if (listElement2d == element2d['Name']):
+                            listElement2d = element2d['Name']
+                            name_lineEdit.setText(element2d['Val'])
+
+            """for element in dataList['Cluster']['Cluster']['SGL']:
+                print(element['Name'])
+                print(element['Val'])
+                if (listElement2d == element['Name']):
+                    newlistElement = element['Name']
+                    #name_lineEdit.setText(element['Val'])
+        #print("doc1:", doc['Cluster']['EB']['Choice'][int(doc['Cluster']['EB']['Val'])])"""
+        """if (listElement2d == 'empty'):
+           if (newlistElement==listElement):
+               name_lineEdit.setText(str(dataList[listElement]))
+           else:
+               name_lineEdit.setText('Element not in the Cluster')"""""
+        """"elif(listElement3d == 'empty'):
             if (listElement2d in dataList[listElement]):
                 name_lineEdit.setText(str(dataList[listElement][listElement2d]))
             else:
@@ -260,10 +339,66 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             if (listElement3d in dataList[listElement][listElement2d]):
                 name_lineEdit.setText(str(dataList[listElement][listElement2d][listElement3d]))
             else:
-                name_lineEdit.setText('Element not in the Cluster')
+                name_lineEdit.setText('Element not in the Cluster')"""""
 
     def set_btn_LED(self, name_btn_LED, dataList, listElement, listElement2d = 'empty', listElement3d = 'empty'):
-        if(listElement2d == 'empty'):
+        if(listElement2d=="empty"):
+            if('Boolean' in dataList['Cluster']):
+                for element in dataList['Cluster']['Boolean']:
+                    #print(element['Name'])
+                    #print(element['Val'])
+                    if(listElement==element['Name']):
+                        if (element['Val'] == "0"):
+                            name_btn_LED.setStyleSheet('border: none; border-radius: 10px; background-color: red')
+                        elif (element['Val'] == "1"):
+                            name_btn_LED.setStyleSheet(
+                                'border: none; border-radius: 10px; background-color: rgb(38, 255, 0);')
+                        else:
+                            name_btn_LED.setStyleSheet(
+                                'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
+        elif (listElement3d == "empty"):
+            for element in dataList['Cluster']['Cluster']:
+                if ('Boolean' in element):
+                    if(len(element['Boolean'])>2):
+                        for booleanELement in element['Boolean']:
+                            if (booleanELement['Name'] == listElement2d):
+                                if (booleanELement['Val'] == "0"):
+                                    name_btn_LED.setStyleSheet(
+                                        'border: none; border-radius: 10px; background-color: red')
+                                elif (booleanELement['Val'] == "1"):
+                                    name_btn_LED.setStyleSheet(
+                                        'border: none; border-radius: 10px; background-color: rgb(38, 255, 0);')
+                                else:
+                                    name_btn_LED.setStyleSheet(
+                                        'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
+                    if('Name' in element['Boolean']):
+                        print("Boolean Name:", element['Boolean']['Name'])
+                        if(element['Boolean']['Name']==listElement2d):
+                            if (element['Boolean']['Val'] == "0"):
+                                name_btn_LED.setStyleSheet('border: none; border-radius: 10px; background-color: red')
+                            elif (element['Boolean']['Val'] == "1"):
+                                name_btn_LED.setStyleSheet(
+                                    'border: none; border-radius: 10px; background-color: rgb(38, 255, 0);')
+                            else:
+                                name_btn_LED.setStyleSheet(
+                                    'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
+                """    for element2d in element['Boolean']:
+                        #print(element2d)
+                        if(listElement2d and 'Val' in element2d):
+                            print(listElement2d)
+                            print("1111111111111111111111111111111111111111111111111111111111111111")
+                            if (listElement2d['Val'] == "0"):
+                                   name_btn_LED.setStyleSheet('border: none; border-radius: 10px; background-color: red')
+                            elif (listElement2d['Val'] == "1"):
+                                name_btn_LED.setStyleSheet(
+                                    'border: none; border-radius: 10px; background-color: rgb(38, 255, 0);')
+                            else:
+                                name_btn_LED.setStyleSheet(
+                                    'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')"""
+
+            #    newlistElement=element['Name']
+            #    name_lineEdit.setText(element['Val'])
+        """if(listElement2d == 'empty'):
             if(listElement in dataList):
                 if (dataList[listElement] == False):
                     name_btn_LED.setStyleSheet('border: none; border-radius: 10px; background-color: red')
@@ -298,7 +433,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                     name_btn_LED.setStyleSheet(
                         'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
             else:
-                name_btn_LED.setText('Element not in the Cluster')
+                name_btn_LED.setText('Element not in the Cluster')"""
 
     def serial_to_float(self, byte1, byte2, byte3, byte4):
         str_byte1 = bin(byte1)
@@ -412,10 +547,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def recieve_Config_Values(self, json_config):
         self.set_lineEdit(self.ui.lineEdit_Vehicle_Mode, json_config, 'Vehicle Mode')
-        self.set_lineEdit(self.ui.lineEdit_APPS1_min, json_config, 'APPS1_min[°]')
-        self.set_lineEdit(self.ui.lineEdit_APPS1_max, json_config, 'APPS1_max[°]')
-        self.set_lineEdit(self.ui.lineEdit_APPS2_min, json_config, 'APPS2_min[°]')
-        self.set_lineEdit(self.ui.lineEdit_APPS2_max, json_config, 'APPS2_max[°]')
+        self.set_lineEdit(self.ui.lineEdit_APPS1_min, json_config, 'APPS1_min[]')
+        self.set_lineEdit(self.ui.lineEdit_APPS1_max, json_config, 'APPS1_max[]')
+        self.set_lineEdit(self.ui.lineEdit_APPS2_min, json_config, 'APPS2_min[]')
+        self.set_lineEdit(self.ui.lineEdit_APPS2_max, json_config, 'APPS2_max[]')
         self.set_lineEdit(self.ui.lineEdit_maxTorque_plus, json_config, 'maxTorque+[Nm]')
         self.set_lineEdit(self.ui.lineEdit_maxTorque_minus, json_config, 'maxTorque-[Nm]')
         self.set_lineEdit(self.ui.lineEdit_Leistungslimit, json_config, 'Leistungslimit[kW]')
@@ -439,24 +574,24 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         print(str(json_config))
 
     def recieve_Sensors(self, json_Sensors):
-        self.set_lineEdit(self.ui.lineEdit_APPS1, json_Sensors, 'Analog', listElement2d='APPS1[°]')
-        self.set_lineEdit(self.ui.lineEdit_APPS2, json_Sensors, 'Analog', listElement2d='APPS2[°]')
+        self.set_lineEdit(self.ui.lineEdit_APPS1, json_Sensors, 'Analog', listElement2d='APPS1[]')
+        self.set_lineEdit(self.ui.lineEdit_APPS2, json_Sensors, 'Analog', listElement2d='APPS2[]')
         self.set_lineEdit(self.ui.lineEdit_Bremsdruck_vorne, json_Sensors, 'Analog', listElement2d='Bremsdruck vorne [bar]')
         self.set_lineEdit(self.ui.lineEdit_Bremsdruck_hinten, json_Sensors, 'Analog', listElement2d='Bremsdruck hinten [bar]')
         self.set_lineEdit(self.ui.lineEdit_Bremskraft, json_Sensors, 'Analog', listElement2d='Bremskraft[N]')
-        self.set_lineEdit(self.ui.lineEdit_Lenkwinkel, json_Sensors, 'Analog', listElement2d='Lenkwinkel[°]')
-        self.set_lineEdit(self.ui.lineEdit_WT_Motor_high, json_Sensors, 'Analog', listElement2d='WT_Motor_high[°C]')
-        self.set_lineEdit(self.ui.lineEdit_WT_Motor_Low, json_Sensors, 'Analog', listElement2d='WT_Motor_Low[°C]')
-        self.set_lineEdit(self.ui.lineEdit_LT_Inv_FrR, json_Sensors, 'Analog', listElement2d='LT_Inv_FrR[°C]')
-        self.set_lineEdit(self.ui.lineEdit_LT_Inv_FrL, json_Sensors, 'Analog', listElement2d='LT_Inv_FrL[°C]')
-        self.set_lineEdit(self.ui.lineEdit_LT_Inv_ReR, json_Sensors, 'Analog', listElement2d='LT_Inv_ReR[°C]')
-        self.set_lineEdit(self.ui.lineEdit_LT_Inv_ReL, json_Sensors, 'Analog', listElement2d='LT_Inv_ReL[°C]')
-        self.set_lineEdit(self.ui.lineEdit_Ambient_Temp, json_Sensors, 'Analog', listElement2d='Ambient_Temp[°C]')
+        self.set_lineEdit(self.ui.lineEdit_Lenkwinkel, json_Sensors, 'Analog', listElement2d='Lenkwinkel[]')
+        self.set_lineEdit(self.ui.lineEdit_WT_Motor_high, json_Sensors, 'Analog', listElement2d='WT_Motor_high[C]')
+        self.set_lineEdit(self.ui.lineEdit_WT_Motor_Low, json_Sensors, 'Analog', listElement2d='WT_Motor_Low[C]')
+        self.set_lineEdit(self.ui.lineEdit_LT_Inv_FrR, json_Sensors, 'Analog', listElement2d='LT_Inv_FrR[C]')
+        self.set_lineEdit(self.ui.lineEdit_LT_Inv_FrL, json_Sensors, 'Analog', listElement2d='LT_Inv_FrL[C]')
+        self.set_lineEdit(self.ui.lineEdit_LT_Inv_ReR, json_Sensors, 'Analog', listElement2d='LT_Inv_ReR[C]')
+        self.set_lineEdit(self.ui.lineEdit_LT_Inv_ReL, json_Sensors, 'Analog', listElement2d='LT_Inv_ReL[C]')
+        self.set_lineEdit(self.ui.lineEdit_Ambient_Temp, json_Sensors, 'Analog', listElement2d='Ambient_Temp[C]')
         self.set_lineEdit(self.ui.lineEdit_ST_FR, json_Sensors, 'Analog', listElement2d='ST_FR[mm}')
         self.set_lineEdit(self.ui.lineEdit_ST_FL, json_Sensors, 'Analog', listElement2d='ST_FL[mm]')
         self.set_lineEdit(self.ui.lineEdit_ST_RR, json_Sensors, 'Analog', listElement2d='ST_RR[mm]')
         self.set_lineEdit(self.ui.lineEdit_ST_RL, json_Sensors, 'Analog', listElement2d='ST_RL[mm]')
-        self.set_lineEdit(self.ui.lineEdit_Temp_Fusebox, json_Sensors, 'Analog', listElement2d='Temp_Fusebox [°C]')
+        self.set_lineEdit(self.ui.lineEdit_Temp_Fusebox, json_Sensors, 'Analog', listElement2d='Temp_Fusebox [C]')
 
         self.set_lineEdit(self.ui.lineEdit_HV_Current, json_Sensors, 'Akku/HV', listElement2d='HV_Current[A]')
         self.set_lineEdit(self.ui.lineEdit_IC_Voltage, json_Sensors, 'Akku/HV', listElement2d='IC_Voltage[V]')
@@ -469,8 +604,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_CVL, json_Sensors, 'Akku/HV', listElement2d='CVL[V]')
         self.set_lineEdit(self.ui.lineEdit_CVL_2, json_Sensors, 'Akku/HV', listElement2d='CVL[V] 20s')
         self.set_lineEdit(self.ui.lineEdit_CVL_3, json_Sensors, 'Akku/HV', listElement2d='CVL[V] 60s')
-        self.set_lineEdit(self.ui.lineEdit_CTH, json_Sensors, 'Akku/HV', listElement2d='CTH[°C]')
-        self.set_lineEdit(self.ui.lineEdit_CTL, json_Sensors, 'Akku/HV', listElement2d='CTL[°C]')
+        self.set_lineEdit(self.ui.lineEdit_CTH, json_Sensors, 'Akku/HV', listElement2d='CTH[C]')
+        self.set_lineEdit(self.ui.lineEdit_CTL, json_Sensors, 'Akku/HV', listElement2d='CTL[C]')
         self.set_lineEdit(self.ui.lineEdit_State_IMD, json_Sensors, 'Akku/HV', listElement2d='State IMD')
         self.set_lineEdit(self.ui.lineEdit_Isolationswiderstand, json_Sensors, 'Akku/HV',
                           listElement2d='Isolationswider\nstand[kOhm]')
@@ -620,11 +755,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def recieve_Inverter(self, json_Inverter):
 
         #Inverter VR
-        self.set_lineEdit(self.ui.lineEdit_AMK_Control_VR, json_Inverter, 'VR', listElement2d='AMK_Control[b]')
+        """self.set_lineEdit(self.ui.lineEdit_AMK_Control_VR, json_Inverter, 'VR', listElement2d='AMK_Control[b]')
         self.set_lineEdit(self.ui.lineEdit_Drehzahlsollwert_VR, json_Inverter, 'VR',
-                          listElement2d='Drehzahlsollwert[1/min]')
+                          listElement2d='Drehzahlsollwert[1/min]
         self.set_lineEdit(self.ui.lineEdit_Momentsollwert_VR, json_Inverter, 'VR', listElement2d='Momentsollwert[Nm]')
-        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_VR, json_Inverter, 'VR', listElement2d='Momentsollwert[Nm]')
+        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_VR, json_Inverter, 'VR', listElement2d='Momentsollwert[Nm]')"""
         self.set_btn_LED(self.ui.btn_LED_System_bereit_VR, json_Inverter, 'VR', listElement2d='System bereit')
         self.set_btn_LED(self.ui.btn_LED_Warnung_VR, json_Inverter, 'VR', listElement2d='Warnung')
         self.set_btn_LED(self.ui.btn_LED_Fehler_VR, json_Inverter, 'VR', listElement2d='Fehler')
@@ -635,7 +770,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                          listElement2d='Spiegel Regelerfeigabe')
         self.set_btn_LED(self.ui.btn_LED_Quit_Reglerfreigabe_VR, json_Inverter, 'VR',
                          listElement2d='Quit Reglerfreigabe')
-        self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_VR, json_Inverter, 'VR',
+        """self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_VR, json_Inverter, 'VR',
                           listElement2d='Drehzahlistwert[U/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentistwert_VR, json_Inverter, 'VR', listElement2d='Momentistwert[Nm]')
         self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_VR, json_Inverter, 'VR',
@@ -659,7 +794,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Drehzahlsollwert_VL, json_Inverter, 'VL',
                           listElement2d='Drehzahlsollwert[1/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentsollwert_VL, json_Inverter, 'VL', listElement2d='Momentsollwert[Nm]')
-        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_VL, json_Inverter, 'VL', listElement2d='Momentsollwert[Nm]')
+        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_VL, json_Inverter, 'VL', listElement2d='Momentsollwert[Nm]')"""
         self.set_btn_LED(self.ui.btn_LED_System_bereit_VL, json_Inverter, 'VL', listElement2d='System bereit')
         self.set_btn_LED(self.ui.btn_LED_Warnung_VL, json_Inverter, 'VL', listElement2d='Warnung')
         self.set_btn_LED(self.ui.btn_LED_Fehler_VL, json_Inverter, 'VL', listElement2d='Fehler')
@@ -670,7 +805,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                          listElement2d='Spiegel Regelerfeigabe')
         self.set_btn_LED(self.ui.btn_LED_Quit_Reglerfreigabe_VL, json_Inverter, 'VL',
                          listElement2d='Quit Reglerfreigabe')
-        self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_VL, json_Inverter, 'VL',
+        """self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_VL, json_Inverter, 'VL',
                           listElement2d='Drehzahlistwert[U/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentistwert_VL, json_Inverter, 'VL', listElement2d='Momentistwert[Nm]')
         self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_VL, json_Inverter, 'VL',
@@ -694,7 +829,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Drehzahlsollwert_HR, json_Inverter, 'HR',
                           listElement2d='Drehzahlsollwert[1/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentsollwert_HR, json_Inverter, 'HR', listElement2d='Momentsollwert[Nm]')
-        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_HR, json_Inverter, 'HR', listElement2d='Momentsollwert[Nm]')
+        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_HR, json_Inverter, 'HR', listElement2d='Momentsollwert[Nm]')"""
         self.set_btn_LED(self.ui.btn_LED_System_bereit_HR, json_Inverter, 'HR', listElement2d='System bereit')
         self.set_btn_LED(self.ui.btn_LED_Warnung_HR, json_Inverter, 'HR', listElement2d='Warnung')
         self.set_btn_LED(self.ui.btn_LED_Fehler_HR, json_Inverter, 'HR', listElement2d='Fehler')
@@ -705,7 +840,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                          listElement2d='Spiegel Regelerfeigabe')
         self.set_btn_LED(self.ui.btn_LED_Quit_Reglerfreigabe_HR, json_Inverter, 'HR',
                          listElement2d='Quit Reglerfreigabe')
-        self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_HR, json_Inverter, 'HR',
+        """self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_HR, json_Inverter, 'HR',
                           listElement2d='Drehzahlistwert[U/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentistwert_HR, json_Inverter, 'HR', listElement2d='Momentistwert[Nm]')
         self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_HR, json_Inverter, 'HR',
@@ -729,7 +864,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Drehzahlsollwert_HL, json_Inverter, 'HL',
                           listElement2d='Drehzahlsollwert[1/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentsollwert_HL, json_Inverter, 'HL', listElement2d='Momentsollwert[Nm]')
-        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_HL, json_Inverter, 'HL', listElement2d='Momentsollwert[Nm]')
+        self.set_lineEdit(self.ui.lineEdit_Momentsollwert_HL, json_Inverter, 'HL', listElement2d='Momentsollwert[Nm]')"""
         self.set_btn_LED(self.ui.btn_LED_System_bereit_HL, json_Inverter, 'HL', listElement2d='System bereit')
         self.set_btn_LED(self.ui.btn_LED_Warnung_HL, json_Inverter, 'HL', listElement2d='Warnung')
         self.set_btn_LED(self.ui.btn_LED_Fehler_HL, json_Inverter, 'HL', listElement2d='Fehler')
@@ -740,7 +875,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                          listElement2d='Spiegel Regelerfeigabe')
         self.set_btn_LED(self.ui.btn_LED_Quit_Reglerfreigabe_HL, json_Inverter, 'HL',
                          listElement2d='Quit Reglerfreigabe')
-        self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_HL, json_Inverter, 'HL',
+        """self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_HL, json_Inverter, 'HL',
                           listElement2d='Drehzahlistwert[U/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentistwert_HL, json_Inverter, 'HL', listElement2d='Momentistwert[Nm]')
         self.set_lineEdit(self.ui.lineEdit_Drehzahlistwert_HL, json_Inverter, 'HL',
@@ -757,7 +892,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Blindleistung_HL, json_Inverter, 'HL', listElement2d='Blindleistung [kvar]')
         self.set_lineEdit(self.ui.lineEdit_Fehlerzusatznr_1_HL, json_Inverter, 'HL', listElement2d='Fehlerzusatznr. 1')
         self.set_lineEdit(self.ui.lineEdit_Fehlerzusatznr_2_HL, json_Inverter, 'HL', listElement2d='Fehlerzusatznr. 2')
-        self.set_lineEdit(self.ui.lineEdit_Fehlerzusatznr_3_HL, json_Inverter, 'HL', listElement2d='Fehlerzusatznr. 3')
+        self.set_lineEdit(self.ui.lineEdit_Fehlerzusatznr_3_HL, json_Inverter, 'HL', listElement2d='Fehlerzusatznr. 3')"""
 
         print(str(json_Inverter))
 
@@ -930,27 +1065,155 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def show_page_config_values(self):
         self.ui.Pages.setCurrentWidget(self.ui.page_config_values)
+        self.ui.btn_config_values.setStyleSheet('border: none; border-radius: 0px; background-color: rgb(171, 171, 171, 255);color: rgb(255, 255, 255)')
+        self.ui.btn_sensors.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_inverter.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_errors.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_math.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_controls.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_fpga_error.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_timestamp.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
 
     def show_page_sensors(self):
         self.ui.Pages.setCurrentWidget(self.ui.page_sensors)
+        self.ui.btn_sensors.setStyleSheet(
+            'border: none; border-radius: 0px; background-color: rgb(171, 171, 171, 255);color: rgb(255, 255, 255)')
+        self.ui.btn_config_values.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_inverter.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_errors.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_math.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_controls.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_fpga_error.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_timestamp.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
 
     def show_page_inverter(self):
         self.ui.Pages.setCurrentWidget(self.ui.page_inverter)
+        self.ui.btn_inverter.setStyleSheet(
+            'border: none; border-radius: 0px; background-color: rgb(171, 171, 171, 255);color: rgb(255, 255, 255)')
+        self.ui.btn_sensors.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_config_values.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_errors.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_math.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_controls.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_fpga_error.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_timestamp.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
 
     def show_page_errors(self):
         self.ui.Pages.setCurrentWidget(self.ui.page_errors)
+        self.ui.btn_errors.setStyleSheet(
+            'border: none; border-radius: 0px; background-color: rgb(171, 171, 171, 255);color: rgb(255, 255, 255)')
+        self.ui.btn_sensors.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_inverter.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_config_values.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_math.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_controls.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_fpga_error.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_timestamp.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
 
     def show_page_math(self):
         self.ui.Pages.setCurrentWidget(self.ui.page_math)
+        self.ui.btn_math.setStyleSheet(
+            'border: none; border-radius: 0px; background-color: rgb(171, 171, 171, 255);color: rgb(255, 255, 255)')
+        self.ui.btn_sensors.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_inverter.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_errors.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_config_values.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_controls.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_fpga_error.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_timestamp.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
 
     def show_page_controls(self):
         self.ui.Pages.setCurrentWidget(self.ui.page_controls)
+        self.ui.btn_controls.setStyleSheet(
+            'border: none; border-radius: 0px; background-color: rgb(171, 171, 171, 255);color: rgb(255, 255, 255)')
+        self.ui.btn_sensors.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_inverter.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_errors.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_math.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_config_values.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_fpga_error.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_timestamp.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
 
     def show_page_fpga_error(self):
         self.ui.Pages.setCurrentWidget(self.ui.page_fpga_error)
+        self.ui.btn_fpga_error.setStyleSheet(
+            'border: none; border-radius: 0px; background-color: rgb(171, 171, 171, 255);color: rgb(255, 255, 255)')
+        self.ui.btn_sensors.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_inverter.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_errors.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_math.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_controls.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_config_values.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_timestamp.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
 
     def show_page_timestamp(self):
         self.ui.Pages.setCurrentWidget(self.ui.page_timestamp)
+        self.ui.btn_timestamp.setStyleSheet(
+            'border: none; border-radius: 0px; background-color: rgb(171, 171, 171, 255);color: rgb(255, 255, 255)')
+        self.ui.btn_sensors.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_inverter.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_errors.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_math.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_controls.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_fpga_error.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+        self.ui.btn_config_values.setStyleSheet(
+            'QPushButton {\nbackground-color: none;\nborder:  none;\ncolor: rgb(255, 255, 255);\n}\nQPushButton:hover {\nbackground-color: rgba(171, 171, 171, 255);\nborder:  none;\ncolor: rgb(255, 255, 255);\n}')
+
 
 
     def recieve(self):
