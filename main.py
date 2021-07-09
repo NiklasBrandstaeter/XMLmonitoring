@@ -10,6 +10,7 @@ from monitoring import Ui_MainWindow
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import xmltodict
+from typing import OrderedDict
 
 
 
@@ -168,21 +169,21 @@ class WorkerUDP(QObject):
 
                     ##time.sleep(0.3)
                     if (doc['Cluster']['Name']=='Config-Values'):
-                        print(doc)
+  #                      print(doc)
                         self.signal_Config_Values.emit(doc)
                         self.signal_Config_Values_init.emit(doc)
                     elif(doc['Cluster']['Name']=='Sensors'):
-                        print(doc)
+   #                     print(doc)
                         self.signal_Sensors.emit(doc)
                         self.signal_Sensors_init.emit(doc)
                     elif (doc['Cluster']['Name'] == 'Inverter'):
-                        print(doc)
+   #                     print(doc)
                         self.signal_Inverter.emit(doc)
                     elif (doc['Cluster']['Name'] == 'Errors'):
-                        print(doc)
+    #                    print(doc)
                         self.signal_Errors.emit(doc)
                     elif (doc['Cluster']['Name'] == 'Math'):
-                        print(doc)
+    #                    print(doc)
                         self.signal_Math.emit(doc)
 
                     """elif (doc['Cluster']['Name'] == 'Controls'):
@@ -267,7 +268,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.config_list = json_config_init
 
     def set_Sensors_list(self, json_sensors_init):
-        print("Index: ", self.sensors_list_index)
+#        print("Index: ", self.sensors_list_index)
         #if (self.sensors_list_index == 0):
         self.sensors_list = json_sensors_init
         #else:
@@ -290,13 +291,32 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     #            name_lineEdit.setText(str(dataList[listElement][listElement2d][listElement3d]))
     #        else:
     #            name_lineEdit.setText('Element not in the Cluster')
+    def searchElement(self, listofElements, wantedElement, oldElement):
+        for element in listofElements:
+            print("Element:", element)
+            if (element == wantedElement):
+                print("wanted:", wantedElement)
+                print("foooooooooooooooooooooouuuuuuuuuuuuuuuuuuuuuuuund")
+                if("Choice" in str(oldElement)):
+                    print("Choice!")
+            if (isinstance(element, OrderedDict)):
+                self.searchElement(element.values(), wantedElement, listofElements)
+            elif(isinstance(element, list)):
+                self.searchElement(element, wantedElement, listofElements)
+
+    def dictBool(self, dict, elementName, clusterName, name_btn_LED):
+        print("Cluster:", dict.get(clusterName, 'None'))
+        print("Type of cluster:", type(dict.get(clusterName, 'None')))
+        print("Values of cluster:", dict.get(clusterName, 'None').values())
+        self.searchElement(dict.get(clusterName, 'None').values(), elementName, dict)
 
     def set_lineEdit(self, name_lineEdit, dataList, listElement, listElement2d = 'empty', listElement3d = 'empty'):
         if(listElement2d == "empty"):
+            self.dictBool(dataList, listElement, 'Cluster', listElement)
             if ('Choice' in dataList['Cluster']['EB']):
                 name_lineEdit.setText(dataList['Cluster']['EB']['Choice'][int(dataList['Cluster']['EB']['Val'])])
             if('SGL' in dataList['Cluster']):
-                print(len(dataList['Cluster']['SGL']))
+  #              print(len(dataList['Cluster']['SGL']))
                 for element in dataList['Cluster']['SGL']:
                     #print(element['Name'])
                     #print(element['Val'])
@@ -306,8 +326,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         elif(listElement3d == "empty"):
             for element in dataList['Cluster']['Cluster']:
                 if ('EB' in element):
-                    print("Länge:",len(element['EB']))
-                    print(element['EB'])
+ #                   print("Länge:",len(element['EB']))
+ #                   print(element['EB'])
                     if(len(element['EB'])>3):
                         for EBelement in element['EB']:
                             if(EBelement['Name'] == listElement2d):
@@ -346,8 +366,37 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             else:
                 name_lineEdit.setText('Element not in the Cluster')"""""
 
+
+        """for value in dict.get(clusterName, 'None').values():
+            print("Value:", value)
+            print("Type of value:", type(value))
+            if (isinstance(value, list) or isinstance(value, OrderedDict)):
+                print("next value")
+                for value2 in value:
+                    print("Value2:", value2)"""
+
+
+        """for elemenentLevel1 in dict[clusterName]:
+            if (elemenentLevel1 == elementName):
+                if (elemenentLevel1['Val'] == "0"):
+                    #name_btn_LED.setStyleSheet('border: none; border-radius: 10px; background-color: red')
+                    print("Faaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaalse")
+                elif (elemenentLevel1['Val'] == "1"):
+                    #name_btn_LED.setStyleSheet(
+                    #    'border: none; border-radius: 10px; background-color: rgb(38, 255, 0);')
+                    print("Truuuuuuuuuuuuuuuuuuuuuuueeeeeeeeeeeeeeeeeeeeeeeeeee")
+                else:
+                    #name_btn_LED.setStyleSheet(
+                     #   'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
+                    print("Noneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+            else:
+                self.dictBool(dict[clusterName], elemenentLevel1, name_btn_LED)"""
+
+
+
     def set_btn_LED(self, name_btn_LED, dataList, listElement, listElement2d = 'empty', listElement3d = 'empty'):
         if(listElement2d=="empty"):
+            #self.dictBool(dataList, listElement, 'Cluster', name_btn_LED)
             if('Boolean' in dataList['Cluster']):
                 for element in dataList['Cluster']['Boolean']:
                     #print(element['Name'])
@@ -377,7 +426,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                                     name_btn_LED.setStyleSheet(
                                         'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
                     if('Name' in element['Boolean']):
-                        print("Boolean Name:", element['Boolean']['Name'])
+#                        print("Boolean Name:", element['Boolean']['Name'])
                         if(element['Boolean']['Name']==listElement2d):
                             if (element['Boolean']['Val'] == "0"):
                                 name_btn_LED.setStyleSheet('border: none; border-radius: 10px; background-color: red')
