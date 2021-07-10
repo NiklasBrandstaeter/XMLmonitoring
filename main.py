@@ -166,7 +166,7 @@ class WorkerUDP(QObject):
                     #    print("Child: ", child.tag)
                     #    print("Attribut: ",  child.attrib)
                     #print(root)
-
+                    print("Doc:", doc)
                     ##time.sleep(0.3)
                     if (doc['Cluster']['Name']=='Config-Values'):
   #                      print(doc)
@@ -185,13 +185,15 @@ class WorkerUDP(QObject):
                     elif (doc['Cluster']['Name'] == 'Math'):
     #                    print(doc)
                         self.signal_Math.emit(doc)
-
-                    """elif (doc['Cluster']['Name'] == 'Controls'):
+                    elif (doc['Cluster']['Name'] == 'Controls'):
                         print(doc)
-                        self.signal_Controls.emit(doc)"""
-                    """elif (doc['Cluster']['Name'] == 'FPGA Error'):
+                        self.signal_Controls.emit(doc)
+                    elif (doc['Cluster']['Name'] == 'FPGA Error'):
                         print(doc)
-                        self.signal_FPGA_Error.emit(doc)"""
+                        self.signal_FPGA_Error.emit(doc)
+                    elif (doc['Cluster']['Name'] == 'Timestamp'):
+                        print(doc)
+                        self.signal_Timestamp.emit(doc)
 
                     """elif('VR' and 'VL' and 'HR' and 'HL' in recvData):
                         self.signal_Inverter.emit(recvData)
@@ -263,6 +265,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.config_list = []
         self.sensors_list = []
         self.sensors_list_index = 0
+        self.elementName = "None"
+        self.elementValue = "None"
 
     def set_config_list(self, json_config_init):
         self.config_list = json_config_init
@@ -293,203 +297,120 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     #            name_lineEdit.setText('Element not in the Cluster')
     def searchElement(self, listofElements, wantedElement, oldElement):
         for element in listofElements:
-            print("Element:", element)
-            if (element == wantedElement):
-                print("wanted:", wantedElement)
-                print("foooooooooooooooooooooouuuuuuuuuuuuuuuuuuuuuuuund")
-                if("Choice" in str(oldElement)):
-                    print("Choice!")
             if (isinstance(element, OrderedDict)):
-                self.searchElement(element.values(), wantedElement, listofElements)
-            elif(isinstance(element, list)):
+                if(element.get('Name') == wantedElement and element.get('Val') != 'None'):
+                    self.elementName = element.get('Name')
+                    if(element.get('Choice')):
+                        self.elementValue = element.get('Choice')[int(element.get('Val'))]
+                    else:
+                        self.elementValue = element.get('Val')
+                else:
+                    self.searchElement(element.values(), wantedElement, listofElements)
+            if(isinstance(element, list)):
                 self.searchElement(element, wantedElement, listofElements)
 
-    def dictBool(self, dict, elementName, clusterName, name_btn_LED):
-        print("Cluster:", dict.get(clusterName, 'None'))
-        print("Type of cluster:", type(dict.get(clusterName, 'None')))
-        print("Values of cluster:", dict.get(clusterName, 'None').values())
-        self.searchElement(dict.get(clusterName, 'None').values(), elementName, dict)
-
-    def set_lineEdit(self, name_lineEdit, dataList, listElement, listElement2d = 'empty', listElement3d = 'empty'):
-        if(listElement2d == "empty"):
-            self.dictBool(dataList, listElement, 'Cluster', listElement)
-            if ('Choice' in dataList['Cluster']['EB']):
-                name_lineEdit.setText(dataList['Cluster']['EB']['Choice'][int(dataList['Cluster']['EB']['Val'])])
-            if('SGL' in dataList['Cluster']):
-  #              print(len(dataList['Cluster']['SGL']))
-                for element in dataList['Cluster']['SGL']:
-                    #print(element['Name'])
-                    #print(element['Val'])
-                    if(listElement==element['Name']):
-                        newlistElement=element['Name']
-                        name_lineEdit.setText(element['Val'])
-        elif(listElement3d == "empty"):
-            for element in dataList['Cluster']['Cluster']:
-                if ('EB' in element):
- #                   print("Länge:",len(element['EB']))
- #                   print(element['EB'])
-                    if(len(element['EB'])>3):
-                        for EBelement in element['EB']:
-                            if(EBelement['Name'] == listElement2d):
-                                name_lineEdit.setText(EBelement['Choice'][int(EBelement['Val'])])
-
-                if('U16' in element):
-                    if("Name" in element['U16']):
-                        name_lineEdit.setText(element['U16']['Val'])
-                """name_lineEdit.setText(dataList['Cluster']['Cluster']['EB']['Choice'][int(dataList['Cluster']['Choice']['EB']['Val'])])"""
-                if('SGL' in element):
-                    for element2d in element['SGL']:
-                        if (listElement2d == element2d['Name']):
-                            listElement2d = element2d['Name']
-                            name_lineEdit.setText(element2d['Val'])
-
-            """for element in dataList['Cluster']['Cluster']['SGL']:
-                print(element['Name'])
-                print(element['Val'])
-                if (listElement2d == element['Name']):
-                    newlistElement = element['Name']
-                    #name_lineEdit.setText(element['Val'])
-        #print("doc1:", doc['Cluster']['EB']['Choice'][int(doc['Cluster']['EB']['Val'])])"""
-        """if (listElement2d == 'empty'):
-           if (newlistElement==listElement):
-               name_lineEdit.setText(str(dataList[listElement]))
-           else:
-               name_lineEdit.setText('Element not in the Cluster')"""""
-        """"elif(listElement3d == 'empty'):
-            if (listElement2d in dataList[listElement]):
-                name_lineEdit.setText(str(dataList[listElement][listElement2d]))
-            else:
-                name_lineEdit.setText('Element not in the Cluster')
-        else:
-            if (listElement3d in dataList[listElement][listElement2d]):
-                name_lineEdit.setText(str(dataList[listElement][listElement2d][listElement3d]))
-            else:
-                name_lineEdit.setText('Element not in the Cluster')"""""
-
-
-        """for value in dict.get(clusterName, 'None').values():
-            print("Value:", value)
-            print("Type of value:", type(value))
-            if (isinstance(value, list) or isinstance(value, OrderedDict)):
-                print("next value")
-                for value2 in value:
-                    print("Value2:", value2)"""
-
-
-        """for elemenentLevel1 in dict[clusterName]:
-            if (elemenentLevel1 == elementName):
-                if (elemenentLevel1['Val'] == "0"):
-                    #name_btn_LED.setStyleSheet('border: none; border-radius: 10px; background-color: red')
-                    print("Faaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaalse")
-                elif (elemenentLevel1['Val'] == "1"):
-                    #name_btn_LED.setStyleSheet(
-                    #    'border: none; border-radius: 10px; background-color: rgb(38, 255, 0);')
-                    print("Truuuuuuuuuuuuuuuuuuuuuuueeeeeeeeeeeeeeeeeeeeeeeeeee")
+    def searchElementLevel2(self, listofElements, wantedElement, elementLevelbefore, oldElement, level=0):
+        for element in listofElements:
+            if (isinstance(element, OrderedDict)):
+                if(element.get('Name') == elementLevelbefore and level == 0):
+                    if (isinstance(element, OrderedDict)):
+                        self.searchElementLevel2(element.values(), wantedElement, elementLevelbefore, listofElements, level=2)
+                    elif (isinstance(element, list)):
+                        self.searchElementLevel2(element, wantedElement, elementLevelbefore, listofElements, level=2)
+                elif(element.get('Name') == wantedElement and element.get('Val') != 'None' and level == 2):
+                    self.elementName = element.get('Name')
+                    if(element.get('Choice')):
+                        self.elementValue = element.get('Choice')[int(element.get('Val'))]
+                    else:
+                        self.elementValue = element.get('Val')
                 else:
-                    #name_btn_LED.setStyleSheet(
-                     #   'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
-                    print("Noneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-            else:
-                self.dictBool(dict[clusterName], elemenentLevel1, name_btn_LED)"""
+                    self.searchElementLevel2(element.values(), wantedElement, elementLevelbefore, listofElements, level=level)
+            elif(isinstance(element, list)):
+                self.searchElementLevel2(element, wantedElement, elementLevelbefore, listofElements, level=level)
+
+    def searchElementLevel3(self, listofElements, wantedElement, elementLevelbefore, elementLevelbeforebefore, oldElement, level=0):
+        print("Hirarchie:", elementLevelbeforebefore, elementLevelbefore, wantedElement)
+        for element in listofElements:
+            if (isinstance(element, OrderedDict)):
+                if (element.get('Name') == elementLevelbeforebefore and level == 0):
+                    if (isinstance(element, OrderedDict)):
+                        self.searchElementLevel3(element.values(), wantedElement, elementLevelbefore, elementLevelbeforebefore, listofElements,
+                                                 level=2)
+                    elif (isinstance(element, list)):
+                        self.searchElementLevel3(element, wantedElement, elementLevelbefore, elementLevelbeforebefore, listofElements, level=2)
+                if (element.get('Name') == elementLevelbefore and level == 2):
+                    print("Level 2")
+                    if (isinstance(element, OrderedDict)):
+                        self.searchElementLevel3(element.values(), wantedElement, elementLevelbefore, elementLevelbeforebefore, listofElements,
+                                                 level=3)
+                    elif (isinstance(element, list)):
+                        self.searchElementLevel3(element, wantedElement, elementLevelbefore, elementLevelbeforebefore, listofElements, level=3)
+                elif (element.get('Name') == wantedElement and element.get('Val') != 'None' and level == 3):
+                    self.elementName = element.get('Name')
+                    if (element.get('Choice')):
+                        self.elementValue = element.get('Choice')[int(element.get('Val'))]
+                    else:
+                        self.elementValue = element.get('Val')
+                else:
+                    self.searchElementLevel3(element.values(), wantedElement, elementLevelbefore, elementLevelbeforebefore, listofElements, level=level)
+            elif (isinstance(element, list)):
+                self.searchElementLevel3(element, wantedElement, elementLevelbefore, elementLevelbeforebefore, listofElements, level=level)
+
+
+    def set_lineEdit(self, name_lineEdit, dataList, listElement, listElement2d = 'empty', listElement3d = 'empty', indexes = 0):
+        if(listElement2d == "empty"):
+            #self.dictBool(dataList, listElement, 'Cluster', listElement)
+            self.searchElement(dataList.get('Cluster', 'None').values(), listElement, dataList.get('Cluster', 'None'))
+            if (self.elementName == listElement):
+                name_lineEdit.setText(self.elementValue)
+        elif(listElement3d == "empty"):
+            self.searchElementLevel2(dataList.get('Cluster', 'None').values(), listElement2d, listElement,dataList.get('Cluster', 'None'))
+            if (self.elementName == listElement2d):
+                name_lineEdit.setText(self.elementValue)
+        else:
+            pass
+            self.searchElementLevel3(dataList.get('Cluster', 'None').values(), listElement3d, listElement2d, listElement, dataList.get('Cluster', 'None'))
+            if (self.elementName == listElement3d):
+                name_lineEdit.setText(self.elementValue)
+
 
 
 
     def set_btn_LED(self, name_btn_LED, dataList, listElement, listElement2d = 'empty', listElement3d = 'empty'):
         if(listElement2d=="empty"):
-            #self.dictBool(dataList, listElement, 'Cluster', name_btn_LED)
-            if('Boolean' in dataList['Cluster']):
-                for element in dataList['Cluster']['Boolean']:
-                    #print(element['Name'])
-                    #print(element['Val'])
-                    if(listElement==element['Name']):
-                        if (element['Val'] == "0"):
-                            name_btn_LED.setStyleSheet('border: none; border-radius: 10px; background-color: red')
-                        elif (element['Val'] == "1"):
-                            name_btn_LED.setStyleSheet(
-                                'border: none; border-radius: 10px; background-color: rgb(38, 255, 0);')
-                        else:
-                            name_btn_LED.setStyleSheet(
-                                'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
+            self.searchElement(dataList.get('Cluster', 'None').values(), listElement, dataList.get('Cluster', 'None'))
+            if(self.elementName == listElement):
+                if (self.elementValue == "0"):
+                    name_btn_LED.setStyleSheet('border: none; border-radius: 10px; background-color: red')
+                elif (self.elementValue == "1"):
+                    name_btn_LED.setStyleSheet(
+                        'border: none; border-radius: 10px; background-color: rgb(38, 255, 0);')
+                else:
+                    name_btn_LED.setStyleSheet(
+                        'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
         elif (listElement3d == "empty"):
-            for element in dataList['Cluster']['Cluster']:
-                if ('Boolean' in element):
-                    if(len(element['Boolean'])>2):
-                        for booleanELement in element['Boolean']:
-                            if (booleanELement['Name'] == listElement2d):
-                                if (booleanELement['Val'] == "0"):
-                                    name_btn_LED.setStyleSheet(
-                                        'border: none; border-radius: 10px; background-color: red')
-                                elif (booleanELement['Val'] == "1"):
-                                    name_btn_LED.setStyleSheet(
-                                        'border: none; border-radius: 10px; background-color: rgb(38, 255, 0);')
-                                else:
-                                    name_btn_LED.setStyleSheet(
-                                        'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
-                    if('Name' in element['Boolean']):
-#                        print("Boolean Name:", element['Boolean']['Name'])
-                        if(element['Boolean']['Name']==listElement2d):
-                            if (element['Boolean']['Val'] == "0"):
-                                name_btn_LED.setStyleSheet('border: none; border-radius: 10px; background-color: red')
-                            elif (element['Boolean']['Val'] == "1"):
-                                name_btn_LED.setStyleSheet(
-                                    'border: none; border-radius: 10px; background-color: rgb(38, 255, 0);')
-                            else:
-                                name_btn_LED.setStyleSheet(
-                                    'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
-                else:
-                    pass
-                """    for element2d in element['Boolean']:
-                        #print(element2d)
-                        if(listElement2d and 'Val' in element2d):
-                            print(listElement2d)
-                            print("1111111111111111111111111111111111111111111111111111111111111111")
-                            if (listElement2d['Val'] == "0"):
-                                   name_btn_LED.setStyleSheet('border: none; border-radius: 10px; background-color: red')
-                            elif (listElement2d['Val'] == "1"):
-                                name_btn_LED.setStyleSheet(
-                                    'border: none; border-radius: 10px; background-color: rgb(38, 255, 0);')
-                            else:
-                                name_btn_LED.setStyleSheet(
-                                    'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')"""
-
-            #    newlistElement=element['Name']
-            #    name_lineEdit.setText(element['Val'])
-        """if(listElement2d == 'empty'):
-            if(listElement in dataList):
-                if (dataList[listElement] == False):
+            self.searchElementLevel2(dataList.get('Cluster', 'None').values(), listElement2d, listElement, dataList.get('Cluster', 'None'))
+            if (self.elementName == listElement2d):
+                if (self.elementValue == "0"):
                     name_btn_LED.setStyleSheet('border: none; border-radius: 10px; background-color: red')
-                elif (dataList[listElement] == True):
+                elif (self.elementValue == "1"):
                     name_btn_LED.setStyleSheet(
                         'border: none; border-radius: 10px; background-color: rgb(38, 255, 0);')
                 else:
                     name_btn_LED.setStyleSheet(
                         'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
-            else:
-                name_btn_LED.setText('Element not in the Cluster')
-        elif(listElement3d == 'empty'):
-            if (listElement2d in dataList[listElement]):
-                if (dataList[listElement][listElement2d] == False):
-                    name_btn_LED.setStyleSheet('border: none; border-radius: 10px; background-color: red')
-                elif (dataList[listElement][listElement2d] == True):
-                    name_btn_LED.setStyleSheet(
-                        'border: none; border-radius: 10px; background-color: rgb(38, 255, 0);')
-                else:
-                    name_btn_LED.setStyleSheet(
-                        'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
-            else:
-                name_btn_LED.setText('Element not in the Cluster')
         else:
-            if (listElement3d in dataList[listElement][listElement2d]):
-                if (dataList[listElement][listElement2d][listElement3d] == False):
+            self.searchElementLevel3(dataList.get('Cluster', 'None').values(), listElement3d, listElement2d, listElement, dataList.get('Cluster', 'None'))
+            if (self.elementName == listElement3d):
+                if (self.elementValue == "0"):
                     name_btn_LED.setStyleSheet('border: none; border-radius: 10px; background-color: red')
-                elif (dataList[listElement][listElement2d][listElement3d] == True):
+                elif (self.elementValue == "1"):
                     name_btn_LED.setStyleSheet(
                         'border: none; border-radius: 10px; background-color: rgb(38, 255, 0);')
                 else:
                     name_btn_LED.setStyleSheet(
                         'border: none; border-radius: 10px; background-color: rgb(100, 100, 100);')
-            else:
-                name_btn_LED.setText('Element not in the Cluster')"""
+
 
     def serial_to_float(self, byte1, byte2, byte3, byte4):
         str_byte1 = bin(byte1)
@@ -734,40 +655,40 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_btn_LED(self.ui.btn_LED_Lenkrad_6, json_Sensors, 'Buttons/Knobs', listElement2d='Lenkrad 6')
 
         self.set_lineEdit(self.ui.lineEdit_V_GPS, json_Sensors, 'GPS/9-axis Front', listElement2d='V_GPS[km/h]')
-        self.set_lineEdit(self.ui.lineEdit_Course_GPS, json_Sensors, 'GPS/9-axis Front', listElement2d='Course_GPS[°]')
-        self.set_lineEdit(self.ui.lineEdit_Latitude, json_Sensors, 'GPS/9-axis Front', listElement2d='Latitude[°]')
-        self.set_lineEdit(self.ui.lineEdit_Longitude, json_Sensors, 'GPS/9-axis Front', listElement2d='Longitude[°]')
+        self.set_lineEdit(self.ui.lineEdit_Course_GPS, json_Sensors, 'GPS/9-axis Front', listElement2d='Course_GPS[]')
+        self.set_lineEdit(self.ui.lineEdit_Latitude, json_Sensors, 'GPS/9-axis Front', listElement2d='Latitude[]')
+        self.set_lineEdit(self.ui.lineEdit_Longitude, json_Sensors, 'GPS/9-axis Front', listElement2d='Longitude[]')
         self.set_lineEdit(self.ui.lineEdit_HDOP, json_Sensors, 'GPS/9-axis Front', listElement2d='HDOP')
         self.set_lineEdit(self.ui.lineEdit_Quality_of_Fix, json_Sensors, 'GPS/9-axis Front',
                           listElement2d='Quality of Fix')
         self.set_lineEdit(self.ui.lineEdit_Satellites, json_Sensors, 'GPS/9-axis Front', listElement2d='Satellites')
         self.set_lineEdit(self.ui.lineEdit_Odometer, json_Sensors, 'GPS/9-axis Front', listElement2d='Odometer[km]')
-        self.set_lineEdit(self.ui.lineEdit_ACC_X_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_X_Fr[m/s²]')
-        self.set_lineEdit(self.ui.lineEdit_ACC_Y_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_Y_Fr[m/s²] ')
-        self.set_lineEdit(self.ui.lineEdit_ACC_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_Z_Fr[m/s²]')
-        self.set_lineEdit(self.ui.lineEdit_ROT_X_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ROT_X_Fr[°/s]')
-        self.set_lineEdit(self.ui.lineEdit_ROT_Y_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ROT_Y_Fr[°/s]')
-        self.set_lineEdit(self.ui.lineEdit_ROT_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ROT_Z_Fr[°/s]')
+        self.set_lineEdit(self.ui.lineEdit_ACC_X_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_X_Fr[m/s]')
+        self.set_lineEdit(self.ui.lineEdit_ACC_Y_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_Y_Fr[m/s] ')
+        self.set_lineEdit(self.ui.lineEdit_ACC_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_Z_Fr[m/s]')
+        self.set_lineEdit(self.ui.lineEdit_ROT_X_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ROT_X_Fr[/s]')
+        self.set_lineEdit(self.ui.lineEdit_ROT_Y_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ROT_Y_Fr[/s]')
+        self.set_lineEdit(self.ui.lineEdit_ROT_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ROT_Z_Fr[/s]')
         self.set_lineEdit(self.ui.lineEdit_MAG_X_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='MAG_X_Fr[b]')
         self.set_lineEdit(self.ui.lineEdit_MAG_Y_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='MAG_Y_Fr[b]')
         self.set_lineEdit(self.ui.lineEdit_MAG_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='MAG_Z_Fr[b]')
         self.set_lineEdit(self.ui.lineEdit_MAG_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='MAG_Z_Fr[b]')
 
         self.set_lineEdit(self.ui.lineEdit_V_GPS_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='V_GPS[km/h]')
-        self.set_lineEdit(self.ui.lineEdit_Course_GPS_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='Course_GPS[°]')
-        self.set_lineEdit(self.ui.lineEdit_Latitude_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='Latitude[°]')
-        self.set_lineEdit(self.ui.lineEdit_Longitude_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='Longitude[°]')
+        self.set_lineEdit(self.ui.lineEdit_Course_GPS_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='Course_GPS[]')
+        self.set_lineEdit(self.ui.lineEdit_Latitude_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='Latitude[]')
+        self.set_lineEdit(self.ui.lineEdit_Longitude_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='Longitude[]')
         self.set_lineEdit(self.ui.lineEdit_HDOP_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='HDOP')
         self.set_lineEdit(self.ui.lineEdit_Quality_of_Fix_Rear, json_Sensors, 'GPS/9-axis Rear',
                           listElement2d='Quality of Fix')
         self.set_lineEdit(self.ui.lineEdit_Satellites_Rear, json_Sensors, 'GPS/9-axis Front', listElement2d='Satellites')
         self.set_lineEdit(self.ui.lineEdit_Odometer_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='Odometer[km]')
-        self.set_lineEdit(self.ui.lineEdit_ACC_X_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_X_Re[m/s²]')
-        self.set_lineEdit(self.ui.lineEdit_ACC_Y_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_Y_Re[m/s²] ')
-        self.set_lineEdit(self.ui.lineEdit_ACC_Z_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_Z_Re[m/s²]')
-        self.set_lineEdit(self.ui.lineEdit_ROT_X_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ROT_X_Re[°/s]')
-        self.set_lineEdit(self.ui.lineEdit_ROT_Y_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ROT_Y_Re[°/s]')
-        self.set_lineEdit(self.ui.lineEdit_ROT_Z_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ROT_Z_Re[°/s]')
+        self.set_lineEdit(self.ui.lineEdit_ACC_X_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_X_Re[m/s]')
+        self.set_lineEdit(self.ui.lineEdit_ACC_Y_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_Y_Re[m/s] ')
+        self.set_lineEdit(self.ui.lineEdit_ACC_Z_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_Z_Re[m/s]')
+        self.set_lineEdit(self.ui.lineEdit_ROT_X_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ROT_X_Re[/s]')
+        self.set_lineEdit(self.ui.lineEdit_ROT_Y_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ROT_Y_Re[/s]')
+        self.set_lineEdit(self.ui.lineEdit_ROT_Z_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ROT_Z_Re[/s]')
         self.set_lineEdit(self.ui.lineEdit_MAG_X_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='MAG_X_Re[b]')
         self.set_lineEdit(self.ui.lineEdit_MAG_Y_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='MAG_Y_Re[b]')
         self.set_lineEdit(self.ui.lineEdit_MAG_Z_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='MAG_Z_Re[b]')
@@ -791,10 +712,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Weg, json_Sensors, 'Kistler', listElement2d='Weg [m]')
         self.set_lineEdit(self.ui.lineEdit_V_lon, json_Sensors, 'Kistler', listElement2d='V_lon [m/s]')
         self.set_lineEdit(self.ui.lineEdit_V_lat, json_Sensors, 'Kistler', listElement2d='V_lat [m/s]')
-        self.set_lineEdit(self.ui.lineEdit_Winkel, json_Sensors, 'Kistler', listElement2d='Winkel [°]')
+        self.set_lineEdit(self.ui.lineEdit_Winkel, json_Sensors, 'Kistler', listElement2d='Winkel []')
         self.set_lineEdit(self.ui.lineEdit_SerienNr, json_Sensors, 'Kistler', listElement2d='SerienNr')
         self.set_lineEdit(self.ui.lineEdit_SensorNr, json_Sensors, 'Kistler', listElement2d='SensorNr')
-        self.set_lineEdit(self.ui.lineEdit_Temp, json_Sensors, 'Kistler', listElement2d='Temp [°C]')
+        self.set_lineEdit(self.ui.lineEdit_Temp, json_Sensors, 'Kistler', listElement2d='Temp [C]')
         self.set_lineEdit(self.ui.lineEdit_LED_Strom, json_Sensors, 'Kistler', listElement2d='LED Strom [0,01A]')
         self.set_lineEdit(self.ui.lineEdit_Statusbyte1, json_Sensors, 'Kistler', listElement2d='Statusbyte1')
         self.set_lineEdit(self.ui.lineEdit_Statusbyte2, json_Sensors, 'Kistler', listElement2d='Statusbyte2')
@@ -833,10 +754,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                           listElement2d='Drehzahlistwert[U/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentistwert_VR, json_Inverter, 'VR', listElement2d='Momentistwert[Nm]')
         self.set_lineEdit(self.ui.lineEdit_Diagnosenummer_VR, json_Inverter, 'VR', listElement2d='Diagnosenummer')
-        self.set_lineEdit(self.ui.lineEdit_Motortemp_VR, json_Inverter, 'VR', listElement2d='Motortemp[°C]')
+        self.set_lineEdit(self.ui.lineEdit_Motortemp_VR, json_Inverter, 'VR', listElement2d='Motortemp[C]')
         self.set_lineEdit(self.ui.lineEdit_Kuehlplattentemp_VR, json_Inverter, 'VR',
-                          listElement2d='Kühlplattentemp[°C]')
-        self.set_lineEdit(self.ui.lineEdit_IGBTtemp_VR, json_Inverter, 'VR', listElement2d='IGBTtemp[°C]')
+                          listElement2d='Khlplattentemp[C]')
+        self.set_lineEdit(self.ui.lineEdit_IGBTtemp_VR, json_Inverter, 'VR', listElement2d='IGBTtemp[C]')
         self.set_lineEdit(self.ui.lineEdit_I_q_VR, json_Inverter, 'VR', listElement2d='I_q[A]')
         self.set_lineEdit(self.ui.lineEdit_I_d_VR, json_Inverter, 'VR', listElement2d='I_d[A]')
         self.set_lineEdit(self.ui.lineEdit_Wirkleistung_VR, json_Inverter, 'VR', listElement2d='Wirkleistung [kW]')
@@ -868,10 +789,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                           listElement2d='Drehzahlistwert[U/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentistwert_VL, json_Inverter, 'VL', listElement2d='Momentistwert[Nm]')
         self.set_lineEdit(self.ui.lineEdit_Diagnosenummer_VL, json_Inverter, 'VL', listElement2d='Diagnosenummer')
-        self.set_lineEdit(self.ui.lineEdit_Motortemp_VL, json_Inverter, 'VL', listElement2d='Motortemp[°C]')
+        self.set_lineEdit(self.ui.lineEdit_Motortemp_VL, json_Inverter, 'VL', listElement2d='Motortemp[C]')
         self.set_lineEdit(self.ui.lineEdit_Kuehlplattentemp_VL, json_Inverter, 'VL',
-                          listElement2d='Kühlplattentemp[°C]')
-        self.set_lineEdit(self.ui.lineEdit_IGBTtemp_VL, json_Inverter, 'VL', listElement2d='IGBTtemp[°C]')
+                          listElement2d='Khlplattentemp[C]')
+        self.set_lineEdit(self.ui.lineEdit_IGBTtemp_VL, json_Inverter, 'VL', listElement2d='IGBTtemp[C]')
         self.set_lineEdit(self.ui.lineEdit_I_q_VL, json_Inverter, 'VL', listElement2d='I_q[A]')
         self.set_lineEdit(self.ui.lineEdit_I_d_VL, json_Inverter, 'VL', listElement2d='I_d[A]')
         self.set_lineEdit(self.ui.lineEdit_Wirkleistung_VL, json_Inverter, 'VL', listElement2d='Wirkleistung [kW]')
@@ -903,10 +824,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                           listElement2d='Drehzahlistwert[U/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentistwert_HR, json_Inverter, 'HR', listElement2d='Momentistwert[Nm]')
         self.set_lineEdit(self.ui.lineEdit_Diagnosenummer_HR, json_Inverter, 'HR', listElement2d='Diagnosenummer')
-        self.set_lineEdit(self.ui.lineEdit_Motortemp_HR, json_Inverter, 'HR', listElement2d='Motortemp[°C]')
+        self.set_lineEdit(self.ui.lineEdit_Motortemp_HR, json_Inverter, 'HR', listElement2d='Motortemp[C]')
         self.set_lineEdit(self.ui.lineEdit_Kuehlplattentemp_HR, json_Inverter, 'HR',
-                          listElement2d='Kühlplattentemp[°C]')
-        self.set_lineEdit(self.ui.lineEdit_IGBTtemp_HR, json_Inverter, 'HR', listElement2d='IGBTtemp[°C]')
+                          listElement2d='Khlplattentemp[C]')
+        self.set_lineEdit(self.ui.lineEdit_IGBTtemp_HR, json_Inverter, 'HR', listElement2d='IGBTtemp[C]')
         self.set_lineEdit(self.ui.lineEdit_I_q_HR, json_Inverter, 'HR', listElement2d='I_q[A]')
         self.set_lineEdit(self.ui.lineEdit_I_d_HR, json_Inverter, 'HR', listElement2d='I_d[A]')
         self.set_lineEdit(self.ui.lineEdit_Wirkleistung_HR, json_Inverter, 'HR', listElement2d='Wirkleistung [kW]')
@@ -938,10 +859,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                           listElement2d='Drehzahlistwert[U/min]')
         self.set_lineEdit(self.ui.lineEdit_Momentistwert_HL, json_Inverter, 'HL', listElement2d='Momentistwert[Nm]')
         self.set_lineEdit(self.ui.lineEdit_Diagnosenummer_HL, json_Inverter, 'HL', listElement2d='Diagnosenummer')
-        self.set_lineEdit(self.ui.lineEdit_Motortemp_HL, json_Inverter, 'HL', listElement2d='Motortemp[°C]')
+        self.set_lineEdit(self.ui.lineEdit_Motortemp_HL, json_Inverter, 'HL', listElement2d='Motortemp[C]')
         self.set_lineEdit(self.ui.lineEdit_Kuehlplattentemp_HL, json_Inverter, 'HL',
-                          listElement2d='Kühlplattentemp[°C]')
-        self.set_lineEdit(self.ui.lineEdit_IGBTtemp_HL, json_Inverter, 'HL', listElement2d='IGBTtemp[°C]')
+                          listElement2d='Khlplattentemp[C]')
+        self.set_lineEdit(self.ui.lineEdit_IGBTtemp_HL, json_Inverter, 'HL', listElement2d='IGBTtemp[C]')
         self.set_lineEdit(self.ui.lineEdit_I_q_HL, json_Inverter, 'HL', listElement2d='I_q[A]')
         self.set_lineEdit(self.ui.lineEdit_I_d_HL, json_Inverter, 'HL', listElement2d='I_d[A]')
         self.set_lineEdit(self.ui.lineEdit_Wirkleistung_HL, json_Inverter, 'HL', listElement2d='Wirkleistung [kW]')
@@ -1027,7 +948,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
         #TV/KF
         self.set_lineEdit(self.ui.lineEdit_KF_Velocity, json_Math, 'TV/KF', listElement2d='KF_Velocity[km/h]')
-        self.set_lineEdit(self.ui.lineEdit_KF_ACC_X, json_Math, 'TV/KF', listElement2d='KF_ACC_X[m/s²]')
+        self.set_lineEdit(self.ui.lineEdit_KF_ACC_X, json_Math, 'TV/KF', listElement2d='KF_ACC_X[m/s]')
         self.set_lineEdit(self.ui.lineEdit_KF_slip_ist_FR, json_Math, 'TV/KF', listElement2d='KF_slip_ist_FR[%/100]')
         self.set_lineEdit(self.ui.lineEdit_KF_slip_ist_FL, json_Math, 'TV/KF', listElement2d='KF_slip_ist_FL[%/100]')
         self.set_lineEdit(self.ui.lineEdit_KF_slip_ist_RR, json_Math, 'TV/KF', listElement2d='KF_slip_ist_RR[%/100]')
@@ -1074,7 +995,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def recieve_Controls(self, json_Controls):
 
         #Switches
-        self.set_btn_LED(self.ui.btn_LED_1A_1_RTDS, json_Controls, 'Switches', listElement2d='\n1A 1 RTDS')
+        self.set_btn_LED(self.ui.btn_LED_1A_1_RTDS, json_Controls, 'Switches', listElement2d='1A 1 RTDS')
         self.set_btn_LED(self.ui.btn_LED_1A_2_Brakelight, json_Controls, 'Switches', listElement2d='1A 2 Brakelight')
         self.set_btn_LED(self.ui.btn_LED_1A_3_Switches, json_Controls, 'Switches', listElement2d='1A 3')
         self.set_btn_LED(self.ui.btn_LED_1A_4_Switches, json_Controls, 'Switches', listElement2d='1A 4')
@@ -1094,7 +1015,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_DRS_Position, json_Controls, 'DRS Position[%/100]')
         self.set_lineEdit(self.ui.lineEdit_Fan_Motor, json_Controls, 'Fan Motor[%/100]')
         self.set_lineEdit(self.ui.lineEdit_Fan_Akku, json_Controls, 'Fan Akku[%/100]')
-        self.set_btn_LED(self.ui.btn_LED_HV_Freigabe, json_Controls, 'HV Freigabe ')
+        self.set_btn_LED(self.ui.btn_LED_HV_Freigabe, json_Controls, 'HV Freigabe')
         self.set_btn_LED(self.ui.btn_LED_IC_Voltage_OK, json_Controls, 'IC Voltage OK')
 
         print(str(json_Controls))
@@ -1104,7 +1025,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Input_Error_Code, json_FPGA_Error, 'Input Error Code')
         self.set_lineEdit(self.ui.lineEdit_Output_Error_Code, json_FPGA_Error, 'Output Error Code')
         self.set_lineEdit(self.ui.lineEdit_Transmit_Error_Counter, json_FPGA_Error, 'Transmit Error Counter')
-        self.set_lineEdit(self.ui.lineEdit_Error_Counter, json_FPGA_Error, ' Error Counter')
+        self.set_lineEdit(self.ui.lineEdit_Error_Counter, json_FPGA_Error, 'Error Counter')
 
         print(str(json_FPGA_Error))
 
@@ -1114,7 +1035,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def recieve_Timestamp(self, json_Timestamp):
 
-        self.set_lineEdit(self.ui.lineEdit_Timestamp_Timestamp, json_Timestamp, 'Timestamp')
+        self.set_lineEdit(self.ui.lineEdit_Timestamp_Timestamp, json_Timestamp, 'None', indexes = 3)
 
         print(str(json_Timestamp))
 
@@ -1286,7 +1207,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             print(self.recvData)
             print((self.recvData['Vehicle Mode']))
             self.ui.lineEdit_Vehicle_Mode.setText(self.recvData['Vehicle Mode'])
-            self.ui.lineEdit_APPS1_max.setText(str(self.recvData['APPS1_max[°]']))
+            self.ui.lineEdit_APPS1_max.setText(str(self.recvData['APPS1_max[]']))
 
     def show(self):
         self.main_window.show()
