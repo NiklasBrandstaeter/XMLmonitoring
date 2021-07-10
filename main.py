@@ -103,18 +103,18 @@ class WorkerUDP(QObject):
                 #print("root:", root)
 
                 if(data[3] == 1):
-                    """self.signal_Config_Values_serial.emit(data)
+                    self.signal_Config_Values_serial.emit(data)
                     #print(data)
                     #print(type(data))
                     test = self.serial_to_float(data[4], data[5], data[6], data[7])
-                    #print(test)"""
+                    #print(test)
                     pass
 
                 elif(data[3] == 2):
-                    """print(data)
+                    print(data)
                     print(type(data))
 
-                    self.signal_Sensors_serial.emit(data)"""
+                    self.signal_Sensors_serial.emit(data)
                     pass
 
 
@@ -263,7 +263,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
 
         self.config_list = []
-        self.sensors_list = []
+        self.sensors_list = {}
         self.sensors_list_index = 0
         self.elementName = "None"
         self.elementValue = "None"
@@ -272,7 +272,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.config_list = json_config_init
 
     def set_Sensors_list(self, json_sensors_init):
-#        print("Index: ", self.sensors_list_index)
+#        #print("Index: ", self.sensors_list_index)
         #if (self.sensors_list_index == 0):
         self.sensors_list = json_sensors_init
         #else:
@@ -329,7 +329,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 self.searchElementLevel2(element, wantedElement, elementLevelbefore, listofElements, level=level)
 
     def searchElementLevel3(self, listofElements, wantedElement, elementLevelbefore, elementLevelbeforebefore, oldElement, level=0):
-        print("Hirarchie:", elementLevelbeforebefore, elementLevelbefore, wantedElement)
         for element in listofElements:
             if (isinstance(element, OrderedDict)):
                 if (element.get('Name') == elementLevelbeforebefore and level == 0):
@@ -339,7 +338,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                     elif (isinstance(element, list)):
                         self.searchElementLevel3(element, wantedElement, elementLevelbefore, elementLevelbeforebefore, listofElements, level=2)
                 if (element.get('Name') == elementLevelbefore and level == 2):
-                    print("Level 2")
+                    #print("Level 2")
                     if (isinstance(element, OrderedDict)):
                         self.searchElementLevel3(element.values(), wantedElement, elementLevelbefore, elementLevelbeforebefore, listofElements,
                                                  level=3)
@@ -445,81 +444,227 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def recieve_Config_Values_serial(self, config_serial):
         for element in self.config_list:
-            print(element)
-            print(self.config_list[element])
+            pass
+            #print(element)
+            #print(self.config_list[element])
             #if(type(self.config_list[element]) == 'int'):
             #for element2d in element:
                 #print(element2d)
 
             #self.config_list[i] = int(self.serial_to_float(json_config_serial[4], json_config_serial[5], json_config_serial[6], json_config_serial[7]))
         #test = self.serial_to_float(json_config_serial[4], json_config_serial[5], json_config_serial[6], json_config_serial[7])
-        print("Listeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:")
-        print(self.config_list)
+        #print(self.config_list)
         #pass
-    def recieve_Sensors_serial(self, Sensors_serial):
-        print(self.serial_to_float(Sensors_serial[4], Sensors_serial[5], Sensors_serial[6], Sensors_serial[7]))
-        #print("Sensors_serial: ", Sensors_serial)
-        print(self.serial_to_float(Sensors_serial[4], Sensors_serial[5], Sensors_serial[6], Sensors_serial[7]))
-        i = 0
+
+    def writeSerialElement(self, Sensors_serial, i=0):
+        print("writeSerialElement")
         for element in self.sensors_list:
-
-            #print(self.serial_to_float(Sensors_serial[4], Sensors_serial[5], Sensors_serial[6],
-             #                    Sensors_serial[7]))
-            #print(element)
-            #print(self.sensors_list[element])
-            #print(type(self.sensors_list[element]))
-            #print(element)
-            print(element)
-            print("Type of element: ", element)
-            if (isinstance((self.sensors_list[element]), dict)):
-                for element2 in self.sensors_list[element]:
-                    print(element2)
-                    print("Type of element: ", element2)
-                    print(type(self.sensors_list[element][element2]))
-                    if (isinstance((self.sensors_list[element][element2]), dict)):
-                        for element3 in self.sensors_list[element][element2]:
-                            if (isinstance((self.sensors_list[element][element2][element3]), float) and not isinstance((self.sensors_list[element][element2][element3]), bool)):
-                                # print("Sensors_serial: " ,Sensors_serial)
-                                # print(self.serial_to_float(Sensors_serial[4], Sensors_serial[5], Sensors_serial[6], Sensors_serial[7]))
-                                print("Wert vor der Zuweisung: ", self.serial_to_float(Sensors_serial[4 + i], Sensors_serial[5 + i], Sensors_serial[6 + i], Sensors_serial[7 + i]))
-                                self.sensors_list[element][element2][element3] = int(self.serial_to_float(Sensors_serial[4 + i], Sensors_serial[5 + i], Sensors_serial[6 + i], Sensors_serial[7 + i]))
-                                # self.sensors_list['Analog']['APPS1[°]'] = 25
-                                # print(self.sensors_list['Analog']['APPS1[°]'])
-                                print("Elementname int", element3)
-                                print("Elementtype int", type(element3))
-                                print("Elementtype int", type(self.sensors_list[element][element2][element3]))
-                                print("Element int 3", self.sensors_list[element][element2][element3])
-                                i = i + 4
-                            else:
-                                i = i + 1
-
-                    elif (isinstance((self.sensors_list[element][element2]), int) and not isinstance((self.sensors_list[element][element2]), bool)):
-                        #print("Sensors_serial: " ,Sensors_serial)
-                        #print(self.serial_to_float(Sensors_serial[4], Sensors_serial[5], Sensors_serial[6], Sensors_serial[7]))
-                        self.sensors_list[element][element2] = int(self.serial_to_float(Sensors_serial[4 + i], Sensors_serial[5 + i], Sensors_serial[6 + i], Sensors_serial[7 + i]))
-                        #self.sensors_list['Analog']['APPS1[°]'] = 25
-                        #print(self.sensors_list['Analog']['APPS1[°]'])
-                        print("Elementname mit int", element2)
-                        print("Elementtype mit int", type(element2))
-                        print("Elementtype mit int", type(self.sensors_list[element][element2]))
-                        print("Element mit int", self.sensors_list[element][element2])
-                        i = i + 4
-                    elif (isinstance((self.sensors_list[element][element2]), bool)):
-                        print("bool")
-                        print("Size of: ", sys.getsizeof(self.sensors_list[element][element2]))
-                        i = i + 1
-                    elif (isinstance((self.sensors_list[element][element2]), str)):
-                        print("String")
-                        print("Size of: ", len(self.sensors_list[element][element2]))
-                        i = i + 1
+            print("writeSerialElement2")
+            #print(element.get('Name'))
+            print(self.sensors_list)
+            if (isinstance(element, OrderedDict)):
+                print("writeSerialElement3")
+                if(element.get('Val')):
+                    self.elementName = element.get('Name')
+                    element.setdefault('Val', self.serial_to_float(Sensors_serial[4+i], Sensors_serial[5+i], Sensors_serial[6+i], Sensors_serial[7+i]))
+                    i=i+4
+                    print("new Val name:", element.get('Name'))
+                    print("new Val value:", element.get('Val'))
+                    """if(element.get('Choice')):
+                        self.elementValue = element.get('Choice')[int(element.get('Val'))]
                     else:
-                        i = i + 1
+                        element.setdefault('Val', newValue)"""
+                else:
+                    self.writeSerialElement(element.values(), Sensors_serial, i)
+            elif(isinstance(element, list)):
+                self.writeSerialElement(Sensors_serial, i)
 
-        print("Liste:")
-        #self.sensors_list['Analog']['APPS1[°]'] = 25
-        #print(self.sensors_list['Analog']['APPS1[°]'])
-        print(self.sensors_list)
-        #pass"""
+    def recieve_Sensors_serial(self, Sensors_serial):
+        #self.writeSerialElement(Sensors_serial.get('Cluster', 'None').values())
+        print("Aus recieve_Sensors_serial:" ,self.serial_to_float(Sensors_serial[4], Sensors_serial[5], Sensors_serial[6], Sensors_serial[7]))
+        #print("Sensors_serial: ", Sensors_serial)
+        print("Aus recieve_Sensors_serial:" ,self.serial_to_float(Sensors_serial[4], Sensors_serial[5], Sensors_serial[6], Sensors_serial[7]))
+
+        """self.set_lineEdit(self.ui.lineEdit_APPS1, json_Sensors, 'Analog', listElement2d='APPS1[]')
+        self.set_lineEdit(self.ui.lineEdit_APPS2, json_Sensors, 'Analog', listElement2d='APPS2[]')
+        self.set_lineEdit(self.ui.lineEdit_Bremsdruck_vorne, json_Sensors, 'Analog',
+                          listElement2d='Bremsdruck vorne [bar]')
+        self.set_lineEdit(self.ui.lineEdit_Bremsdruck_hinten, json_Sensors, 'Analog',
+                          listElement2d='Bremsdruck hinten [bar]')
+        self.set_lineEdit(self.ui.lineEdit_Bremskraft, json_Sensors, 'Analog', listElement2d='Bremskraft[N]')
+        self.set_lineEdit(self.ui.lineEdit_Lenkwinkel, json_Sensors, 'Analog', listElement2d='Lenkwinkel[]')
+        self.set_lineEdit(self.ui.lineEdit_WT_Motor_high, json_Sensors, 'Analog', listElement2d='WT_Motor_high[C]')
+        self.set_lineEdit(self.ui.lineEdit_WT_Motor_Low, json_Sensors, 'Analog', listElement2d='WT_Motor_Low[C]')
+        self.set_lineEdit(self.ui.lineEdit_LT_Inv_FrR, json_Sensors, 'Analog', listElement2d='LT_Inv_FrR[C]')
+        self.set_lineEdit(self.ui.lineEdit_LT_Inv_FrL, json_Sensors, 'Analog', listElement2d='LT_Inv_FrL[C]')
+        self.set_lineEdit(self.ui.lineEdit_LT_Inv_ReR, json_Sensors, 'Analog', listElement2d='LT_Inv_ReR[C]')
+        self.set_lineEdit(self.ui.lineEdit_LT_Inv_ReL, json_Sensors, 'Analog', listElement2d='LT_Inv_ReL[C]')
+        self.set_lineEdit(self.ui.lineEdit_Ambient_Temp, json_Sensors, 'Analog', listElement2d='Ambient_Temp[C]')
+        self.set_lineEdit(self.ui.lineEdit_ST_FR, json_Sensors, 'Analog', listElement2d='ST_FR[mm}')
+        self.set_lineEdit(self.ui.lineEdit_ST_FL, json_Sensors, 'Analog', listElement2d='ST_FL[mm]')
+        self.set_lineEdit(self.ui.lineEdit_ST_RR, json_Sensors, 'Analog', listElement2d='ST_RR[mm]')
+        self.set_lineEdit(self.ui.lineEdit_ST_RL, json_Sensors, 'Analog', listElement2d='ST_RL[mm]')
+        self.set_lineEdit(self.ui.lineEdit_Temp_Fusebox, json_Sensors, 'Analog', listElement2d='Temp_Fusebox [C]')
+
+        self.set_lineEdit(self.ui.lineEdit_HV_Current, json_Sensors, 'Akku/HV', listElement2d='HV_Current[A]')
+        self.set_lineEdit(self.ui.lineEdit_IC_Voltage, json_Sensors, 'Akku/HV', listElement2d='IC_Voltage[V]')
+        self.set_lineEdit(self.ui.lineEdit_Charge, json_Sensors, 'Akku/HV', listElement2d='Charge[Ah]')
+        self.set_lineEdit(self.ui.lineEdit_AMS_State, json_Sensors, 'Akku/HV', listElement2d='AMS-State')
+        self.set_btn_LED(self.ui.btn_LED_State_SC, json_Sensors, 'Akku/HV', listElement2d='State SC')
+        self.set_lineEdit(self.ui.lineEdit_Akku_Voltage, json_Sensors, 'Akku/HV', listElement2d='Akku-Voltage[V]')
+        self.set_lineEdit(self.ui.lineEdit_SOC, json_Sensors, 'Akku/HV', listElement2d='SOC[%]')
+        self.set_lineEdit(self.ui.lineEdit_CVH, json_Sensors, 'Akku/HV', listElement2d='CVH[V]')
+        self.set_lineEdit(self.ui.lineEdit_CVL, json_Sensors, 'Akku/HV', listElement2d='CVL[V]')
+        self.set_lineEdit(self.ui.lineEdit_CVL_2, json_Sensors, 'Akku/HV', listElement2d='CVL[V] 20s')
+        self.set_lineEdit(self.ui.lineEdit_CVL_3, json_Sensors, 'Akku/HV', listElement2d='CVL[V] 60s')
+        self.set_lineEdit(self.ui.lineEdit_CTH, json_Sensors, 'Akku/HV', listElement2d='CTH[C]')
+        self.set_lineEdit(self.ui.lineEdit_CTL, json_Sensors, 'Akku/HV', listElement2d='CTL[C]')
+        self.set_lineEdit(self.ui.lineEdit_State_IMD, json_Sensors, 'Akku/HV', listElement2d='State IMD')
+        self.set_lineEdit(self.ui.lineEdit_Isolationswiderstand, json_Sensors, 'Akku/HV',
+                          listElement2d='Isolationswider\nstand[kOhm]')
+
+        self.set_lineEdit(self.ui.lineEdit_SC_after_Motors_Rear, json_Sensors, 'SC', listElement2d='SC Messungen',
+                          listElement3d='SC after Motors Rear [V]')
+        self.set_lineEdit(self.ui.lineEdit_SC_after_Motors_Front, json_Sensors, 'SC', listElement2d='SC Messungen',
+                          listElement3d='SC after Motors Front [V]')
+        self.set_lineEdit(self.ui.lineEdit_SC_after_BOTS, json_Sensors, 'SC', listElement2d='SC Messungen',
+                          listElement3d='SC after BOTS [V]')
+        self.set_lineEdit(self.ui.lineEdit_SC_after_Akku, json_Sensors, 'SC', listElement2d='SC Messungen',
+                          listElement3d='SC after Akku [V]')
+        self.set_lineEdit(self.ui.lineEdit_SC_Voltage_AMS_1, json_Sensors, 'SC', listElement2d='SC Messungen',
+                          listElement3d='SC Voltage AMS 1')
+        self.set_lineEdit(self.ui.lineEdit_SC_Voltage_AMS_2, json_Sensors, 'SC', listElement2d='SC Messungen',
+                          listElement3d='SC Voltage AMS 2')
+        self.set_btn_LED(self.ui.btn_LED_SC_Motors_Front, json_Sensors, 'SC', listElement2d='SC Errors',
+                         listElement3d='SC Motors Front')
+        self.set_btn_LED(self.ui.btn_LED_SC_Motors_Rear, json_Sensors, 'SC', listElement2d='SC Errors',
+                         listElement3d='SC Motors Rear')
+        self.set_btn_LED(self.ui.btn_LED_SC_BOTS, json_Sensors, 'SC', listElement2d='SC Errors',
+                         listElement3d='SC BOTS')
+        self.set_btn_LED(self.ui.btn_LED_SC_Akku, json_Sensors, 'SC', listElement2d='SC Errors',
+                         listElement3d='SC Akku')
+
+        self.set_btn_LED(self.ui.btn_LED_Fuse1, json_Sensors, 'Fuses', listElement2d='Fuse1[b]')
+        self.set_btn_LED(self.ui.btn_LED_Fuse2_SSB, json_Sensors, 'Fuses', listElement2d='Fuse2_SSB[b]')
+        self.set_btn_LED(self.ui.btn_LED_Fuse3_IMD, json_Sensors, 'Fuses', listElement2d='Fuse3_IMD[b]')
+        self.set_btn_LED(self.ui.btn_LED_Fuse4_Inv, json_Sensors, 'Fuses', listElement2d='Fuse4_Inv[b]')
+        self.set_btn_LED(self.ui.btn_LED_Fuse5_GPS, json_Sensors, 'Fuses', listElement2d='Fuse5_GPS[b]')
+        self.set_btn_LED(self.ui.btn_LED_Fuse6_VCU, json_Sensors, 'Fuses', listElement2d='Fuse6_VCU[b]')
+        self.set_btn_LED(self.ui.btn_LED_Fuse7_BSE, json_Sensors, 'Fuses', listElement2d='Fuse7_BSE[b]')
+        self.set_btn_LED(self.ui.btn_LED_Fuse8_DIS, json_Sensors, 'Fuses', listElement2d='Fuse8_DIS[b]')
+        self.set_btn_LED(self.ui.btn_LED_Fuse9_SWS, json_Sensors, 'Fuses', listElement2d='Fuse9_SWS[b]')
+        self.set_btn_LED(self.ui.btn_LED_Fuse10_TPMS, json_Sensors, 'Fuses', listElement2d='Fuse10_TPMS[b]')
+        self.set_btn_LED(self.ui.btn_LED_Fuse11, json_Sensors, 'Fuses', listElement2d='Fuse11[b]')
+        self.set_btn_LED(self.ui.btn_LED_Fuse12, json_Sensors, 'Fuses', listElement2d='Fuse12[b]')
+        self.set_btn_LED(self.ui.btn_LED_Fuse1A_1_RTDS, json_Sensors, 'Fuses', listElement2d='Fuse1A_1_RTDS')
+        self.set_btn_LED(self.ui.btn_LED_Fuse1A_2_Brakelight, json_Sensors, 'Fuses',
+                         listElement2d='Fuse1A_2_Brakelight')
+        self.set_btn_LED(self.ui.btn_LED_Fuse1A_3, json_Sensors, 'Fuses', listElement2d='Fuse1A_3')
+        self.set_btn_LED(self.ui.btn_LED_Fuse1A_4, json_Sensors, 'Fuses', listElement2d='Fuse1A_4')
+        self.set_btn_LED(self.ui.btn_LED_Fuse6A_1_Motor_Fans, json_Sensors, 'Fuses',
+                         listElement2d='Fuse6A_1_Motor_Fans')
+        self.set_btn_LED(self.ui.btn_LED_Fuse6A_2_DRS, json_Sensors, 'Fuses',
+                         listElement2d='Fuse6A_2_DRS')
+        self.set_btn_LED(self.ui.btn_LED_Fuse6A_3_SC, json_Sensors, 'Fuses',
+                         listElement2d='Fuse6A_3_SC')
+        self.set_btn_LED(self.ui.btn_LED_Fuse6A_4_Vectorbox, json_Sensors, 'Fuses',
+                         listElement2d='Fuse6A_4_Vectorbox')
+        self.set_btn_LED(self.ui.btn_LED_Fuse6A_5_Mot_Pumps, json_Sensors, 'Fuses',
+                         listElement2d='Fuse6A_5_Mot_Pumps')
+        self.set_btn_LED(self.ui.btn_LED_Fuse6A_6, json_Sensors, 'Fuses',
+                         listElement2d='Fuse6A_6')
+        self.set_btn_LED(self.ui.btn_LED_Fuse12A_1_Inv_Fans_Fr, json_Sensors, 'Fuses',
+                         listElement2d='Fuse12A_1_Inv_Fans_Fr')
+        self.set_btn_LED(self.ui.btn_LED_Fuse12A_2_Inv_Fans_Re, json_Sensors, 'Fuses',
+                         listElement2d='Fuse12A_2_Inv_Fans_Re')
+
+        self.set_lineEdit(self.ui.lineEdit_TunKnob_1, json_Sensors, 'Buttons/Knobs', listElement2d='TunKnob 1[%]')
+        self.set_lineEdit(self.ui.lineEdit_TunKnob_2, json_Sensors, 'Buttons/Knobs', listElement2d='TunKnob 2[%]')
+        self.set_btn_LED(self.ui.btn_LED_Start_Button, json_Sensors, 'Buttons/Knobs', listElement2d='Start-Button')
+        self.set_btn_LED(self.ui.btn_LED_HV_Button, json_Sensors, 'Buttons/Knobs', listElement2d='HV-Button')
+        self.set_btn_LED(self.ui.btn_LED_Reku_Button, json_Sensors, 'Buttons/Knobs', listElement2d='Reku-Button')
+        self.set_btn_LED(self.ui.btn_LED_Lenkrad_1, json_Sensors, 'Buttons/Knobs', listElement2d='Lenkrad 1')
+        self.set_btn_LED(self.ui.btn_LED_Lenkrad_2, json_Sensors, 'Buttons/Knobs', listElement2d='Lenkrad 2')
+        self.set_btn_LED(self.ui.btn_LED_Lenkrad_3, json_Sensors, 'Buttons/Knobs', listElement2d='Lenkrad 3')
+        self.set_btn_LED(self.ui.btn_LED_Lenkrad_4, json_Sensors, 'Buttons/Knobs', listElement2d='Lenkrad 4')
+        self.set_btn_LED(self.ui.btn_LED_Lenkrad_5, json_Sensors, 'Buttons/Knobs', listElement2d='Lenkrad 5')
+        self.set_btn_LED(self.ui.btn_LED_Lenkrad_6, json_Sensors, 'Buttons/Knobs', listElement2d='Lenkrad 6')
+
+        self.set_lineEdit(self.ui.lineEdit_V_GPS, json_Sensors, 'GPS/9-axis Front', listElement2d='V_GPS[km/h]')
+        self.set_lineEdit(self.ui.lineEdit_Course_GPS, json_Sensors, 'GPS/9-axis Front', listElement2d='Course_GPS[]')
+        self.set_lineEdit(self.ui.lineEdit_Latitude, json_Sensors, 'GPS/9-axis Front', listElement2d='Latitude[]')
+        self.set_lineEdit(self.ui.lineEdit_Longitude, json_Sensors, 'GPS/9-axis Front', listElement2d='Longitude[]')
+        self.set_lineEdit(self.ui.lineEdit_HDOP, json_Sensors, 'GPS/9-axis Front', listElement2d='HDOP')
+        self.set_lineEdit(self.ui.lineEdit_Quality_of_Fix, json_Sensors, 'GPS/9-axis Front',
+                          listElement2d='Quality of Fix')
+        self.set_lineEdit(self.ui.lineEdit_Satellites, json_Sensors, 'GPS/9-axis Front', listElement2d='Satellites')
+        self.set_lineEdit(self.ui.lineEdit_Odometer, json_Sensors, 'GPS/9-axis Front', listElement2d='Odometer[km]')
+        self.set_lineEdit(self.ui.lineEdit_ACC_X_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_X_Fr[m/s]')
+        self.set_lineEdit(self.ui.lineEdit_ACC_Y_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_Y_Fr[m/s]')
+        self.set_lineEdit(self.ui.lineEdit_ACC_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_Z_Fr[m/s]')
+        self.set_lineEdit(self.ui.lineEdit_ROT_X_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ROT_X_Fr[/s]')
+        self.set_lineEdit(self.ui.lineEdit_ROT_Y_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ROT_Y_Fr[/s]')
+        self.set_lineEdit(self.ui.lineEdit_ROT_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ROT_Z_Fr[/s]')
+        self.set_lineEdit(self.ui.lineEdit_MAG_X_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='MAG_X_Fr[b]')
+        self.set_lineEdit(self.ui.lineEdit_MAG_Y_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='MAG_Y_Fr[b]')
+        self.set_lineEdit(self.ui.lineEdit_MAG_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='MAG_Z_Fr[b]')
+        self.set_lineEdit(self.ui.lineEdit_MAG_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='MAG_Z_Fr[b]')
+
+        self.set_lineEdit(self.ui.lineEdit_V_GPS_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='V_GPS[km/h]')
+        self.set_lineEdit(self.ui.lineEdit_Course_GPS_Rear, json_Sensors, 'GPS/9-axis Rear',
+                          listElement2d='Course_GPS[]')
+        self.set_lineEdit(self.ui.lineEdit_Latitude_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='Latitude[]')
+        self.set_lineEdit(self.ui.lineEdit_Longitude_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='Longitude[]')
+        self.set_lineEdit(self.ui.lineEdit_HDOP_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='HDOP')
+        self.set_lineEdit(self.ui.lineEdit_Quality_of_Fix_Rear, json_Sensors, 'GPS/9-axis Rear',
+                          listElement2d='Quality of Fix')
+        self.set_lineEdit(self.ui.lineEdit_Satellites_Rear, json_Sensors, 'GPS/9-axis Front',
+                          listElement2d='Satellites')
+        self.set_lineEdit(self.ui.lineEdit_Odometer_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='Odometer[km]')
+        self.set_lineEdit(self.ui.lineEdit_ACC_X_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_X_Re[m/s]')
+        self.set_lineEdit(self.ui.lineEdit_ACC_Y_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_Y_Re[m/s]')
+        self.set_lineEdit(self.ui.lineEdit_ACC_Z_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_Z_Re[m/s]')
+        self.set_lineEdit(self.ui.lineEdit_ROT_X_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ROT_X_Re[/s]')
+        self.set_lineEdit(self.ui.lineEdit_ROT_Y_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ROT_Y_Re[/s]')
+        self.set_lineEdit(self.ui.lineEdit_ROT_Z_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ROT_Z_Re[/s]')
+        self.set_lineEdit(self.ui.lineEdit_MAG_X_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='MAG_X_Re[b]')
+        self.set_lineEdit(self.ui.lineEdit_MAG_Y_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='MAG_Y_Re[b]')
+        self.set_lineEdit(self.ui.lineEdit_MAG_Z_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='MAG_Z_Re[b]')
+        self.set_lineEdit(self.ui.lineEdit_MAG_Z_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='MAG_Z_Re[b]')
+
+        self.set_lineEdit(self.ui.lineEdit_1A_1, json_Sensors, 'Fusebox Currents', listElement2d='1A_1')
+        self.set_lineEdit(self.ui.lineEdit_1A_2, json_Sensors, 'Fusebox Currents', listElement2d='1A_ 2')
+        self.set_lineEdit(self.ui.lineEdit_1A_3, json_Sensors, 'Fusebox Currents', listElement2d='1A_3')
+        self.set_lineEdit(self.ui.lineEdit_1A_4, json_Sensors, 'Fusebox Currents', listElement2d='1A_4')
+        self.set_lineEdit(self.ui.lineEdit_6A_1, json_Sensors, 'Fusebox Currents', listElement2d='6A_1')
+        self.set_lineEdit(self.ui.lineEdit_6A_2, json_Sensors, 'Fusebox Currents', listElement2d='6A_2')
+        self.set_lineEdit(self.ui.lineEdit_6A_3, json_Sensors, 'Fusebox Currents', listElement2d='6A_3')
+        self.set_lineEdit(self.ui.lineEdit_6A_4, json_Sensors, 'Fusebox Currents', listElement2d='6A_4')
+        self.set_lineEdit(self.ui.lineEdit_6A_5, json_Sensors, 'Fusebox Currents', listElement2d='6A_5')
+        self.set_lineEdit(self.ui.lineEdit_6A_6, json_Sensors, 'Fusebox Currents', listElement2d='6A_6')
+        self.set_lineEdit(self.ui.lineEdit_12A_1, json_Sensors, 'Fusebox Currents', listElement2d='12A_1')
+        self.set_lineEdit(self.ui.lineEdit_12A_2, json_Sensors, 'Fusebox Currents', listElement2d='12A_2')
+
+        self.set_lineEdit(self.ui.lineEdit_Timestamp, json_Sensors, 'Kistler', listElement2d='Timestamp [4ms]')
+        self.set_lineEdit(self.ui.lineEdit_IVI, json_Sensors, 'Kistler', listElement2d='IVI [10^-2 m/s]')
+        self.set_lineEdit(self.ui.lineEdit_Weg, json_Sensors, 'Kistler', listElement2d='Weg [m]')
+        self.set_lineEdit(self.ui.lineEdit_V_lon, json_Sensors, 'Kistler', listElement2d='V_lon [m/s]')
+        self.set_lineEdit(self.ui.lineEdit_V_lat, json_Sensors, 'Kistler', listElement2d='V_lat [m/s]')
+        self.set_lineEdit(self.ui.lineEdit_Winkel, json_Sensors, 'Kistler', listElement2d='Winkel []')
+        self.set_lineEdit(self.ui.lineEdit_SerienNr, json_Sensors, 'Kistler', listElement2d='SerienNr')
+        self.set_lineEdit(self.ui.lineEdit_SensorNr, json_Sensors, 'Kistler', listElement2d='SensorNr')
+        self.set_lineEdit(self.ui.lineEdit_Temp, json_Sensors, 'Kistler', listElement2d='Temp [C]')
+        self.set_lineEdit(self.ui.lineEdit_LED_Strom, json_Sensors, 'Kistler', listElement2d='LED Strom [0,01A]')
+        self.set_lineEdit(self.ui.lineEdit_Statusbyte1, json_Sensors, 'Kistler', listElement2d='Statusbyte1')
+        self.set_lineEdit(self.ui.lineEdit_Statusbyte2, json_Sensors, 'Kistler', listElement2d='Statusbyte2')
+
+        self.set_lineEdit(self.ui.lineEdit_Status, json_Sensors, 'Datalogger', listElement2d='Status')
+        self.set_lineEdit(self.ui.lineEdit_Voltage, json_Sensors, 'Datalogger', listElement2d='Voltage[V]')
+        self.set_lineEdit(self.ui.lineEdit_Current, json_Sensors, 'Datalogger', listElement2d='Current[A]')
+        self.set_lineEdit(self.ui.lineEdit_Power, json_Sensors, 'Datalogger', listElement2d='Power[kW]')
+        self.set_lineEdit(self.ui.lineEdit_Message_Counter, json_Sensors, 'Datalogger',
+                          listElement2d='Message\nCounter')"""
+
 
 
     def recieve_Config_Values(self, json_config):
@@ -664,7 +809,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Satellites, json_Sensors, 'GPS/9-axis Front', listElement2d='Satellites')
         self.set_lineEdit(self.ui.lineEdit_Odometer, json_Sensors, 'GPS/9-axis Front', listElement2d='Odometer[km]')
         self.set_lineEdit(self.ui.lineEdit_ACC_X_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_X_Fr[m/s]')
-        self.set_lineEdit(self.ui.lineEdit_ACC_Y_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_Y_Fr[m/s] ')
+        self.set_lineEdit(self.ui.lineEdit_ACC_Y_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_Y_Fr[m/s]')
         self.set_lineEdit(self.ui.lineEdit_ACC_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_Z_Fr[m/s]')
         self.set_lineEdit(self.ui.lineEdit_ROT_X_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ROT_X_Fr[/s]')
         self.set_lineEdit(self.ui.lineEdit_ROT_Y_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ROT_Y_Fr[/s]')
@@ -684,7 +829,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Satellites_Rear, json_Sensors, 'GPS/9-axis Front', listElement2d='Satellites')
         self.set_lineEdit(self.ui.lineEdit_Odometer_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='Odometer[km]')
         self.set_lineEdit(self.ui.lineEdit_ACC_X_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_X_Re[m/s]')
-        self.set_lineEdit(self.ui.lineEdit_ACC_Y_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_Y_Re[m/s] ')
+        self.set_lineEdit(self.ui.lineEdit_ACC_Y_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_Y_Re[m/s]')
         self.set_lineEdit(self.ui.lineEdit_ACC_Z_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_Z_Re[m/s]')
         self.set_lineEdit(self.ui.lineEdit_ROT_X_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ROT_X_Re[/s]')
         self.set_lineEdit(self.ui.lineEdit_ROT_Y_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ROT_Y_Re[/s]')
@@ -707,7 +852,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_12A_1, json_Sensors, 'Fusebox Currents', listElement2d='12A_1')
         self.set_lineEdit(self.ui.lineEdit_12A_2, json_Sensors, 'Fusebox Currents', listElement2d='12A_2')
 
-        self.set_lineEdit(self.ui.lineEdit_Timestamp, json_Sensors, 'Kistler', listElement2d='Timestamp [4ms] ')
+        self.set_lineEdit(self.ui.lineEdit_Timestamp, json_Sensors, 'Kistler', listElement2d='Timestamp [4ms]')
         self.set_lineEdit(self.ui.lineEdit_IVI, json_Sensors, 'Kistler', listElement2d='IVI [10^-2 m/s]')
         self.set_lineEdit(self.ui.lineEdit_Weg, json_Sensors, 'Kistler', listElement2d='Weg [m]')
         self.set_lineEdit(self.ui.lineEdit_V_lon, json_Sensors, 'Kistler', listElement2d='V_lon [m/s]')
