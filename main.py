@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDialog, QLabel, QLineEdit
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QTimer,QDateTime, QObject, QThread, pyqtSignal, QRunnable, Qt, QThreadPool
+import time
 import datetime
 import socket
 import json
@@ -11,11 +12,13 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import xmltodict
 from typing import OrderedDict
+import timeit
+from netifaces import interfaces, ifaddresses, AF_INET
 
 
 
 class WorkerUDP(QObject):
-    signal_Config_Values = pyqtSignal(dict)
+    signal_Config_Values = pyqtSignal(dict) #Signal for setting new values XML
     signal_Sensors = pyqtSignal(dict)
     signal_Inverter = pyqtSignal(dict)
     signal_Errors = pyqtSignal(dict)
@@ -24,12 +27,15 @@ class WorkerUDP(QObject):
     signal_FPGA_Error = pyqtSignal(dict)
     signal_Timestamp = pyqtSignal(dict)
 
-    signal_Config_Values_serial = pyqtSignal(bytes)
-    signal_Config_Values_init = pyqtSignal(dict)
+    signal_Config_Values_json = pyqtSignal(dict)  # Signal for setting new values JSON
+    signal_Sensors_json = pyqtSignal(dict)
+
+    signal_Config_Values_serial = pyqtSignal(bytes) #serial Values for monitoring
+    signal_Config_Values_init = pyqtSignal(dict)    #for setting the structure of the cluster
     signal_Sensors_serial = pyqtSignal(bytes)
     signal_Sensors_init = pyqtSignal(dict)
 
-    def int_litleE_to_bigE(self, oldString):
+    def int_litleE_to_bigE(self, oldString):    #not in use
 
         oldString_binary = bin(oldString)
         oldString_binary = oldString_binary.replace('0b', '')
@@ -37,7 +43,7 @@ class WorkerUDP(QObject):
 
         return int(newString_binary, 2)
 
-    def serial_to_float(self, byte1, byte2, byte3, byte4):
+    def serial_to_float(self, byte1, byte2, byte3, byte4):  #transfering 4 bytes to floating point number
         str_byte1 = bin(byte1)
         str_byte2 = bin(byte2)
         str_byte3 = bin(byte3)
@@ -68,18 +74,19 @@ class WorkerUDP(QObject):
         return value_float
 
     def show(self, elem, level=0):
-        print("Element:" ,elem.tag)
-        print("Attr.:", elem.attrib)
-        print("text:", elem.text)
-        print("Level:", level)
+        #print("Element:" ,elem.tag)
+        #print("Attr.:", elem.attrib)
+        #print("text:", elem.text)
+        #print("Level:", level)
         i=0
         for child in elem.findall('*'):
             i=i+1
-            print("i:",i)
+            #print("i:",i)
             self.show(child, level+1)
 
     def run(self):
-        UDP_IP = "192.168.178.20"
+
+        UDP_IP = "192.168.178.20"#"192.168.178.30" #"192.168.178.20"
         UDP_PORT = 1005
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -92,131 +99,67 @@ class WorkerUDP(QObject):
             ready = select.select([sock], [], [], 2)
             if ready[0]:
                 data, addr = sock.recvfrom(4*4096)
-                #print("print data:",data)
-                #print("Type:",type(data))
-                str = data.decode("utf-8", errors="ignore")
-                #print("str:", str)
-                #test = str(data,'utf-8')
-                #print("String:", str(data,'utf-8'))
-                #xmldoc = minidom.parseString(data)
-                #mldict = self.XmlDictConfig(root)
-                #print("root:", root)
+                #print(data)
 
-                if(data[3] == 1):
+                str = data.decode("utf-8", errors="ignore")
+
+                if(str[0] == "J"):          #seperate Json model at the beginning of the connection. Json is used for
+                                            #the structure of the seriel byte stream
+                    #print("JSON")
+                    jsonStr = str[1:]
+                    jsonObject = json.loads(jsonStr)
+                    #print("Json:", jsonStr)
+                    if ('Vehicle Mode' in jsonStr):
+                        pass
+                        #self.signal_Config_Values_json.emit(jsonStr)
+                    elif('Analog' and 'Akku/HV' and 'SC' and 'Fuses' in jsonStr):
+                        #print("Sensors", type(jsonStr))
+                        self.signal_Sensors_json.emit(jsonObject)
+                elif(str[0] == "X"):
+                    XMLStr = str[1:]
+                    XMLObject = xmltodict.parse(XMLStr)
+                    if (XMLObject['Cluster']['Name'] == 'Config-Values'):
+                        self.signal_Config_Values.emit(XMLObject)
+                        self.signal_Config_Values_init.emit(XMLObject)
+                    elif (XMLObject['Cluster']['Name'] == 'Sensors'):
+                        #print(XMLObject)
+                        self.signal_Sensors.emit(XMLObject)
+                        self.signal_Sensors_init.emit(XMLObject)
+                    elif (XMLObject['Cluster']['Name'] == 'Inverter'):
+                        #                     print(doc)
+                        self.signal_Inverter.emit(XMLObject)
+                    elif (XMLObject['Cluster']['Name'] == 'Errors'):
+                        #                    print(doc)
+                        self.signal_Errors.emit(XMLObject)
+                    elif (XMLObject['Cluster']['Name'] == 'Math'):
+                        #                    print(doc)
+                        self.signal_Math.emit(XMLObject)
+                    elif (XMLObject['Cluster']['Name'] == 'Controls'):
+                        # print(doc)
+                        self.signal_Controls.emit(XMLObject)
+                    elif (XMLObject['Cluster']['Name'] == 'FPGA Error'):
+                        # print(doc)
+                        self.signal_FPGA_Error.emit(XMLObject)
+                    elif (XMLObject['Cluster']['Name'] == 'Timestamp'):
+                        # print(doc)
+                        self.signal_Timestamp.emit(XMLObject)
+                elif(data[3] == 1):
                     self.signal_Config_Values_serial.emit(data)
-                    #print(data)
-                    #print(type(data))
                     test = self.serial_to_float(data[4], data[5], data[6], data[7])
                     #print(test)
                     pass
 
                 elif(data[3] == 2):
-                    print(data)
-                    print(type(data))
+                    #(data)
+                    #print(type(data))
 
                     self.signal_Sensors_serial.emit(data)
                     pass
 
 
-                else:
 
-                    doc = xmltodict.parse(str)
-                    xmljson = json.dumps(xmltodict.parse(str))
-                    xmljsonload = json.loads(xmljson)
-                    """print("xmlJson:", xmljson)
-                    #print(xmljson["Cluster"]["Name"])
-                    print("xmljsonload:", xmljsonload)
-                    print(xmljsonload['Cluster']['Name'])
-                    print("doc:", doc)
-                    print("doc1 name:", doc['Cluster']['Name'])
-                    print("doc1:", doc['Cluster']['EB']['Name'])
-                    print("doc1:", doc['Cluster']['EB']['Choice'][int(doc['Cluster']['EB']['Val'])])
-                    print("Type:",type(doc['Cluster']['EB']['Val']))
-                    print("Type:", type(doc['Cluster']['EB']['Val']))
-                    print("SGL:", doc['Cluster']['SGL'])
-                    print("SGL:", doc['Cluster']['SGL'][1]['Name'])
-                    for element in doc['Cluster']['SGL']:
-                        print("Check")
-                        print(element['Name'])
-                        #print("Name" ,doc['Cluster']['SGL'][i]['Name'])
-                    print("doc:",doc.items())
-                    if(doc['Cluster']['Name']=='Config-Values'):
-                        print("yeahhhhhhhhhhhhhhhhhhhhh")
-                    for key, value in doc.items():  # accessing keys
-                        print("key")
-                        print(key, end=',')
-                    root = ET.fromstring(str)
-                    #print(type(root))
-                    print("root:",root.tag)
-                    #print(root.find("Config-Values").tag)
-                    #self.show(root)
-                    print("Name:",root.find("Cluster"))
-                    print("items:", root.items())
-                    for attrName, attrValue in root.items():
-                        print("Name and attribute:",attrName + '=' + attrValue)
-                    #testtest=list(root)
-                    #print(type(testtest))
-                    #print(testtest)"""
 
-                    #for x in root.findall('Cluster'):
-                    #    item = x.find('Val').text
-                    #    price = x.find('BSR').text
-                    #    print(item, price)
-                    #for child in root:
-                    #    print("Child: ", child.tag)
-                    #    print("Attribut: ",  child.attrib)
-                    #print(root)
-                    print("Doc:", doc)
-                    ##time.sleep(0.3)
-                    if (doc['Cluster']['Name']=='Config-Values'):
-  #                      print(doc)
-                        self.signal_Config_Values.emit(doc)
-                        self.signal_Config_Values_init.emit(doc)
-                    elif(doc['Cluster']['Name']=='Sensors'):
-   #                     print(doc)
-                        self.signal_Sensors.emit(doc)
-                        self.signal_Sensors_init.emit(doc)
-                    elif (doc['Cluster']['Name'] == 'Inverter'):
-   #                     print(doc)
-                        self.signal_Inverter.emit(doc)
-                    elif (doc['Cluster']['Name'] == 'Errors'):
-    #                    print(doc)
-                        self.signal_Errors.emit(doc)
-                    elif (doc['Cluster']['Name'] == 'Math'):
-    #                    print(doc)
-                        self.signal_Math.emit(doc)
-                    elif (doc['Cluster']['Name'] == 'Controls'):
-                        print(doc)
-                        self.signal_Controls.emit(doc)
-                    elif (doc['Cluster']['Name'] == 'FPGA Error'):
-                        print(doc)
-                        self.signal_FPGA_Error.emit(doc)
-                    elif (doc['Cluster']['Name'] == 'Timestamp'):
-                        print(doc)
-                        self.signal_Timestamp.emit(doc)
 
-                    """elif('VR' and 'VL' and 'HR' and 'HL' in recvData):
-                        self.signal_Inverter.emit(recvData)
-                    elif ('Timeout CAN' and 'Wert' and 'Latching' in recvData):
-                        self.signal_Errors.emit(recvData)
-                    elif ('General' and 'TV/KF' and 'Energy Control' in recvData):
-                        self.signal_Math.emit(recvData)
-                    elif ('Switches' in recvData):
-                        self.signal_Controls.emit(recvData)
-                    elif ('Input Error Code' and 'Output Error Code' and 'Transmit Error Counter' and ' Error Counter' in recvData):
-                        self.signal_FPGA_Error.emit(recvData)
-                    elif ('Timestamp' in recvData):
-                        self.signal_Timestamp.emit(recvData)
-            else:
-                #Reset value if the connection is lost
-                data = '{"Vehicle Mode": " ", "APPS1_min[°]": " ", "APPS1_max[°]": " ", "APPS2_min[°]": " ",' \
-                       ' "APPS2_max[°]": " ", "maxTorque+[Nm]": " ", "maxTorque-[Nm]": " ", "Leistungslimit[kW]": " ",' \
-                       ' "maxRPM[1/min]": " ", "Rekuperation": " ", "ASR": " ", "BSR": " ", "TV": " ", "DRS": " ",' \
-                       ' "Energiesparmodus": " ", "Accelslip [%/100]": " ", "Brakeslip [%/100]": " ",' \
-                       ' "Backupload": " ", "Config locked": " ", "InverterVR-active": " ", "InverterVL-active": " ",' \
-                       ' "InverterHR-active": " ", "InverterHL-active": " "}'
-                recvData = json.loads(data)
-                self.signal_Config_Values.emit(recvData)"""
 
 
 class MyMainWindow(QMainWindow, Ui_MainWindow):
@@ -242,6 +185,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
         self.thread.started.connect(self.worker.run)
 
+        #Signals for XML
+        #self.worker.signal_Config_Values.connect(lambda json_config: self.recieve_Config_Values(json_config), Qt.QueuedConnection)
         self.worker.signal_Config_Values.connect(lambda json_config: self.recieve_Config_Values(json_config))
         self.worker.signal_Sensors.connect(lambda json_Sensors: self.recieve_Sensors(json_Sensors))
         self.worker.signal_Inverter.connect(lambda json_Inverter: self.recieve_Inverter(json_Inverter))
@@ -258,23 +203,329 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             lambda json_sensors_init: self.set_Sensors_list(json_sensors_init))
         self.worker.signal_Sensors_serial.connect(
             lambda Sensors_serial: self.recieve_Sensors_serial(Sensors_serial))
+
+        #Signals for JSON
+        self.worker.signal_Sensors_json.connect(
+            lambda json_Sensors_dict: self.set_Sensors_json_dict(json_Sensors_dict))
         self.thread.start()
 
 
 
+
+        self.serialCounter = 0
         self.config_list = []
-        self.sensors_list = {}
+        self.config_i = 0
+        self.XML_sensors_list = []
         self.sensors_list_index = 0
+        self.sensors_i = 0
         self.elementName = "None"
         self.elementValue = "None"
+        self.elementChoiceElements = "None"
+        self.elementDatatype = "None"
+
+        #json iteration
+        self.json_sensor_dict = []
+        self.json_sensor_dict_counter = 0
+        self.json_sensor_dict_element_1 = "None"
+        self.json_sensor_dict_element_2 = "None"
+        self.json_sensor_dict_element_3 = "None"
+        self.searchXMLLevel = 0
+        self.XMLElementFound = False
+        self.XML_dict_element_1 = "None"
+        self.XML_dict_element_2 = "None"
+        self.XML_dict_element_3 = "None"
+        self.XMLElement = None
+        self.cluster2 = False
+        self.clusterName2 = "None"
+        self.clusterName1 = "None"
+        self.val = 0
+
+    def set_Sensors_json_dict(self, json_Sensors_dict):
+        #print("Json Sensonrs type" ,type(json_Sensors_dict))
+        if(self.json_sensor_dict_counter < 1):
+            #print(self.json_sensor_dict_counter)
+            self.json_sensor_dict = json_Sensors_dict
+            self.json_sensor_dict_counter = self.json_sensor_dict_counter + 1
+            #print(self.json_sensor_dict_counter)
+
+        #self.jsonIteration(json_Sensors_dict, 0, serialElements)
+
+    def jsonIteration(self, jsonDict, iteration_level, serialElements):
+        self.val = 0
+        iteration_level = iteration_level + 1
+        for key in jsonDict:
+            if(isinstance(jsonDict[key], dict)):
+                if(iteration_level == 1):
+                    self.json_sensor_dict_element_1 = key
+                elif(iteration_level == 2):
+                    self.json_sensor_dict_element_2 = key
+                elif (iteration_level == 3):
+                    self.json_sensor_dict_element_3 = key
+                self.jsonIteration(jsonDict[key], iteration_level, serialElements)
+            elif (isinstance(jsonDict[key], list)):
+                self.jsonIteration(jsonDict[key], iteration_level, serialElements)
+            else:
+                if(self.json_sensor_dict_element_2 == "None" and self.sensors_i > 0):
+                    self.searchXMLLevel = 0
+                    self.XMLElementFound = False
+                    self.elementDatatype = "None"
+                    strdataType = str(self.searchXMLdatatype(self.XML_sensors_list, key)) #for checking the datatype
+                    if(self.elementChoiceElements != "None"):
+                        print("Choice L1:", key, self.elementChoiceElements[serialElements[self.serialCounter]])
+                        self.val = self.elementChoiceElements[serialElements[self.serialCounter]]
+                        self.serialCounter = self.serialCounter + 1
+                    elif (self.elementDatatype == "U32"):  # is checking the datatype for serial datastream
+                        # intValue = serialElements[self.serialCounter] * 256 + serialElements[self.serialCounter + 1]
+                        print("U32 L2:", key)
+                        self.val = key
+                        self.serialCounter = self.serialCounter + 4
+                    elif(self.elementDatatype == "U16"):  #is checking the datatype for serial datastream
+                        intValue = serialElements[self.serialCounter] * 256 + serialElements[self.serialCounter+1]
+                        print("U16 L1:", key, intValue)
+                        self.val = intValue
+                        self.serialCounter = self.serialCounter + 2
+                    elif(self.elementDatatype == "U8"):  # is checking the datatype for serial datastream
+                        print("U8 L1:", key, serialElements[self.serialCounter])
+                        self.val = serialElements[self.serialCounter]
+                        self.serialCounter = self.serialCounter + 1
+                    elif (self.elementDatatype == "I8"):  # is checking the datatype for serial datastream
+                        print("I8 L1:", key, serialElements[self.serialCounter])
+                        self.val = serialElements[self.serialCounter]
+                        self.serialCounter = self.serialCounter + 1
+                    elif(self.elementDatatype == "Boolean"):
+                        print("Boolean L1:", key, serialElements[self.serialCounter])
+                        self.val = serialElements[self.serialCounter]
+                        self.serialCounter = self.serialCounter + 1
+                    elif (self.elementDatatype == "DBL"):
+                        value = self.serial_to_float(serialElements[self.serialCounter],
+                                                   serialElements[self.serialCounter + 1],
+                                                   serialElements[self.serialCounter + 2],
+                                                   serialElements[self.serialCounter + 3])
+                        print("DBL L1:", key, value)
+                        self.val = value
+                        self.serialCounter = self.serialCounter + 8
+                    elif(self.elementDatatype == "SGL"):
+                        value = self.serial_to_float(serialElements[self.serialCounter],
+                                                     serialElements[self.serialCounter + 1],
+                                                     serialElements[self.serialCounter + 2],
+                                                     serialElements[self.serialCounter + 3])
+                        print("SGL L1:", key, value)
+                        self.val = value
+                        self.serialCounter = self.serialCounter + 4
+                    elif(strdataType == "<class 'float'>"):  # is checking the datatype for serial datastream
+                        print("Aus recieve_Sensors_serial L1:", key,
+                              self.serial_to_float(serialElements[self.serialCounter],
+                                                   serialElements[self.serialCounter + 1],
+                                                   serialElements[self.serialCounter + 2],
+                                                   serialElements[self.serialCounter + 3]))
+                        self.serialCounter = self.serialCounter + 4
+                    else:
+                        print("Ungeklärter Datentyp L1:",key)
+                        self.serialCounter = self.serialCounter + 1
+                elif(self.json_sensor_dict_element_3 == "None" and self.sensors_i > 0):
+                    #print("3:", key, self.json_sensor_dict_element_1, self.json_sensor_dict_element_2)
+                    self.searchXMLLevel = 0
+                    self.XMLElementFound = False
+                    self.elementDatatype = "None"
+                    strdataType = str(self.searchXMLdatatype(self.XML_sensors_list, key, self.json_sensor_dict_element_2))  # for checking the datatype
+                    if(self.XMLElementFound):
+                        #print("Datentyp:",self.elementDatatype, self.XMLElementFound)
+                        if (self.elementChoiceElements != "None"):
+                            print("Choice L2:", key, self.elementChoiceElements[serialElements[self.serialCounter]])
+                            self.val = self.elementChoiceElements[serialElements[self.serialCounter]]
+                            self.serialCounter = self.serialCounter + 1
+                        elif (self.elementDatatype == "U32"):  # is checking the datatype for serial datastream
+                            #intValue = serialElements[self.serialCounter] * 256 + serialElements[self.serialCounter + 1]
+                            print("U32 L2:", key)
+                            self.val = key
+                            self.serialCounter = self.serialCounter + 4
+                        elif (self.elementDatatype == "U16"):  # is checking the datatype for serial datastream
+                            intValue = serialElements[self.serialCounter] * 256 + serialElements[self.serialCounter + 1]
+                            print("U16 L2:", key, intValue)
+                            self.val = intValue
+                            self.serialCounter = self.serialCounter + 2
+                        elif (self.elementDatatype == "U8"):  # is checking the datatype for serial datastream
+                            print("U8 L2:", key, serialElements[self.serialCounter])
+                            self.val = serialElements[self.serialCounter]
+                            self.serialCounter = self.serialCounter + 1
+                        elif (self.elementDatatype == "I8"):  # is checking the datatype for serial datastream
+                            print("I8 L2:", key, serialElements[self.serialCounter])
+                            self.val = serialElements[self.serialCounter]
+                            self.serialCounter = self.serialCounter + 1
+                        elif (self.elementDatatype == "Boolean"):
+                            print("Boolean L2:", key, serialElements[self.serialCounter])
+                            self.val = serialElements[self.serialCounter]
+                            self.serialCounter = self.serialCounter + 1
+                        elif (self.elementDatatype == "DBL"):
+                            value = self.serial_to_float(serialElements[self.serialCounter],
+                                                       serialElements[self.serialCounter + 1],
+                                                       serialElements[self.serialCounter + 2],
+                                                       serialElements[self.serialCounter + 3])
+                            print("DBL L2:", key, value)
+                            self.val = value
+                            self.serialCounter = self.serialCounter + 8
+                        elif (self.elementDatatype == "SGL"):
+                            value = self.serial_to_float(serialElements[self.serialCounter],
+                                                         serialElements[self.serialCounter + 1],
+                                                         serialElements[self.serialCounter + 2],
+                                                         serialElements[self.serialCounter + 3])
+                            print("SGL L2:", key, value)
+                            self.val = value
+                            self.serialCounter = self.serialCounter + 4
+                        elif (strdataType == "<class 'float'>"):  # is checking the datatype for serial datastream
+                            print("Aus recieve_Sensors_serial:", key,
+                                  self.serial_to_float(serialElements[self.serialCounter],
+                                                       serialElements[self.serialCounter + 1],
+                                                       serialElements[self.serialCounter + 2],
+                                                       serialElements[self.serialCounter + 3]))
+                            self.serialCounter = self.serialCounter + 4
+                        else:
+                            print("Ungeklärter Datentyp:", key)
+                            self.serialCounter = self.serialCounter + 1
+                #print("XMLElement:", self.XMLElement)
+                #print("XML List", self.XML_sensors_list)
+                #print("XML:", self.XML_sensors_list.get("Cluster"))
+                    print("XXXX:", self.XML_dict_element_1,self.clusterName2, key, self.val)
+
+                    #print(self.XML_dict_element_1, self.XML_dict_element_2)
+                    if(self.cluster2):
+                        self.cluster2 = False
+                        self.clusterName2 = "None"
+                if(self.cluster2 == False):
+                    try:
+                        self.XML_sensors_list["Cluster"]["Cluster"][0]["SGL"][0]["Val"]=10000000000
+                    except:
+                        pass
+                    print("kkkk:", self.XML_sensors_list["Cluster"]["Cluster"][0]["Name"])
+                    print("kkkk:",self.XML_sensors_list["Cluster"]["Cluster"][0]["SGL"][0]["Val"])
+                print("YYYY:", self.XML_dict_element_1)
+
+        iteration_level = iteration_level - 1
+        if (iteration_level == 1):
+            self.json_sensor_dict_element_1 = "None"
+        elif (iteration_level == 2):
+            self.json_sensor_dict_element_2 = "None"
+        elif (iteration_level == 3):
+            self.json_sensor_dict_element_3 = "None"
+        # self.json_sensor_dict_element_1 = "None"
+        # self.json_sensor_dict_element_2 = "None"
+        # self.json_sensor_dict_element_3 = "None"
+
+    def set_XML(self, XMLDict, wantedElement):
+        pass
+        # if(isinstance(XMLDict, list)):
+        #     for element in XMLDict:
+        #         self.set_XML(element)
+        # elif(isinstance(XMLDict, OrderedDict)):
+        #     if(XMLDict == wantedElement):
+        #         pass
+
+
+    def searchXMLdatatype(self, dataList, listElement, listElement2d = 'empty', listElement3d = 'empty', indexes = 0):
+        ElementXMLCompare = listElement.replace("°", "")
+        ElementXMLCompare = ElementXMLCompare.replace("²", "")
+        ElementXMLCompare2d = listElement2d.replace("°", "")
+        ElementXMLCompare2d = ElementXMLCompare2d.replace("²", "")
+        ElementXMLCompare3d = listElement3d.replace("°", "")
+        ElementXMLCompare3d = ElementXMLCompare3d.replace("²", "")
+        if (ElementXMLCompare[0] == " "):
+            ElementXMLCompare = ElementXMLCompare[1:]
+        if (ElementXMLCompare[len(ElementXMLCompare) - 1] == " "):
+            ElementXMLCompare = ElementXMLCompare[:len(ElementXMLCompare) - 1]
+        if(listElement2d == "empty"):
+            #self.dictBool(dataList, listElement, 'Cluster', listElement)
+            self.searchElementandDatatype(dataList.get('Cluster', 'None').values(), ElementXMLCompare)
+            #print("N:",self.elementName,":",len(self.elementName), self.elementName.encode())
+            #print(dataList)
+            #print(self.elementName == ElementXMLCompare)
+            if (self.elementName == ElementXMLCompare):
+                datatype = type(0)#type(self.elementValue)
+                #print(listElement + ": " + self.elementValue)
+                if(isinstance(self.elementValue, str)):
+                    #print(self.elementValue, self.elementValue.find('.'))
+                    # print(ElementXMLCompare)
+                    # print(self.elementName, self.elementValue)
+                    if(self.elementValue.find('.') != -1 and any(chr.isdigit() for chr in (self.elementValue))):
+                        datatype = type(0.0)
+                    elif(self.elementValue == "0"):
+                        datatype = type(0)
+                    else:
+                        datatype = type(0)
+
+                return datatype
+            else:
+                print(self.elementName, listElement, ElementXMLCompare, listElement[0],ElementXMLCompare[0])
+        elif(listElement3d == "empty"):
+            #print("EL:", listElement, listElement2d, listElement3d)
+            self.searchElementandDatatype(dataList.get('Cluster', 'None').values(), ElementXMLCompare, wantedElement2 = ElementXMLCompare2d)
+        # elif(listElement3d == "empty"):
+        #     self.searchElementLevel2(dataList.get('Cluster', 'None').values(), listElement2d, listElement,dataList.get('Cluster', 'None'))
+        #     if (self.elementName == listElement2d):
+        #         datatype = type(self.elementValue)
+        #         return type(0)
+        # else:
+        #     self.searchElementLevel3(dataList.get('Cluster', 'None').values(), listElement3d, listElement2d, listElement, dataList.get('Cluster', 'None'))
+        #     if (self.elementName == listElement3d):
+        #         datatype = type(self.elementValue)
+        #         return type(0)
+        #
+    # def searchXMLdatatypeLevel2(self, dataList, listElement, listElement2d = 'empty', listElement3d = 'empty', level = 0, indexes = 0):
+    #     if(listElement2d == "empty" and level == 0):
+    #         #self.dictBool(dataList, listElement, 'Cluster', listElement)
+    #         ElementXMLCompare = listElement.replace("°", "")
+    #         ElementXMLCompare = ElementXMLCompare.replace("²", "")
+    #         ElementXMLCompare2d = listElement2d.replace("°", "")
+    #         ElementXMLCompare2d = ElementXMLCompare2d.replace("²", "")
+    #         ElementXMLCompare3d = listElement3d.replace("°", "")
+    #         ElementXMLCompare3d = ElementXMLCompare3d.replace("²", "")
+    #         if(ElementXMLCompare2d[0] == " "):
+    #             ElementXMLCompare2d = ElementXMLCompare2d[1:]
+    #         if (ElementXMLCompare2d[len(ElementXMLCompare2d)-1] == " "):
+    #             ElementXMLCompare2d = ElementXMLCompare2d[:len(ElementXMLCompare2d)-1]
+    #         self.searchElementandDatatype(dataList.get('Cluster', 'None').values(), ElementXMLCompare2d)
+    #         #print("N:",self.elementName,":",len(self.elementName), self.elementName.encode())
+    #         #print(dataList)
+    #         #print(self.elementName == ElementXMLCompare)
+    #         if (self.elementName == ElementXMLCompare):
+    #             datatype = type(0)#type(self.elementValue)
+    #             #print(listElement + ": " + self.elementValue)
+    #             if(isinstance(self.elementValue, str)):
+    #                 #print(self.elementValue, self.elementValue.find('.'))
+    #                 # print(ElementXMLCompare)
+    #                 # print(self.elementName, self.elementValue)
+    #                 if(self.elementValue.find('.') != -1 and any(chr.isdigit() for chr in (self.elementValue))):
+    #                     datatype = type(0.0)
+    #                 elif(self.elementValue == "0"):
+    #                     datatype = type(0)
+    #                 else:
+    #                     datatype = type(0)
+    #
+    #             return datatype
+    #         else:
+    #             print(self.elementName, listElement, ElementXMLCompare, listElement[0],ElementXMLCompare[0])
+    #     elif(listElement3d == "empty"):
+    #         self.searchElementLevel2(dataList.get('Cluster', 'None').values(), listElement2d, listElement,dataList.get('Cluster', 'None'))
+    #         if (self.elementName == listElement2d):
+    #             datatype = type(self.elementValue)
+    #             return type(0)
+    #     else:
+    #         self.searchElementLevel3(dataList.get('Cluster', 'None').values(), listElement3d, listElement2d, listElement, dataList.get('Cluster', 'None'))
+    #         if (self.elementName == listElement3d):
+    #             datatype = type(self.elementValue)
+    #             return type(0)
 
     def set_config_list(self, json_config_init):
-        self.config_list = json_config_init
+        if(self.config_i < 1):
+            self.config_list = json_config_init
+            self.config_i = self.config_i + 1
 
     def set_Sensors_list(self, json_sensors_init):
+        if (self.sensors_i < 1):
+            self.XML_sensors_list = json_sensors_init
+            self.sensors_i = self.sensors_i + 1
 #        #print("Index: ", self.sensors_list_index)
         #if (self.sensors_list_index == 0):
-        self.sensors_list = json_sensors_init
+     #   self.sensors_list = json_sensors_init
         #else:
         #    self.sensors_list_index = self.sensors_list_index + 1
 
@@ -295,6 +546,100 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     #            name_lineEdit.setText(str(dataList[listElement][listElement2d][listElement3d]))
     #        else:
     #            name_lineEdit.setText('Element not in the Cluster')
+    def searchDatatypeElement(self, datatypeElement, wantedElement, dataType, level = 0, wantedElement2 = None, wantedElement3 = None): #Hier weiter machen
+        if(isinstance(datatypeElement, list)):
+            for datatypeElements in datatypeElement:                    #if (self.searchXMLLevel == 1):
+                    #print("datatypeElements:", wantedElement, type(datatypeElements), datatypeElements.get("Name"))
+                self.searchDatatypeElement(datatypeElements, wantedElement, dataType, level = level, wantedElement2 = wantedElement2)
+        elif (isinstance(datatypeElement, OrderedDict)):
+            if(wantedElement == datatypeElement.get('Name') and self.json_sensor_dict_element_1 == self.XML_dict_element_1): # and self.json_sensor_dict_element_2 == self.XML_dict_element_2):
+                self.elementDatatype = dataType
+                self.XMLElementFound = True
+                self.XMLElement = datatypeElement
+                self.clusterName2 = wantedElement2
+                # print("YYYY:", self.clusterName)
+                # print("XXYY:", wantedElement2)
+                # if (level == 1):
+                # self.XML_dict_element_2 = element.get("Name")
+                # self.clusterName = element.get("Name")
+
+                #print("DataType:", dataType, wantedElement)
+            # elif (isinstance(datatypeElement.get('Name'), list)):
+            #     for datatypeElements in datatypeElement:
+            #         self.searchDatatypeElement(datatypeElements, wantedElement, dataType)
+            #     print("öööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööö")
+
+
+    def searchElementandDatatype(self, listofElements, wantedElement, wantedElement2 = None, wantedElement3 = None):
+        for element in listofElements:
+            if(wantedElement2 == None or self.searchXMLLevel == 1):
+                if(isinstance(element, OrderedDict)):
+                    if(wantedElement2 == None):
+                        self.XML_dict_element_1 = element.get("Name")
+                        #self.searchXMLLevel = 0
+                    #print("RRRR:", element.get("Name"))
+                    DBLElement = element.get('DBL')
+                    SGLElement = element.get('SGL')
+                    boolElement = element.get('Boolean')
+                    U8Element = element.get('U8')
+                    U16Element = element.get('U16')
+                    U32Element = element.get('U32')
+                    I8Element = element.get('I8')
+                    #if (self.searchXMLLevel == 1):
+                        #print("22222222222", element)
+
+                    if(boolElement != None and self.elementDatatype == "None"):
+                        self.searchDatatypeElement(boolElement, wantedElement, "Boolean", self.searchXMLLevel, wantedElement2 = element.get("Name"))
+                    if(DBLElement != None and self.elementDatatype == "None"):
+                        self.searchDatatypeElement(DBLElement, wantedElement, "DBL", self.searchXMLLevel, wantedElement2 = element.get("Name"))
+                    if(SGLElement != None and self.elementDatatype == "None"):
+                        #if (self.searchXMLLevel == 1):
+                            #print("111111", wantedElement, type(SGLElement), SGLElement)
+                        self.searchDatatypeElement(SGLElement, wantedElement, "SGL", self.searchXMLLevel, wantedElement2 = element.get("Name"))
+                    if(U8Element != None and self.elementDatatype == "None"):
+                        self.searchDatatypeElement(U8Element, wantedElement, "U8", self.searchXMLLevel, wantedElement2 = element.get("Name"))
+                    if(U16Element != None and self.elementDatatype == "None"):
+                        self.searchDatatypeElement(U16Element, wantedElement, "U16", self.searchXMLLevel, wantedElement2 = element.get("Name"))
+                    if (U32Element != None and self.elementDatatype == "None"):
+                        self.searchDatatypeElement(U32Element, wantedElement, "U32", self.searchXMLLevel, wantedElement2 = element.get("Name"))
+                    if (I8Element != None and self.elementDatatype == "None"):
+                        self.searchDatatypeElement(I8Element, wantedElement, "I8", self.searchXMLLevel, wantedElement2 = element.get("Name"))
+
+                    if(element.get('Name') == wantedElement and element.get('Val') != 'None'):
+                        self.elementName = element.get('Name')
+                        if(element.get('Choice')):
+                            self.elementValue = element.get('Choice')[int(element.get('Val'))]
+                            self.elementChoiceElements = element.get('Choice')
+                        else:
+                            self.elementChoiceElements = "None"
+                            self.elementValue = element.get('Val')
+                    else:
+                        self.searchElement(element.values(), wantedElement, listofElements)
+                elif(isinstance(element, list)):
+                    self.searchElementandDatatype(element, wantedElement)
+            elif(wantedElement2 != None):
+                for element in listofElements:
+                    #print("Element and wanted Element2:", wantedElement2)
+                    if(isinstance(element, OrderedDict)):
+                        if(element.get("Name") == self.json_sensor_dict_element_1):
+                            self.XML_dict_element_1 = element.get("Name")
+                            self.searchXMLLevel = 1
+                            #print("XXXXX:", element)
+                            self.cluster2 = True
+                            #self.clusterName = (element.get("Cluster")).get("Name")
+                            self.searchElementandDatatype(element.get("Cluster"), wantedElement, wantedElement2 = wantedElement2)
+                            #print("-------", element.get("Cluster"))
+                        # elif(element.get("Name") == self.json_sensor_dict_element_2):
+                        #     self.searchXMLLevel = 2
+                        #     print("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
+                        #print("Dict Element:", element.get("Name"), wantedElement2 ,self.json_sensor_dict_element_1, self.json_sensor_dict_element_2)
+                    elif(isinstance(element, list)):
+                        #print("List Element:", element)
+                        self.searchElementandDatatype(element, wantedElement, wantedElement2 = wantedElement2)
+                        #self.searchElementandDatatype(element, wantedElement)
+
+        self.searchXMLLevel = 0
+
     def searchElement(self, listofElements, wantedElement, oldElement):
         for element in listofElements:
             if (isinstance(element, OrderedDict)):
@@ -302,7 +647,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                     self.elementName = element.get('Name')
                     if(element.get('Choice')):
                         self.elementValue = element.get('Choice')[int(element.get('Val'))]
+                        self.elementChoiceElements = element.get('Choice')
                     else:
+                        self.elementChoiceElements = "None"
                         self.elementValue = element.get('Val')
                 else:
                     self.searchElement(element.values(), wantedElement, listofElements)
@@ -427,7 +774,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         value = str_byte1 + str_byte2 + str_byte3 + str_byte4
         value = value.replace('0b', '')
         exp = '0b' + value[1] + value[2] + value[3] + value[4] + value[5] + value[6] + value[7] + value[8]
-        matisse = 1 + int(value[9]) * 2 ** (-1) + int(value[10]) * 2 ** (-2) + int(value[11]) * 2 ** (-3) + \
+        mantisse = 1 + int(value[9]) * 2 ** (-1) + int(value[10]) * 2 ** (-2) + int(value[11]) * 2 ** (-3) + \
                   int(value[12]) * 2 ** (-4) + int(value[13]) * 2 ** (-5) + int(value[14]) * 2 ** (-6) + \
                   int(value[15]) * 2 ** (-7) + int(value[16]) * 2 ** (-8) + int(value[17]) * 2 ** (-9) + \
                   int(value[18]) * 2 ** (-10) + int(value[19]) * 2 ** (-11) + int(value[20]) * 2 ** (-12) + \
@@ -436,234 +783,57 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                   int(value[27]) * 2 ** (-19) + int(value[28]) * 2 ** (-20) + int(value[29]) * 2 ** (-21) + \
                   int(value[30]) * 2 ** (-22) + int(value[31]) * 2 ** (-23)
         exp_int = int(exp, 2) - 127
-        value_float = float((2 ** exp_int) * matisse)
+        if(exp_int <= -127):
+            exp_int = 0
+            mantisse = 0
+        #print("Mantisse:", mantisse)
+        #print("Exponent:", exp_int)
+        value_float = float((2 ** exp_int) * mantisse)
         if (value[0] == '1'):
             value_float = -value_float
         return value_float
 
 
     def recieve_Config_Values_serial(self, config_serial):
-        for element in self.config_list:
             pass
-            #print(element)
-            #print(self.config_list[element])
-            #if(type(self.config_list[element]) == 'int'):
-            #for element2d in element:
-                #print(element2d)
 
-            #self.config_list[i] = int(self.serial_to_float(json_config_serial[4], json_config_serial[5], json_config_serial[6], json_config_serial[7]))
-        #test = self.serial_to_float(json_config_serial[4], json_config_serial[5], json_config_serial[6], json_config_serial[7])
-        #print(self.config_list)
-        #pass
 
-    def writeSerialElement(self, Sensors_serial, i=0):
-        print("writeSerialElement")
-        for element in self.sensors_list:
-            print("writeSerialElement2")
-            #print(element.get('Name'))
-            print(self.sensors_list)
+    def writeSerialElement(self, wantedElement, listofElements, serialElements):
+        for element in listofElements:
             if (isinstance(element, OrderedDict)):
-                print("writeSerialElement3")
-                if(element.get('Val')):
-                    self.elementName = element.get('Name')
-                    element.setdefault('Val', self.serial_to_float(Sensors_serial[4+i], Sensors_serial[5+i], Sensors_serial[6+i], Sensors_serial[7+i]))
-                    i=i+4
-                    print("new Val name:", element.get('Name'))
-                    print("new Val value:", element.get('Val'))
-                    """if(element.get('Choice')):
-                        self.elementValue = element.get('Choice')[int(element.get('Val'))]
-                    else:
-                        element.setdefault('Val', newValue)"""
+                if (element.get('Name') and element.get('Val')):
+                    if (element.get('Choice')):
+                        #print("Choice:", element.get('Choice')[int(element.get('Val'))])
+                        self.serialCounter = self.serialCounter + 1
+                    elif((element.get('Val')).find('.') != -1 and any(chr.isdigit() for chr in (element.get('Val')))): #check if it contains number and . => double
+                        #print("Aus recieve_Sensors_serial:",
+                            #self.serial_to_float(serialElements[self.serialCounter], serialElements[self.serialCounter+1], serialElements[self.serialCounter+2],
+                                               #serialElements[self.serialCounter+3]))
+                        self.serialCounter = self.serialCounter + 4
+                        #print("double:", element.get('Val'))
+                    elif (isinstance(element, OrderedDict)):
+                        self.writeSerialElement(wantedElement, element.values(), serialElements)
+                elif (element.get('Choice')):
+                    pass
+                    #print("Choice:", element.get('Choice')[int(element.get('Val'))])
                 else:
-                    self.writeSerialElement(element.values(), Sensors_serial, i)
-            elif(isinstance(element, list)):
-                self.writeSerialElement(Sensors_serial, i)
+                    self.writeSerialElement(wantedElement, element.values(), serialElements)
+            if (isinstance(element, list)):
+                self.writeSerialElement(wantedElement, element, serialElements)
+
 
     def recieve_Sensors_serial(self, Sensors_serial):
-        #self.writeSerialElement(Sensors_serial.get('Cluster', 'None').values())
-        print("Aus recieve_Sensors_serial:" ,self.serial_to_float(Sensors_serial[4], Sensors_serial[5], Sensors_serial[6], Sensors_serial[7]))
+        if(self.sensors_i > 0):
+            #print(self.sensors_list)
+            self.serialCounter = 4  #Counter for counting bytes in recieved serial data
+            #self.writeSerialElement(self.sensors_list ,self.sensors_list.get('Cluster', 'None').values(), Sensors_serial)   #Function for writing new values from serial data in to the xml-framework
+            if(self.json_sensor_dict_counter > 0 and self.sensors_i > 0):
+                self.jsonIteration( self.json_sensor_dict, 0, Sensors_serial)
+    #    print("Aus recieve_Sensors_serial:" ,self.serial_to_float(Sensors_serial[4], Sensors_serial[5], Sensors_serial[6], Sensors_serial[7]))
         #print("Sensors_serial: ", Sensors_serial)
-        print("Aus recieve_Sensors_serial:" ,self.serial_to_float(Sensors_serial[4], Sensors_serial[5], Sensors_serial[6], Sensors_serial[7]))
+    #    print("Aus recieve_Sensors_serial:" ,self.serial_to_float(Sensors_serial[4], Sensors_serial[5], Sensors_serial[6], Sensors_serial[7]))
+        #print("Aus recieve_Sensors_serial config_list", self.config_list.get('Cluster', 'None').values())
 
-        """self.set_lineEdit(self.ui.lineEdit_APPS1, json_Sensors, 'Analog', listElement2d='APPS1[]')
-        self.set_lineEdit(self.ui.lineEdit_APPS2, json_Sensors, 'Analog', listElement2d='APPS2[]')
-        self.set_lineEdit(self.ui.lineEdit_Bremsdruck_vorne, json_Sensors, 'Analog',
-                          listElement2d='Bremsdruck vorne [bar]')
-        self.set_lineEdit(self.ui.lineEdit_Bremsdruck_hinten, json_Sensors, 'Analog',
-                          listElement2d='Bremsdruck hinten [bar]')
-        self.set_lineEdit(self.ui.lineEdit_Bremskraft, json_Sensors, 'Analog', listElement2d='Bremskraft[N]')
-        self.set_lineEdit(self.ui.lineEdit_Lenkwinkel, json_Sensors, 'Analog', listElement2d='Lenkwinkel[]')
-        self.set_lineEdit(self.ui.lineEdit_WT_Motor_high, json_Sensors, 'Analog', listElement2d='WT_Motor_high[C]')
-        self.set_lineEdit(self.ui.lineEdit_WT_Motor_Low, json_Sensors, 'Analog', listElement2d='WT_Motor_Low[C]')
-        self.set_lineEdit(self.ui.lineEdit_LT_Inv_FrR, json_Sensors, 'Analog', listElement2d='LT_Inv_FrR[C]')
-        self.set_lineEdit(self.ui.lineEdit_LT_Inv_FrL, json_Sensors, 'Analog', listElement2d='LT_Inv_FrL[C]')
-        self.set_lineEdit(self.ui.lineEdit_LT_Inv_ReR, json_Sensors, 'Analog', listElement2d='LT_Inv_ReR[C]')
-        self.set_lineEdit(self.ui.lineEdit_LT_Inv_ReL, json_Sensors, 'Analog', listElement2d='LT_Inv_ReL[C]')
-        self.set_lineEdit(self.ui.lineEdit_Ambient_Temp, json_Sensors, 'Analog', listElement2d='Ambient_Temp[C]')
-        self.set_lineEdit(self.ui.lineEdit_ST_FR, json_Sensors, 'Analog', listElement2d='ST_FR[mm}')
-        self.set_lineEdit(self.ui.lineEdit_ST_FL, json_Sensors, 'Analog', listElement2d='ST_FL[mm]')
-        self.set_lineEdit(self.ui.lineEdit_ST_RR, json_Sensors, 'Analog', listElement2d='ST_RR[mm]')
-        self.set_lineEdit(self.ui.lineEdit_ST_RL, json_Sensors, 'Analog', listElement2d='ST_RL[mm]')
-        self.set_lineEdit(self.ui.lineEdit_Temp_Fusebox, json_Sensors, 'Analog', listElement2d='Temp_Fusebox [C]')
-
-        self.set_lineEdit(self.ui.lineEdit_HV_Current, json_Sensors, 'Akku/HV', listElement2d='HV_Current[A]')
-        self.set_lineEdit(self.ui.lineEdit_IC_Voltage, json_Sensors, 'Akku/HV', listElement2d='IC_Voltage[V]')
-        self.set_lineEdit(self.ui.lineEdit_Charge, json_Sensors, 'Akku/HV', listElement2d='Charge[Ah]')
-        self.set_lineEdit(self.ui.lineEdit_AMS_State, json_Sensors, 'Akku/HV', listElement2d='AMS-State')
-        self.set_btn_LED(self.ui.btn_LED_State_SC, json_Sensors, 'Akku/HV', listElement2d='State SC')
-        self.set_lineEdit(self.ui.lineEdit_Akku_Voltage, json_Sensors, 'Akku/HV', listElement2d='Akku-Voltage[V]')
-        self.set_lineEdit(self.ui.lineEdit_SOC, json_Sensors, 'Akku/HV', listElement2d='SOC[%]')
-        self.set_lineEdit(self.ui.lineEdit_CVH, json_Sensors, 'Akku/HV', listElement2d='CVH[V]')
-        self.set_lineEdit(self.ui.lineEdit_CVL, json_Sensors, 'Akku/HV', listElement2d='CVL[V]')
-        self.set_lineEdit(self.ui.lineEdit_CVL_2, json_Sensors, 'Akku/HV', listElement2d='CVL[V] 20s')
-        self.set_lineEdit(self.ui.lineEdit_CVL_3, json_Sensors, 'Akku/HV', listElement2d='CVL[V] 60s')
-        self.set_lineEdit(self.ui.lineEdit_CTH, json_Sensors, 'Akku/HV', listElement2d='CTH[C]')
-        self.set_lineEdit(self.ui.lineEdit_CTL, json_Sensors, 'Akku/HV', listElement2d='CTL[C]')
-        self.set_lineEdit(self.ui.lineEdit_State_IMD, json_Sensors, 'Akku/HV', listElement2d='State IMD')
-        self.set_lineEdit(self.ui.lineEdit_Isolationswiderstand, json_Sensors, 'Akku/HV',
-                          listElement2d='Isolationswider\nstand[kOhm]')
-
-        self.set_lineEdit(self.ui.lineEdit_SC_after_Motors_Rear, json_Sensors, 'SC', listElement2d='SC Messungen',
-                          listElement3d='SC after Motors Rear [V]')
-        self.set_lineEdit(self.ui.lineEdit_SC_after_Motors_Front, json_Sensors, 'SC', listElement2d='SC Messungen',
-                          listElement3d='SC after Motors Front [V]')
-        self.set_lineEdit(self.ui.lineEdit_SC_after_BOTS, json_Sensors, 'SC', listElement2d='SC Messungen',
-                          listElement3d='SC after BOTS [V]')
-        self.set_lineEdit(self.ui.lineEdit_SC_after_Akku, json_Sensors, 'SC', listElement2d='SC Messungen',
-                          listElement3d='SC after Akku [V]')
-        self.set_lineEdit(self.ui.lineEdit_SC_Voltage_AMS_1, json_Sensors, 'SC', listElement2d='SC Messungen',
-                          listElement3d='SC Voltage AMS 1')
-        self.set_lineEdit(self.ui.lineEdit_SC_Voltage_AMS_2, json_Sensors, 'SC', listElement2d='SC Messungen',
-                          listElement3d='SC Voltage AMS 2')
-        self.set_btn_LED(self.ui.btn_LED_SC_Motors_Front, json_Sensors, 'SC', listElement2d='SC Errors',
-                         listElement3d='SC Motors Front')
-        self.set_btn_LED(self.ui.btn_LED_SC_Motors_Rear, json_Sensors, 'SC', listElement2d='SC Errors',
-                         listElement3d='SC Motors Rear')
-        self.set_btn_LED(self.ui.btn_LED_SC_BOTS, json_Sensors, 'SC', listElement2d='SC Errors',
-                         listElement3d='SC BOTS')
-        self.set_btn_LED(self.ui.btn_LED_SC_Akku, json_Sensors, 'SC', listElement2d='SC Errors',
-                         listElement3d='SC Akku')
-
-        self.set_btn_LED(self.ui.btn_LED_Fuse1, json_Sensors, 'Fuses', listElement2d='Fuse1[b]')
-        self.set_btn_LED(self.ui.btn_LED_Fuse2_SSB, json_Sensors, 'Fuses', listElement2d='Fuse2_SSB[b]')
-        self.set_btn_LED(self.ui.btn_LED_Fuse3_IMD, json_Sensors, 'Fuses', listElement2d='Fuse3_IMD[b]')
-        self.set_btn_LED(self.ui.btn_LED_Fuse4_Inv, json_Sensors, 'Fuses', listElement2d='Fuse4_Inv[b]')
-        self.set_btn_LED(self.ui.btn_LED_Fuse5_GPS, json_Sensors, 'Fuses', listElement2d='Fuse5_GPS[b]')
-        self.set_btn_LED(self.ui.btn_LED_Fuse6_VCU, json_Sensors, 'Fuses', listElement2d='Fuse6_VCU[b]')
-        self.set_btn_LED(self.ui.btn_LED_Fuse7_BSE, json_Sensors, 'Fuses', listElement2d='Fuse7_BSE[b]')
-        self.set_btn_LED(self.ui.btn_LED_Fuse8_DIS, json_Sensors, 'Fuses', listElement2d='Fuse8_DIS[b]')
-        self.set_btn_LED(self.ui.btn_LED_Fuse9_SWS, json_Sensors, 'Fuses', listElement2d='Fuse9_SWS[b]')
-        self.set_btn_LED(self.ui.btn_LED_Fuse10_TPMS, json_Sensors, 'Fuses', listElement2d='Fuse10_TPMS[b]')
-        self.set_btn_LED(self.ui.btn_LED_Fuse11, json_Sensors, 'Fuses', listElement2d='Fuse11[b]')
-        self.set_btn_LED(self.ui.btn_LED_Fuse12, json_Sensors, 'Fuses', listElement2d='Fuse12[b]')
-        self.set_btn_LED(self.ui.btn_LED_Fuse1A_1_RTDS, json_Sensors, 'Fuses', listElement2d='Fuse1A_1_RTDS')
-        self.set_btn_LED(self.ui.btn_LED_Fuse1A_2_Brakelight, json_Sensors, 'Fuses',
-                         listElement2d='Fuse1A_2_Brakelight')
-        self.set_btn_LED(self.ui.btn_LED_Fuse1A_3, json_Sensors, 'Fuses', listElement2d='Fuse1A_3')
-        self.set_btn_LED(self.ui.btn_LED_Fuse1A_4, json_Sensors, 'Fuses', listElement2d='Fuse1A_4')
-        self.set_btn_LED(self.ui.btn_LED_Fuse6A_1_Motor_Fans, json_Sensors, 'Fuses',
-                         listElement2d='Fuse6A_1_Motor_Fans')
-        self.set_btn_LED(self.ui.btn_LED_Fuse6A_2_DRS, json_Sensors, 'Fuses',
-                         listElement2d='Fuse6A_2_DRS')
-        self.set_btn_LED(self.ui.btn_LED_Fuse6A_3_SC, json_Sensors, 'Fuses',
-                         listElement2d='Fuse6A_3_SC')
-        self.set_btn_LED(self.ui.btn_LED_Fuse6A_4_Vectorbox, json_Sensors, 'Fuses',
-                         listElement2d='Fuse6A_4_Vectorbox')
-        self.set_btn_LED(self.ui.btn_LED_Fuse6A_5_Mot_Pumps, json_Sensors, 'Fuses',
-                         listElement2d='Fuse6A_5_Mot_Pumps')
-        self.set_btn_LED(self.ui.btn_LED_Fuse6A_6, json_Sensors, 'Fuses',
-                         listElement2d='Fuse6A_6')
-        self.set_btn_LED(self.ui.btn_LED_Fuse12A_1_Inv_Fans_Fr, json_Sensors, 'Fuses',
-                         listElement2d='Fuse12A_1_Inv_Fans_Fr')
-        self.set_btn_LED(self.ui.btn_LED_Fuse12A_2_Inv_Fans_Re, json_Sensors, 'Fuses',
-                         listElement2d='Fuse12A_2_Inv_Fans_Re')
-
-        self.set_lineEdit(self.ui.lineEdit_TunKnob_1, json_Sensors, 'Buttons/Knobs', listElement2d='TunKnob 1[%]')
-        self.set_lineEdit(self.ui.lineEdit_TunKnob_2, json_Sensors, 'Buttons/Knobs', listElement2d='TunKnob 2[%]')
-        self.set_btn_LED(self.ui.btn_LED_Start_Button, json_Sensors, 'Buttons/Knobs', listElement2d='Start-Button')
-        self.set_btn_LED(self.ui.btn_LED_HV_Button, json_Sensors, 'Buttons/Knobs', listElement2d='HV-Button')
-        self.set_btn_LED(self.ui.btn_LED_Reku_Button, json_Sensors, 'Buttons/Knobs', listElement2d='Reku-Button')
-        self.set_btn_LED(self.ui.btn_LED_Lenkrad_1, json_Sensors, 'Buttons/Knobs', listElement2d='Lenkrad 1')
-        self.set_btn_LED(self.ui.btn_LED_Lenkrad_2, json_Sensors, 'Buttons/Knobs', listElement2d='Lenkrad 2')
-        self.set_btn_LED(self.ui.btn_LED_Lenkrad_3, json_Sensors, 'Buttons/Knobs', listElement2d='Lenkrad 3')
-        self.set_btn_LED(self.ui.btn_LED_Lenkrad_4, json_Sensors, 'Buttons/Knobs', listElement2d='Lenkrad 4')
-        self.set_btn_LED(self.ui.btn_LED_Lenkrad_5, json_Sensors, 'Buttons/Knobs', listElement2d='Lenkrad 5')
-        self.set_btn_LED(self.ui.btn_LED_Lenkrad_6, json_Sensors, 'Buttons/Knobs', listElement2d='Lenkrad 6')
-
-        self.set_lineEdit(self.ui.lineEdit_V_GPS, json_Sensors, 'GPS/9-axis Front', listElement2d='V_GPS[km/h]')
-        self.set_lineEdit(self.ui.lineEdit_Course_GPS, json_Sensors, 'GPS/9-axis Front', listElement2d='Course_GPS[]')
-        self.set_lineEdit(self.ui.lineEdit_Latitude, json_Sensors, 'GPS/9-axis Front', listElement2d='Latitude[]')
-        self.set_lineEdit(self.ui.lineEdit_Longitude, json_Sensors, 'GPS/9-axis Front', listElement2d='Longitude[]')
-        self.set_lineEdit(self.ui.lineEdit_HDOP, json_Sensors, 'GPS/9-axis Front', listElement2d='HDOP')
-        self.set_lineEdit(self.ui.lineEdit_Quality_of_Fix, json_Sensors, 'GPS/9-axis Front',
-                          listElement2d='Quality of Fix')
-        self.set_lineEdit(self.ui.lineEdit_Satellites, json_Sensors, 'GPS/9-axis Front', listElement2d='Satellites')
-        self.set_lineEdit(self.ui.lineEdit_Odometer, json_Sensors, 'GPS/9-axis Front', listElement2d='Odometer[km]')
-        self.set_lineEdit(self.ui.lineEdit_ACC_X_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_X_Fr[m/s]')
-        self.set_lineEdit(self.ui.lineEdit_ACC_Y_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_Y_Fr[m/s]')
-        self.set_lineEdit(self.ui.lineEdit_ACC_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ACC_Z_Fr[m/s]')
-        self.set_lineEdit(self.ui.lineEdit_ROT_X_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ROT_X_Fr[/s]')
-        self.set_lineEdit(self.ui.lineEdit_ROT_Y_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ROT_Y_Fr[/s]')
-        self.set_lineEdit(self.ui.lineEdit_ROT_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='ROT_Z_Fr[/s]')
-        self.set_lineEdit(self.ui.lineEdit_MAG_X_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='MAG_X_Fr[b]')
-        self.set_lineEdit(self.ui.lineEdit_MAG_Y_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='MAG_Y_Fr[b]')
-        self.set_lineEdit(self.ui.lineEdit_MAG_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='MAG_Z_Fr[b]')
-        self.set_lineEdit(self.ui.lineEdit_MAG_Z_Fr, json_Sensors, 'GPS/9-axis Front', listElement2d='MAG_Z_Fr[b]')
-
-        self.set_lineEdit(self.ui.lineEdit_V_GPS_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='V_GPS[km/h]')
-        self.set_lineEdit(self.ui.lineEdit_Course_GPS_Rear, json_Sensors, 'GPS/9-axis Rear',
-                          listElement2d='Course_GPS[]')
-        self.set_lineEdit(self.ui.lineEdit_Latitude_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='Latitude[]')
-        self.set_lineEdit(self.ui.lineEdit_Longitude_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='Longitude[]')
-        self.set_lineEdit(self.ui.lineEdit_HDOP_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='HDOP')
-        self.set_lineEdit(self.ui.lineEdit_Quality_of_Fix_Rear, json_Sensors, 'GPS/9-axis Rear',
-                          listElement2d='Quality of Fix')
-        self.set_lineEdit(self.ui.lineEdit_Satellites_Rear, json_Sensors, 'GPS/9-axis Front',
-                          listElement2d='Satellites')
-        self.set_lineEdit(self.ui.lineEdit_Odometer_Rear, json_Sensors, 'GPS/9-axis Rear', listElement2d='Odometer[km]')
-        self.set_lineEdit(self.ui.lineEdit_ACC_X_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_X_Re[m/s]')
-        self.set_lineEdit(self.ui.lineEdit_ACC_Y_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_Y_Re[m/s]')
-        self.set_lineEdit(self.ui.lineEdit_ACC_Z_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ACC_Z_Re[m/s]')
-        self.set_lineEdit(self.ui.lineEdit_ROT_X_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ROT_X_Re[/s]')
-        self.set_lineEdit(self.ui.lineEdit_ROT_Y_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ROT_Y_Re[/s]')
-        self.set_lineEdit(self.ui.lineEdit_ROT_Z_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='ROT_Z_Re[/s]')
-        self.set_lineEdit(self.ui.lineEdit_MAG_X_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='MAG_X_Re[b]')
-        self.set_lineEdit(self.ui.lineEdit_MAG_Y_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='MAG_Y_Re[b]')
-        self.set_lineEdit(self.ui.lineEdit_MAG_Z_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='MAG_Z_Re[b]')
-        self.set_lineEdit(self.ui.lineEdit_MAG_Z_Re, json_Sensors, 'GPS/9-axis Rear', listElement2d='MAG_Z_Re[b]')
-
-        self.set_lineEdit(self.ui.lineEdit_1A_1, json_Sensors, 'Fusebox Currents', listElement2d='1A_1')
-        self.set_lineEdit(self.ui.lineEdit_1A_2, json_Sensors, 'Fusebox Currents', listElement2d='1A_ 2')
-        self.set_lineEdit(self.ui.lineEdit_1A_3, json_Sensors, 'Fusebox Currents', listElement2d='1A_3')
-        self.set_lineEdit(self.ui.lineEdit_1A_4, json_Sensors, 'Fusebox Currents', listElement2d='1A_4')
-        self.set_lineEdit(self.ui.lineEdit_6A_1, json_Sensors, 'Fusebox Currents', listElement2d='6A_1')
-        self.set_lineEdit(self.ui.lineEdit_6A_2, json_Sensors, 'Fusebox Currents', listElement2d='6A_2')
-        self.set_lineEdit(self.ui.lineEdit_6A_3, json_Sensors, 'Fusebox Currents', listElement2d='6A_3')
-        self.set_lineEdit(self.ui.lineEdit_6A_4, json_Sensors, 'Fusebox Currents', listElement2d='6A_4')
-        self.set_lineEdit(self.ui.lineEdit_6A_5, json_Sensors, 'Fusebox Currents', listElement2d='6A_5')
-        self.set_lineEdit(self.ui.lineEdit_6A_6, json_Sensors, 'Fusebox Currents', listElement2d='6A_6')
-        self.set_lineEdit(self.ui.lineEdit_12A_1, json_Sensors, 'Fusebox Currents', listElement2d='12A_1')
-        self.set_lineEdit(self.ui.lineEdit_12A_2, json_Sensors, 'Fusebox Currents', listElement2d='12A_2')
-
-        self.set_lineEdit(self.ui.lineEdit_Timestamp, json_Sensors, 'Kistler', listElement2d='Timestamp [4ms]')
-        self.set_lineEdit(self.ui.lineEdit_IVI, json_Sensors, 'Kistler', listElement2d='IVI [10^-2 m/s]')
-        self.set_lineEdit(self.ui.lineEdit_Weg, json_Sensors, 'Kistler', listElement2d='Weg [m]')
-        self.set_lineEdit(self.ui.lineEdit_V_lon, json_Sensors, 'Kistler', listElement2d='V_lon [m/s]')
-        self.set_lineEdit(self.ui.lineEdit_V_lat, json_Sensors, 'Kistler', listElement2d='V_lat [m/s]')
-        self.set_lineEdit(self.ui.lineEdit_Winkel, json_Sensors, 'Kistler', listElement2d='Winkel []')
-        self.set_lineEdit(self.ui.lineEdit_SerienNr, json_Sensors, 'Kistler', listElement2d='SerienNr')
-        self.set_lineEdit(self.ui.lineEdit_SensorNr, json_Sensors, 'Kistler', listElement2d='SensorNr')
-        self.set_lineEdit(self.ui.lineEdit_Temp, json_Sensors, 'Kistler', listElement2d='Temp [C]')
-        self.set_lineEdit(self.ui.lineEdit_LED_Strom, json_Sensors, 'Kistler', listElement2d='LED Strom [0,01A]')
-        self.set_lineEdit(self.ui.lineEdit_Statusbyte1, json_Sensors, 'Kistler', listElement2d='Statusbyte1')
-        self.set_lineEdit(self.ui.lineEdit_Statusbyte2, json_Sensors, 'Kistler', listElement2d='Statusbyte2')
-
-        self.set_lineEdit(self.ui.lineEdit_Status, json_Sensors, 'Datalogger', listElement2d='Status')
-        self.set_lineEdit(self.ui.lineEdit_Voltage, json_Sensors, 'Datalogger', listElement2d='Voltage[V]')
-        self.set_lineEdit(self.ui.lineEdit_Current, json_Sensors, 'Datalogger', listElement2d='Current[A]')
-        self.set_lineEdit(self.ui.lineEdit_Power, json_Sensors, 'Datalogger', listElement2d='Power[kW]')
-        self.set_lineEdit(self.ui.lineEdit_Message_Counter, json_Sensors, 'Datalogger',
-                          listElement2d='Message\nCounter')"""
 
 
 
@@ -693,7 +863,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_btn_LED(self.ui.btn_LED_InverterHL_active, json_config, 'InverterHL-active')
 
 
-        print(str(json_config))
+        #print(str(json_config))
 
     def recieve_Sensors(self, json_Sensors):
         self.set_lineEdit(self.ui.lineEdit_APPS1, json_Sensors, 'Analog', listElement2d='APPS1[]')
@@ -872,7 +1042,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Message_Counter, json_Sensors, 'Datalogger',
                           listElement2d='Message\nCounter')
 
-        print(json_Sensors)
+        #print(json_Sensors)
 
     def recieve_Inverter(self, json_Inverter):
 
@@ -1016,7 +1186,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Fehlerzusatznr_2_HL, json_Inverter, 'HL', listElement2d='Fehlerzusatznr. 2')
         self.set_lineEdit(self.ui.lineEdit_Fehlerzusatznr_3_HL, json_Inverter, 'HL', listElement2d='Fehlerzusatznr. 3')
 
-        print(str(json_Inverter))
+        #print(str(json_Inverter))
 
     def recieve_Errors(self, json_Errors):
 
@@ -1070,7 +1240,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_btn_LED(self.ui.btn_LED_APPS1_Latching, json_Errors, 'Latching', listElement2d='APPS1')
         self.set_btn_LED(self.ui.btn_LED_APPS2_Latching, json_Errors, 'Latching', listElement2d='APPS2')
 
-        print(str(json_Errors))
+        #print(str(json_Errors))
 
 
     def recieve_Math(self, json_Math):
@@ -1135,7 +1305,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Start_Leistungsgrenze, json_Math, 'Energy Control',
                           listElement2d='Start-Leistungsgrenze')
 
-        print(str(json_Math))
+        #print(str(json_Math))
 
     def recieve_Controls(self, json_Controls):
 
@@ -1163,7 +1333,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_btn_LED(self.ui.btn_LED_HV_Freigabe, json_Controls, 'HV Freigabe')
         self.set_btn_LED(self.ui.btn_LED_IC_Voltage_OK, json_Controls, 'IC Voltage OK')
 
-        print(str(json_Controls))
+        #print(str(json_Controls))
 
     def recieve_FPGA_Error(self, json_FPGA_Error):
 
@@ -1172,7 +1342,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.set_lineEdit(self.ui.lineEdit_Transmit_Error_Counter, json_FPGA_Error, 'Transmit Error Counter')
         self.set_lineEdit(self.ui.lineEdit_Error_Counter, json_FPGA_Error, 'Error Counter')
 
-        print(str(json_FPGA_Error))
+        #print(str(json_FPGA_Error))
 
 
 
@@ -1182,7 +1352,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
         self.set_lineEdit(self.ui.lineEdit_Timestamp_Timestamp, json_Timestamp, 'None', indexes = 3)
 
-        print(str(json_Timestamp))
+        #print(str(json_Timestamp))
 
 
     def show_page_config_values(self):
@@ -1349,8 +1519,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         while True:
             data, addr = sock.recvfrom(1024)  # buffer size is 1024 bytes
             self.recvData = json.loads(data)
-            print(self.recvData)
-            print((self.recvData['Vehicle Mode']))
+            #print(self.recvData)
+            #print((self.recvData['Vehicle Mode']))
             self.ui.lineEdit_Vehicle_Mode.setText(self.recvData['Vehicle Mode'])
             self.ui.lineEdit_APPS1_max.setText(str(self.recvData['APPS1_max[]']))
 
@@ -1373,7 +1543,7 @@ if __name__ == '__main__':
     def update_label(main_windoww):
         current_time = str(datetime.datetime.now().time())
         main_windoww.ui.lineEdit_Vehicle_Mode.setText(current_time)
-        print("sdfgdsg")
+        #print("sdfgdsg")
 
 
    # timer = QTimer()
