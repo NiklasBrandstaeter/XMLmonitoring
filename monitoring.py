@@ -6492,10 +6492,18 @@ class Ui_MainWindow(object):
 "color: rgb(255, 255, 255);\n"
 "}")
         self.btn_timestamp.setObjectName("btn_timestamp")
+        self.doubleSpinBoxRefreshGui = QtWidgets.QDoubleSpinBox(self.title_bar)
+        self.doubleSpinBoxRefreshGui.setGeometry(QtCore.QRect(260, 20, 51, 22))
+        self.doubleSpinBoxRefreshGui.setObjectName("doubleSpinBoxRefreshGui")
+        self.label_APPS1_min_2 = QtWidgets.QLabel(self.title_bar)
+        self.label_APPS1_min_2.setGeometry(QtCore.QRect(260, 0, 131, 21))
+        self.label_APPS1_min_2.setStyleSheet("color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(255, 255, 255));\n"
+"background-color: none;")
+        self.label_APPS1_min_2.setObjectName("label_APPS1_min_2")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.Pages.setCurrentIndex(7)
+        self.Pages.setCurrentIndex(0)
         self.Pages_sensors.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -6962,3 +6970,4 @@ class Ui_MainWindow(object):
         self.btn_controls.setText(_translate("MainWindow", "Controls"))
         self.btn_fpga_error.setText(_translate("MainWindow", "FPGA Error"))
         self.btn_timestamp.setText(_translate("MainWindow", "Timestamp"))
+        self.label_APPS1_min_2.setText(_translate("MainWindow", "GUI Refresh Interval[s]"))
