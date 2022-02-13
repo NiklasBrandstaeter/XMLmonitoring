@@ -12,7 +12,7 @@ QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True) #use highdpi icons
 
 
 class MyMainWindow(QMainWindow, Ui_MainWindow, QWidget):
-    def __init__(self, conn_parent):
+    def __init__(self, conn_parent, conn_child):
         super().__init__()
         self.main_window = QMainWindow()
         self.ui = Ui_MainWindow()
@@ -32,6 +32,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow, QWidget):
         self.ui.doubleSpinBoxRefreshGui.setSingleStep(0.01)
         self.ui.doubleSpinBoxRefreshGui.valueChanged.connect(lambda: self.gui_refresh_period())
 
+        self.conn_parent = conn_parent
         self.thread = QThread()
         self.worker = WorkerRecieverProcess(conn_parent)
         self.worker.moveToThread(self.thread)
@@ -111,7 +112,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow, QWidget):
             self.ui.btn_LED_Connection.setStyleSheet('border: none; border-radius: 10px; background-color: red')
 
     def gui_refresh_period(self):
-        conn_parent.send(self.ui.doubleSpinBoxRefreshGui.value())
+        self.conn_parent.send(self.ui.doubleSpinBoxRefreshGui.value())
 
     def set_Text(self, dataTuple):
         getattr(self.ui, dataTuple[0]).setText(dataTuple[1])

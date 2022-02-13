@@ -24,7 +24,7 @@ if __name__ == '__main__':
     process.start()
     app = QApplication(sys.argv)
     app.aboutToQuit.connect(lambda: closeEvent(process))
-    main_window = MyMainWindow(conn_parent)
+    main_window = MyMainWindow(conn_parent, conn_child)
     main_window.show()
 
     sys.exit(app.exec_())

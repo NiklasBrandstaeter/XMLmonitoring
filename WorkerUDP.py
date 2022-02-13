@@ -180,6 +180,11 @@ class WorkerUDP(QObject):
             sock.close()
 
     def analyseByteStream(self, data, str):
+        """
+        analyze the incoming data
+        @param data: raw incoming data
+        @param str: decoded incoming data
+        """
         if(str[0] == "J"):
             jsonStr = str[1:]
             jsonObject = json.loads(jsonStr)
@@ -276,7 +281,21 @@ class WorkerUDP(QObject):
             if (self.jsonTimestamp_i > 0 and self.timestapmp_i > 0):
                 self.jsonIteration(self.json_timstamp_dict, self.XML_timestamp_list, 0, data, 4)
 
-    def jsonIteration(self, jsonDict, xmlDict, iteration_level, serialElements, serialCounter, json_sensor_dict_element_1 = "None", json_sensor_dict_element_2 = "None", json_sensor_dict_element_3 = "None"):
+    def jsonIteration(self, jsonDict, xmlDict, iteration_level, serialElements, serialCounter,
+                      json_sensor_dict_element_1 = "None", json_sensor_dict_element_2 = "None",
+                      json_sensor_dict_element_3 = "None"):
+        """
+        Iterates through the json-object to get the structure and writes the serial data into the xml
+        @param jsonDict: json-object
+        @param xmlDict: xml-object with the exact datatype. This is where the new serial data will be inserted
+        @param iteration_level: tree-level of the json
+        @param serialElements: incoming serial elements
+        @param serialCounter: counter for the bytes of the serial data
+        @param json_sensor_dict_element_1: json-element of the fist tree-level
+        @param json_sensor_dict_element_2: json-element of the second tree-level
+        @param json_sensor_dict_element_3: json-element of the third tree-level
+        @returns: the serialCounter and the level of the json-tree
+        """
         searchXMLLevel = 0
         iteration_level = iteration_level + 1
         start_time = time.time()
@@ -296,20 +315,30 @@ class WorkerUDP(QObject):
                     json_sensor_dict_element_3 = key
                 else:
                     print("wrong iteration_level")
-                serialCounter = self.jsonIteration( jsonDict[key], xmlDict, iteration_level, serialElements, serialCounter, json_sensor_dict_element_1, json_sensor_dict_element_2, json_sensor_dict_element_3)
+                serialCounter = self.jsonIteration( jsonDict[key], xmlDict, iteration_level, serialElements,
+                                                    serialCounter, json_sensor_dict_element_1,
+                                                    json_sensor_dict_element_2, json_sensor_dict_element_3)
             elif (isinstance(jsonDict[key], list)):
-                serialCounter = self.jsonIteration( jsonDict[key], xmlDict, iteration_level, serialElements, serialCounter, json_sensor_dict_element_1, json_sensor_dict_element_2, json_sensor_dict_element_3)
+                serialCounter = self.jsonIteration( jsonDict[key], xmlDict, iteration_level, serialElements,
+                                                    serialCounter, json_sensor_dict_element_1,
+                                                    json_sensor_dict_element_2, json_sensor_dict_element_3)
             else:
                 if(json_sensor_dict_element_2 == "None"):
                     searchXMLLevel = 0
                     elementDatatype = "None"
                     seconds = 1
-                    serialCounter, searchXMLLevel = self.searchXMLdatatype(xmlDict, key, elementDatatype, serialElements, serialCounter, json_sensor_dict_element_1, searchXMLLevel) #for checking the datatype
+                    serialCounter, searchXMLLevel = self.searchXMLdatatype(xmlDict, key, elementDatatype,
+                                                                           serialElements, serialCounter,
+                                                                           json_sensor_dict_element_1,
+                                                                           searchXMLLevel)
 
                 elif(json_sensor_dict_element_3 == "None"):
                     searchXMLLevel = 0
                     elementDatatype = "None"
-                    serialCounter, searchXMLLevel = self.searchXMLdatatype(xmlDict, key, elementDatatype, serialElements, serialCounter, json_sensor_dict_element_1, searchXMLLevel, json_sensor_dict_element_2)  # for checking the datatype
+                    serialCounter, searchXMLLevel = self.searchXMLdatatype(xmlDict, key, elementDatatype,
+                                                                           serialElements, serialCounter,
+                                                                           json_sensor_dict_element_1, searchXMLLevel,
+                                                                           json_sensor_dict_element_2)
                 else:
                     print("json_sensor_dict_element_3 != None")
 
@@ -322,7 +351,21 @@ class WorkerUDP(QObject):
             json_sensor_dict_element_3 = "None"
         return serialCounter
 
-    def searchXMLdatatype(self, dataList, listElement, dataType, serialElements, serialCounter, json_sensor_dict_element_1, searchXMLLevel, listElement2d = 'empty', listElement3d = 'empty', indexes = 0):
+    def searchXMLdatatype(self, dataList, listElement, dataType, serialElements, serialCounter,
+                          json_sensor_dict_element_1, searchXMLLevel, listElement2d = 'empty',
+                          listElement3d = 'empty', indexes = 0):
+        """searches the element from the json-object in the xml to get the datatype for recontruction of the serial data
+        @param dataList: xml-object
+        @param listElement: the wanted element
+        @param dataType: datatype
+        @param serialElements: incoming serial elements
+        @param serialCounter: counter for the bytes of the serial data
+        @param json_sensor_dict_element_1: json-element of the fist tree-level
+        @param searchXMLLevel: level of the xml-tree
+        @param listElement2d: json-element of the second tree-level
+        @param listElement3d: json-element of the third tree-level
+        @returns: the serialCounter and the level of the json-tree
+        """
         ElementXMLCompare = listElement.replace("°", "")
         ElementXMLCompare = ElementXMLCompare.replace("²", "")
         ElementXMLCompare = ElementXMLCompare.replace("ü", "")
@@ -344,19 +387,25 @@ class WorkerUDP(QObject):
             ElementXMLCompare = ElementXMLCompare[:len(ElementXMLCompare) - 1]
         if(listElement2d == "empty"):
             if(dataList != []):
-                if(dataList.get('Cluster').get("Name") == "Config-Values"): #Sollte jetzt auch ohne gesonderte Behandlung funktionieren
-                    serialCounter, elementDatatype, searchXMLLevel = self.searchElementandDatatype(dataList.get('Cluster'), ElementXMLCompare, dataType, serialElements, serialCounter, json_sensor_dict_element_1, 0, "None")
+                if(dataList.get('Cluster').get("Name") == "Config-Values"):
+                    serialCounter, elementDatatype, searchXMLLevel = self._searchElementandDatatype(
+                        dataList.get('Cluster'), ElementXMLCompare, dataType, serialElements, serialCounter,
+                        json_sensor_dict_element_1, 0, "None")
                 else:
-                    serialCounter, elementDatatype, searchXMLLevel = self.searchElementandDatatype(
+                    serialCounter, elementDatatype, searchXMLLevel = self._searchElementandDatatype(
                         dataList.get('Cluster', 'None').values(), ElementXMLCompare, dataType, serialElements,
                         serialCounter, json_sensor_dict_element_1, 0, "None")
             else:
                 print("Dict empty")
         elif(listElement3d == "empty"):
-            serialCounter, elementDatatype, searchXMLLevel = self.searchElementandDatatype(dataList.get('Cluster', 'None').values(), ElementXMLCompare, dataType, serialElements, serialCounter, json_sensor_dict_element_1, 0, "None", wantedElement2 = ElementXMLCompare2d)
+            serialCounter, elementDatatype, searchXMLLevel = self._searchElementandDatatype(
+                dataList.get('Cluster', 'None').values(), ElementXMLCompare, dataType, serialElements, serialCounter,
+                json_sensor_dict_element_1, 0, "None", wantedElement2 = ElementXMLCompare2d)
         return serialCounter, searchXMLLevel
 
-    def searchElementandDatatype(self, listofElements, wantedElement, dataType, serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1, searchXMLLevel, wantedElement2 = None, wantedElement3 = None):
+    def _searchElementandDatatype(self, listofElements, wantedElement, dataType, serialElements, serialCounter,
+                                 json_sensor_dict_element_1, XML_dict_element_1, searchXMLLevel, wantedElement2 = None,
+                                 wantedElement3 = None):
         elementDatatype = dataType
         if (isinstance(listofElements, OrderedDict)):
             XML_dict_element_1 = "None"
@@ -369,44 +418,52 @@ class WorkerUDP(QObject):
             I8Element = listofElements.get('I8')
             EBElement = listofElements.get('EB')
             if (boolElement != None and elementDatatype == "None"):
-                serialCounter, elementDatatype = self.searchDatatypeElement(boolElement, wantedElement,
+                serialCounter, elementDatatype = self._searchDatatypeElement(boolElement, wantedElement,
                                                                             "Boolean", serialElements,
-                                                                            serialCounter, json_sensor_dict_element_1, XML_dict_element_1,
+                                                                            serialCounter, json_sensor_dict_element_1,
+                                                                            XML_dict_element_1,
                                                                             wantedElement2=listofElements.get("Name"))
             if (DBLElement != None and elementDatatype == "None"):
-                serialCounter, elementDatatype = self.searchDatatypeElement(DBLElement, wantedElement, "DBL",
-                                                                            serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1,
-
+                serialCounter, elementDatatype = self._searchDatatypeElement(DBLElement, wantedElement, "DBL",
+                                                                            serialElements, serialCounter,
+                                                                            json_sensor_dict_element_1,
+                                                                            XML_dict_element_1,
                                                                             wantedElement2=listofElements.get("Name"))
             if (SGLElement != None and elementDatatype == "None"):
-                serialCounter, elementDatatype = self.searchDatatypeElement(SGLElement, wantedElement, "SGL",
-                                                                            serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1,
-
+                serialCounter, elementDatatype = self._searchDatatypeElement(SGLElement, wantedElement, "SGL",
+                                                                            serialElements, serialCounter,
+                                                                            json_sensor_dict_element_1,
+                                                                            XML_dict_element_1,
                                                                             wantedElement2=listofElements.get("Name"))
             if (U8Element != None and elementDatatype == "None"):
-                serialCounter, elementDatatype = self.searchDatatypeElement(U8Element, wantedElement, "U8",
-                                                                            serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1,
-
+                serialCounter, elementDatatype = self._searchDatatypeElement(U8Element, wantedElement, "U8",
+                                                                            serialElements, serialCounter,
+                                                                            json_sensor_dict_element_1,
+                                                                            XML_dict_element_1,
                                                                             wantedElement2=listofElements.get("Name"))
             if (U16Element != None and elementDatatype == "None"):
-                serialCounter, elementDatatype = self.searchDatatypeElement(U16Element, wantedElement, "U16",
-                                                                            serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1,
-
+                serialCounter, elementDatatype = self._searchDatatypeElement(U16Element, wantedElement, "U16",
+                                                                            serialElements, serialCounter,
+                                                                            json_sensor_dict_element_1,
+                                                                            XML_dict_element_1,
                                                                             wantedElement2=listofElements.get("Name"))
             if (U32Element != None and elementDatatype == "None"):
-                serialCounter, elementDatatype = self.searchDatatypeElement(U32Element, wantedElement, "U32",
-                                                                            serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1,
-
+                serialCounter, elementDatatype = self._searchDatatypeElement(U32Element, wantedElement, "U32",
+                                                                            serialElements, serialCounter,
+                                                                            json_sensor_dict_element_1,
+                                                                            XML_dict_element_1,
                                                                             wantedElement2=listofElements.get("Name"))
             if (I8Element != None and elementDatatype == "None"):
-                serialCounter, elementDatatype = self.searchDatatypeElement(I8Element, wantedElement, "I8",
-                                                                            serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1,
-
+                serialCounter, elementDatatype = self._searchDatatypeElement(I8Element, wantedElement, "I8",
+                                                                            serialElements, serialCounter,
+                                                                            json_sensor_dict_element_1,
+                                                                            XML_dict_element_1,
                                                                             wantedElement2=listofElements.get("Name"))
             if (EBElement != None and elementDatatype == "None"):
-                serialCounter, elementDatatype = self.searchDatatypeElement(EBElement, wantedElement, "EB",
-                                                                            serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1,
-
+                serialCounter, elementDatatype = self._searchDatatypeElement(EBElement, wantedElement, "EB",
+                                                                            serialElements, serialCounter,
+                                                                            json_sensor_dict_element_1,
+                                                                            XML_dict_element_1,
                                                                             wantedElement2=listofElements.get("Name"))
         else:
             for element in listofElements:
@@ -424,53 +481,125 @@ class WorkerUDP(QObject):
                         EBElement = element.get('EB')
 
                         if(boolElement != None and elementDatatype == "None"):
-                            serialCounter, elementDatatype = self.searchDatatypeElement(boolElement, wantedElement, "Boolean", serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1, wantedElement2 = element.get("Name"))
+                            serialCounter, elementDatatype = self._searchDatatypeElement(boolElement, wantedElement,
+                                                                                        "Boolean", serialElements,
+                                                                                        serialCounter,
+                                                                                        json_sensor_dict_element_1,
+                                                                                        XML_dict_element_1,
+                                                                                        wantedElement2 =
+                                                                                        element.get("Name"))
 
                         if(DBLElement != None and elementDatatype == "None"):
-                            serialCounter, elementDatatype = self.searchDatatypeElement(DBLElement, wantedElement, "DBL", serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1, wantedElement2 = element.get("Name"))
+                            serialCounter, elementDatatype = self._searchDatatypeElement(DBLElement, wantedElement,
+                                                                                        "DBL", serialElements,
+                                                                                        serialCounter,
+                                                                                        json_sensor_dict_element_1,
+                                                                                        XML_dict_element_1,
+                                                                                        wantedElement2 =
+                                                                                        element.get("Name"))
 
                         if(SGLElement != None and elementDatatype == "None"):
-                            serialCounter, elementDatatype = self.searchDatatypeElement(SGLElement, wantedElement, "SGL", serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1, wantedElement2 = element.get("Name"))
+                            serialCounter, elementDatatype = self._searchDatatypeElement(SGLElement, wantedElement,
+                                                                                        "SGL", serialElements,
+                                                                                        serialCounter,
+                                                                                        json_sensor_dict_element_1,
+                                                                                        XML_dict_element_1,
+                                                                                        wantedElement2 =
+                                                                                        element.get("Name"))
 
                         if(U8Element != None and elementDatatype == "None"):
-                            serialCounter, elementDatatype = self.searchDatatypeElement(U8Element, wantedElement, "U8", serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1, wantedElement2 = element.get("Name"))
+                            serialCounter, elementDatatype = self._searchDatatypeElement(U8Element, wantedElement,
+                                                                                        "U8", serialElements,
+                                                                                        serialCounter,
+                                                                                        json_sensor_dict_element_1,
+                                                                                        XML_dict_element_1,
+                                                                                        wantedElement2 =
+                                                                                        element.get("Name"))
 
                         if(U16Element != None and elementDatatype == "None"):
-                            serialCounter, elementDatatype = self.searchDatatypeElement(U16Element, wantedElement, "U16", serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1, wantedElement2 = element.get("Name"))
+                            serialCounter, elementDatatype = self._searchDatatypeElement(U16Element, wantedElement,
+                                                                                        "U16", serialElements,
+                                                                                        serialCounter,
+                                                                                        json_sensor_dict_element_1,
+                                                                                        XML_dict_element_1,
+                                                                                        wantedElement2 =
+                                                                                        element.get("Name"))
 
                         if(U32Element != None and elementDatatype == "None"):
-                            serialCounter, elementDatatype = self.searchDatatypeElement(U32Element, wantedElement, "U32", serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1, wantedElement2 = element.get("Name"))
+                            serialCounter, elementDatatype = self._searchDatatypeElement(U32Element, wantedElement,
+                                                                                        "U32", serialElements,
+                                                                                        serialCounter,
+                                                                                        json_sensor_dict_element_1,
+                                                                                        XML_dict_element_1,
+                                                                                        wantedElement2 =
+                                                                                        element.get("Name"))
 
                         if(I8Element != None and elementDatatype == "None"):
-                            serialCounter, elementDatatype = self.searchDatatypeElement(I8Element, wantedElement, "I8", serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1, wantedElement2 = element.get("Name"))
+                            serialCounter, elementDatatype = self._searchDatatypeElement(I8Element, wantedElement,
+                                                                                        "I8", serialElements,
+                                                                                        serialCounter,
+                                                                                        json_sensor_dict_element_1,
+                                                                                        XML_dict_element_1,
+                                                                                        wantedElement2 =
+                                                                                        element.get("Name"))
 
                         if(EBElement != None and elementDatatype == "None"):
-                            serialCounter, elementDatatype = self.searchDatatypeElement(EBElement, wantedElement, "EB", serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1, wantedElement2 = element.get("Name"))
+                            serialCounter, elementDatatype = self._searchDatatypeElement(EBElement, wantedElement, "EB",
+                                                                                        serialElements, serialCounter,
+                                                                                        json_sensor_dict_element_1,
+                                                                                        XML_dict_element_1,
+                                                                                        wantedElement2 =
+                                                                                        element.get("Name"))
 
                     elif(isinstance(element, list)):
-                        serialCounter, elementDatatype, searchXMLLevel = self.searchElementandDatatype(element, wantedElement, elementDatatype, serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1, searchXMLLevel)
+                        serialCounter, elementDatatype, searchXMLLevel = self._searchElementandDatatype(element,
+                                                                                            wantedElement,
+                                                                                            elementDatatype,
+                                                                                            serialElements,
+                                                                                            serialCounter,
+                                                                                            json_sensor_dict_element_1,
+                                                                                            XML_dict_element_1,
+                                                                                            searchXMLLevel)
                 elif(wantedElement2 != None):
                     for element in listofElements:
                         if(isinstance(element, OrderedDict)):
                             if(element.get("Name") == json_sensor_dict_element_1):
                                 XML_dict_element_1 = element.get("Name")
                                 searchXMLLevel = 1
-                                serialCounter, elementDatatype, searchXMLLevel = self.searchElementandDatatype(element.get("Cluster"), wantedElement, elementDatatype, serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1, searchXMLLevel, wantedElement2 = wantedElement2)
+                                serialCounter, elementDatatype, searchXMLLevel = self._searchElementandDatatype(
+                                    element.get("Cluster"), wantedElement, elementDatatype, serialElements,
+                                    serialCounter, json_sensor_dict_element_1, XML_dict_element_1, searchXMLLevel,
+                                    wantedElement2 = wantedElement2)
                         elif(isinstance(element, list)):
-                            serialCounter, elementDatatype, searchXMLLevel = self.searchElementandDatatype(element, wantedElement, elementDatatype, serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1, searchXMLLevel, wantedElement2 = wantedElement2)
+                            serialCounter, elementDatatype, searchXMLLevel = self._searchElementandDatatype(element,
+                                                                                            wantedElement,
+                                                                                            elementDatatype,
+                                                                                            serialElements,
+                                                                                            serialCounter,
+                                                                                            json_sensor_dict_element_1,
+                                                                                            XML_dict_element_1,
+                                                                                            searchXMLLevel,
+                                                                                            wantedElement2 =
+                                                                                            wantedElement2)
         searchXMLLevel = 0
         return serialCounter, elementDatatype, searchXMLLevel
 
 
-    def searchDatatypeElement(self, datatypeElement, wantedElement, dataType, serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1, wantedElement2 = None, wantedElement3 = None):
+    def _searchDatatypeElement(self, datatypeElement, wantedElement, dataType, serialElements, serialCounter,
+                              json_sensor_dict_element_1, XML_dict_element_1, wantedElement2 = None,
+                              wantedElement3 = None):
         if(isinstance(datatypeElement, list)):
             for datatypeElements in datatypeElement:
-                serialCounter, elementDatatype = self.searchDatatypeElement(datatypeElements, wantedElement, dataType, serialElements, serialCounter, json_sensor_dict_element_1, XML_dict_element_1, wantedElement2 = wantedElement2)
+                serialCounter, elementDatatype = self._searchDatatypeElement(datatypeElements, wantedElement, dataType,
+                                                                            serialElements, serialCounter,
+                                                                            json_sensor_dict_element_1,
+                                                                            XML_dict_element_1,
+                                                                            wantedElement2 = wantedElement2)
                 if(elementDatatype != "None"):
                     return serialCounter, elementDatatype
 
         elif (isinstance(datatypeElement, OrderedDict)):
-            if(wantedElement == datatypeElement.get('Name') and json_sensor_dict_element_1 == XML_dict_element_1): #wantedElement == datatypeElement.get('Name') and self.json_sensor_dict_element_1 == self.XML_dict_element_1
+            if(wantedElement == datatypeElement.get('Name') and json_sensor_dict_element_1 == XML_dict_element_1):
                 elementDatatype = dataType
                 if (dataType == "EB"):
                     datatypeElement['Val'] = str(serialElements[serialCounter])
