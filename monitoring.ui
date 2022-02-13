@@ -17294,7 +17294,7 @@ background-color: none;
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>Elbflorace.jpg</pixmap>
+       <pixmap>EFR.jpg</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>

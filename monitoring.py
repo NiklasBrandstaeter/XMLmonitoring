@@ -5798,7 +5798,7 @@ class Ui_MainWindow(object):
         self.label_symbol = QtWidgets.QLabel(self.title_bar)
         self.label_symbol.setGeometry(QtCore.QRect(0, 0, 60, 60))
         self.label_symbol.setText("")
-        self.label_symbol.setPixmap(QtGui.QPixmap("Elbflorace.jpg"))
+        self.label_symbol.setPixmap(QtGui.QPixmap("EFR.jpg"))
         self.label_symbol.setScaledContents(True)
         self.label_symbol.setObjectName("label_symbol")
         self.top_menu = QtWidgets.QFrame(self.title_bar)
