@@ -59,7 +59,7 @@ class Ui_MainWindow(object):
         self.page_config_values = QtWidgets.QWidget()
         self.page_config_values.setObjectName("page_config_values")
         self.frame_4 = QtWidgets.QFrame(self.page_config_values)
-        self.frame_4.setGeometry(QtCore.QRect(0, 0, 611, 911))
+        self.frame_4.setGeometry(QtCore.QRect(0, 0, 601, 911))
         self.frame_4.setStyleSheet("background-color: none;")
         self.frame_4.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -74,7 +74,7 @@ class Ui_MainWindow(object):
         self.lineEdit_Leistungslimit.setGeometry(QtCore.QRect(30, 310, 113, 20))
         self.lineEdit_Leistungslimit.setObjectName("lineEdit_Leistungslimit")
         self.label_InverterHL_active = QtWidgets.QLabel(self.frame_4)
-        self.label_InverterHL_active.setGeometry(QtCore.QRect(460, 260, 101, 21))
+        self.label_InverterHL_active.setGeometry(QtCore.QRect(430, 260, 131, 21))
         self.label_InverterHL_active.setStyleSheet("color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(50, 50, 50));\n"
 "background-color: none;\n"
 "")
@@ -111,13 +111,13 @@ class Ui_MainWindow(object):
         self.lineEdit_Brakeslip.setGeometry(QtCore.QRect(290, 70, 113, 20))
         self.lineEdit_Brakeslip.setObjectName("lineEdit_Brakeslip")
         self.label_Energiesparmodus = QtWidgets.QLabel(self.frame_4)
-        self.label_Energiesparmodus.setGeometry(QtCore.QRect(180, 260, 101, 21))
+        self.label_Energiesparmodus.setGeometry(QtCore.QRect(180, 250, 141, 31))
         self.label_Energiesparmodus.setStyleSheet("color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(50, 50, 50));\n"
 "background-color: none;\n"
 "")
         self.label_Energiesparmodus.setObjectName("label_Energiesparmodus")
         self.label_InverterVR_active = QtWidgets.QLabel(self.frame_4)
-        self.label_InverterVR_active.setGeometry(QtCore.QRect(460, 110, 101, 21))
+        self.label_InverterVR_active.setGeometry(QtCore.QRect(430, 110, 131, 21))
         self.label_InverterVR_active.setStyleSheet("color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(50, 50, 50));\n"
 "background-color: none;\n"
 "")
@@ -153,15 +153,11 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Rekuperation.setText("")
         self.btn_LED_Rekuperation.setObjectName("btn_LED_Rekuperation")
         self.label_Rekuperation = QtWidgets.QLabel(self.frame_4)
-        self.label_Rekuperation.setGeometry(QtCore.QRect(180, 10, 101, 21))
+        self.label_Rekuperation.setGeometry(QtCore.QRect(180, 0, 101, 31))
         self.label_Rekuperation.setStyleSheet("color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(50, 50, 50));\n"
 "background-color: none;\n"
 "")
@@ -203,7 +199,7 @@ class Ui_MainWindow(object):
 "")
         self.label_Accelslip.setObjectName("label_Accelslip")
         self.label_InverterHR_active = QtWidgets.QLabel(self.frame_4)
-        self.label_InverterHR_active.setGeometry(QtCore.QRect(460, 210, 101, 21))
+        self.label_InverterHR_active.setGeometry(QtCore.QRect(430, 210, 131, 21))
         self.label_InverterHR_active.setStyleSheet("color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(50, 50, 50));\n"
 "background-color: none;\n"
 "")
@@ -240,7 +236,7 @@ class Ui_MainWindow(object):
 "")
         self.label_BSR.setObjectName("label_BSR")
         self.label_InverterVL_active = QtWidgets.QLabel(self.frame_4)
-        self.label_InverterVL_active.setGeometry(QtCore.QRect(460, 160, 101, 21))
+        self.label_InverterVL_active.setGeometry(QtCore.QRect(430, 160, 131, 21))
         self.label_InverterVL_active.setStyleSheet("color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(50, 50, 50));\n"
 "background-color: none;\n"
 "")
@@ -250,7 +246,7 @@ class Ui_MainWindow(object):
         self.lineEdit_APPS1_min.setObjectName("lineEdit_APPS1_min")
         self.line_20 = QtWidgets.QFrame(self.frame_4)
         self.line_20.setGeometry(QtCore.QRect(580, 10, 5, 881))
-        self.line_20.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_20.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_20.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_20.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_20.setObjectName("line_20")
@@ -261,11 +257,8 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"\n"
+"")
         self.btn_LED_ASR.setText("")
         self.btn_LED_ASR.setObjectName("btn_LED_ASR")
         self.btn_LED_BSR = QtWidgets.QPushButton(self.frame_4)
@@ -275,11 +268,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_BSR.setText("")
         self.btn_LED_BSR.setObjectName("btn_LED_BSR")
         self.btn_LED_TV = QtWidgets.QPushButton(self.frame_4)
@@ -289,11 +278,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_TV.setText("")
         self.btn_LED_TV.setObjectName("btn_LED_TV")
         self.btn_LED_DRS = QtWidgets.QPushButton(self.frame_4)
@@ -303,11 +288,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_DRS.setText("")
         self.btn_LED_DRS.setObjectName("btn_LED_DRS")
         self.btn_LED_Energiesparmodus = QtWidgets.QPushButton(self.frame_4)
@@ -317,11 +298,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Energiesparmodus.setText("")
         self.btn_LED_Energiesparmodus.setObjectName("btn_LED_Energiesparmodus")
         self.btn_LED_Backupload = QtWidgets.QPushButton(self.frame_4)
@@ -331,11 +308,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Backupload.setText("")
         self.btn_LED_Backupload.setObjectName("btn_LED_Backupload")
         self.btn_LED_Config_locked = QtWidgets.QPushButton(self.frame_4)
@@ -345,11 +318,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Config_locked.setText("")
         self.btn_LED_Config_locked.setObjectName("btn_LED_Config_locked")
         self.btn_LED_InverterVR_active = QtWidgets.QPushButton(self.frame_4)
@@ -359,11 +328,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_InverterVR_active.setText("")
         self.btn_LED_InverterVR_active.setObjectName("btn_LED_InverterVR_active")
         self.btn_LED_InverterVL_active = QtWidgets.QPushButton(self.frame_4)
@@ -373,11 +338,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_InverterVL_active.setText("")
         self.btn_LED_InverterVL_active.setObjectName("btn_LED_InverterVL_active")
         self.btn_LED_InverterHR_active = QtWidgets.QPushButton(self.frame_4)
@@ -387,11 +348,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_InverterHR_active.setText("")
         self.btn_LED_InverterHR_active.setObjectName("btn_LED_InverterHR_active")
         self.btn_LED_InverterHL_active = QtWidgets.QPushButton(self.frame_4)
@@ -401,11 +358,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_InverterHL_active.setText("")
         self.btn_LED_InverterHL_active.setObjectName("btn_LED_InverterHL_active")
         self.Pages.addWidget(self.page_config_values)
@@ -1511,7 +1464,7 @@ class Ui_MainWindow(object):
         self.lineEdit_Isolationswiderstand.setObjectName("lineEdit_Isolationswiderstand")
         self.line_4 = QtWidgets.QFrame(self.frame_akku_hv)
         self.line_4.setGeometry(QtCore.QRect(130, 10, 5, 881))
-        self.line_4.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_4.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_4.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_4.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_4.setObjectName("line_4")
@@ -1522,11 +1475,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_State_SC.setText("")
         self.btn_LED_State_SC.setObjectName("btn_LED_State_SC")
         self.frame_6 = QtWidgets.QFrame(self.page_3)
@@ -1544,7 +1493,7 @@ class Ui_MainWindow(object):
         self.label_SC.setObjectName("label_SC")
         self.line_5 = QtWidgets.QFrame(self.frame_6)
         self.line_5.setGeometry(QtCore.QRect(130, 10, 5, 881))
-        self.line_5.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_5.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_5.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_5.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_5.setObjectName("line_5")
@@ -1679,11 +1628,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_SC_Motors_Front.setText("")
         self.btn_LED_SC_Motors_Front.setObjectName("btn_LED_SC_Motors_Front")
         self.btn_LED_SC_Motors_Rear = QtWidgets.QPushButton(self.frame_sc_errors)
@@ -1693,11 +1638,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_SC_Motors_Rear.setText("")
         self.btn_LED_SC_Motors_Rear.setObjectName("btn_LED_SC_Motors_Rear")
         self.btn_LED_SC_BOTS = QtWidgets.QPushButton(self.frame_sc_errors)
@@ -1707,11 +1648,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_SC_BOTS.setText("")
         self.btn_LED_SC_BOTS.setObjectName("btn_LED_SC_BOTS")
         self.btn_LED_SC_Akku = QtWidgets.QPushButton(self.frame_sc_errors)
@@ -1721,11 +1658,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_SC_Akku.setText("")
         self.btn_LED_SC_Akku.setObjectName("btn_LED_SC_Akku")
         self.frame_7 = QtWidgets.QFrame(self.page_3)
@@ -1897,11 +1830,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse1.setText("")
         self.btn_LED_Fuse1.setObjectName("btn_LED_Fuse1")
         self.btn_LED_Fuse2_SSB = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -1911,11 +1840,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse2_SSB.setText("")
         self.btn_LED_Fuse2_SSB.setObjectName("btn_LED_Fuse2_SSB")
         self.btn_LED_Fuse3_IMD = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -1925,11 +1850,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse3_IMD.setText("")
         self.btn_LED_Fuse3_IMD.setObjectName("btn_LED_Fuse3_IMD")
         self.btn_LED_Fuse4_Inv = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -1939,11 +1860,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse4_Inv.setText("")
         self.btn_LED_Fuse4_Inv.setObjectName("btn_LED_Fuse4_Inv")
         self.btn_LED_Fuse5_GPS = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -1953,11 +1870,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse5_GPS.setText("")
         self.btn_LED_Fuse5_GPS.setObjectName("btn_LED_Fuse5_GPS")
         self.btn_LED_Fuse6_VCU = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -1967,11 +1880,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse6_VCU.setText("")
         self.btn_LED_Fuse6_VCU.setObjectName("btn_LED_Fuse6_VCU")
         self.btn_LED_Fuse7_BSE = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -1981,11 +1890,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse7_BSE.setText("")
         self.btn_LED_Fuse7_BSE.setObjectName("btn_LED_Fuse7_BSE")
         self.btn_LED_Fuse8_DIS = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -1995,11 +1900,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse8_DIS.setText("")
         self.btn_LED_Fuse8_DIS.setObjectName("btn_LED_Fuse8_DIS")
         self.btn_LED_Fuse9_SWS = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2009,11 +1910,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse9_SWS.setText("")
         self.btn_LED_Fuse9_SWS.setObjectName("btn_LED_Fuse9_SWS")
         self.btn_LED_Fuse10_TPMS = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2023,11 +1920,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse10_TPMS.setText("")
         self.btn_LED_Fuse10_TPMS.setObjectName("btn_LED_Fuse10_TPMS")
         self.btn_LED_Fuse11 = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2037,11 +1930,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse11.setText("")
         self.btn_LED_Fuse11.setObjectName("btn_LED_Fuse11")
         self.btn_LED_Fuse12 = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2051,11 +1940,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse12.setText("")
         self.btn_LED_Fuse12.setObjectName("btn_LED_Fuse12")
         self.btn_LED_Fuse1A_1_RTDS = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2065,11 +1950,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse1A_1_RTDS.setText("")
         self.btn_LED_Fuse1A_1_RTDS.setObjectName("btn_LED_Fuse1A_1_RTDS")
         self.btn_LED_Fuse1A_2_Brakelight = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2079,11 +1960,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse1A_2_Brakelight.setText("")
         self.btn_LED_Fuse1A_2_Brakelight.setObjectName("btn_LED_Fuse1A_2_Brakelight")
         self.btn_LED_Fuse1A_3 = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2093,11 +1970,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse1A_3.setText("")
         self.btn_LED_Fuse1A_3.setObjectName("btn_LED_Fuse1A_3")
         self.btn_LED_Fuse1A_4 = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2107,11 +1980,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse1A_4.setText("")
         self.btn_LED_Fuse1A_4.setObjectName("btn_LED_Fuse1A_4")
         self.btn_LED_Fuse6A_1_Motor_Fans = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2121,11 +1990,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse6A_1_Motor_Fans.setText("")
         self.btn_LED_Fuse6A_1_Motor_Fans.setObjectName("btn_LED_Fuse6A_1_Motor_Fans")
         self.btn_LED_Fuse6A_2_DRS = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2135,11 +2000,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse6A_2_DRS.setText("")
         self.btn_LED_Fuse6A_2_DRS.setObjectName("btn_LED_Fuse6A_2_DRS")
         self.btn_LED_Fuse6A_3_SC = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2149,11 +2010,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse6A_3_SC.setText("")
         self.btn_LED_Fuse6A_3_SC.setObjectName("btn_LED_Fuse6A_3_SC")
         self.btn_LED_Fuse6A_4_Vectorbox = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2163,11 +2020,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse6A_4_Vectorbox.setText("")
         self.btn_LED_Fuse6A_4_Vectorbox.setObjectName("btn_LED_Fuse6A_4_Vectorbox")
         self.btn_LED_Fuse6A_5_Mot_Pumps = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2177,11 +2030,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse6A_5_Mot_Pumps.setText("")
         self.btn_LED_Fuse6A_5_Mot_Pumps.setObjectName("btn_LED_Fuse6A_5_Mot_Pumps")
         self.btn_LED_Fuse6A_6 = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2191,11 +2040,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse6A_6.setText("")
         self.btn_LED_Fuse6A_6.setObjectName("btn_LED_Fuse6A_6")
         self.btn_LED_Fuse12A_1_Inv_Fans_Fr = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2205,11 +2050,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse12A_1_Inv_Fans_Fr.setText("")
         self.btn_LED_Fuse12A_1_Inv_Fans_Fr.setObjectName("btn_LED_Fuse12A_1_Inv_Fans_Fr")
         self.btn_LED_Fuse12A_2_Inv_Fans_Re = QtWidgets.QPushButton(self.frame_sc_messung_2)
@@ -2219,16 +2060,12 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fuse12A_2_Inv_Fans_Re.setText("")
         self.btn_LED_Fuse12A_2_Inv_Fans_Re.setObjectName("btn_LED_Fuse12A_2_Inv_Fans_Re")
         self.line_6 = QtWidgets.QFrame(self.page_3)
         self.line_6.setGeometry(QtCore.QRect(620, 10, 5, 881))
-        self.line_6.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_6.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_6.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_6.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_6.setObjectName("line_6")
@@ -2267,7 +2104,7 @@ class Ui_MainWindow(object):
         self.lineEdit_TunKnob_2.setObjectName("lineEdit_TunKnob_2")
         self.line_7 = QtWidgets.QFrame(self.frame_akku_hv_2)
         self.line_7.setGeometry(QtCore.QRect(130, 10, 5, 881))
-        self.line_7.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_7.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_7.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_7.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_7.setObjectName("line_7")
@@ -2332,11 +2169,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Start_Button.setText("")
         self.btn_LED_Start_Button.setObjectName("btn_LED_Start_Button")
         self.btn_LED_HV_Button = QtWidgets.QPushButton(self.frame_akku_hv_2)
@@ -2346,11 +2179,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_HV_Button.setText("")
         self.btn_LED_HV_Button.setObjectName("btn_LED_HV_Button")
         self.btn_LED_Reku_Button = QtWidgets.QPushButton(self.frame_akku_hv_2)
@@ -2360,11 +2189,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Reku_Button.setText("")
         self.btn_LED_Reku_Button.setObjectName("btn_LED_Reku_Button")
         self.btn_LED_Lenkrad_1 = QtWidgets.QPushButton(self.frame_akku_hv_2)
@@ -2374,11 +2199,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Lenkrad_1.setText("")
         self.btn_LED_Lenkrad_1.setObjectName("btn_LED_Lenkrad_1")
         self.btn_LED_Lenkrad_2 = QtWidgets.QPushButton(self.frame_akku_hv_2)
@@ -2388,11 +2209,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Lenkrad_2.setText("")
         self.btn_LED_Lenkrad_2.setObjectName("btn_LED_Lenkrad_2")
         self.btn_LED_Lenkrad_3 = QtWidgets.QPushButton(self.frame_akku_hv_2)
@@ -2402,11 +2219,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Lenkrad_3.setText("")
         self.btn_LED_Lenkrad_3.setObjectName("btn_LED_Lenkrad_3")
         self.btn_LED_Lenkrad_4 = QtWidgets.QPushButton(self.frame_akku_hv_2)
@@ -2416,11 +2229,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Lenkrad_4.setText("")
         self.btn_LED_Lenkrad_4.setObjectName("btn_LED_Lenkrad_4")
         self.btn_LED_Lenkrad_5 = QtWidgets.QPushButton(self.frame_akku_hv_2)
@@ -2430,11 +2239,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Lenkrad_5.setText("")
         self.btn_LED_Lenkrad_5.setObjectName("btn_LED_Lenkrad_5")
         self.btn_LED_Lenkrad_6 = QtWidgets.QPushButton(self.frame_akku_hv_2)
@@ -2444,11 +2249,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Lenkrad_6.setText("")
         self.btn_LED_Lenkrad_6.setObjectName("btn_LED_Lenkrad_6")
         self.frame_GPS_9_axis_Front = QtWidgets.QFrame(self.page_3)
@@ -2615,7 +2416,7 @@ class Ui_MainWindow(object):
         self.label_GPS_9_axis_Front.setObjectName("label_GPS_9_axis_Front")
         self.line_8 = QtWidgets.QFrame(self.frame_GPS_9_axis_Front)
         self.line_8.setGeometry(QtCore.QRect(140, 10, 5, 881))
-        self.line_8.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_8.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_8.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_8.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_8.setObjectName("line_8")
@@ -2803,7 +2604,7 @@ class Ui_MainWindow(object):
         self.label_GPS_9_axis_Rear.setObjectName("label_GPS_9_axis_Rear")
         self.line_9 = QtWidgets.QFrame(self.frame_GPS_9_axis_Rear)
         self.line_9.setGeometry(QtCore.QRect(140, 10, 5, 881))
-        self.line_9.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_9.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_9.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_9.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_9.setObjectName("line_9")
@@ -2961,7 +2762,7 @@ class Ui_MainWindow(object):
         self.label_Fusebox_Currents.setObjectName("label_Fusebox_Currents")
         self.line_10 = QtWidgets.QFrame(self.frame_Fusebox_Currents)
         self.line_10.setGeometry(QtCore.QRect(140, 10, 5, 881))
-        self.line_10.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_10.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_10.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_10.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_10.setObjectName("line_10")
@@ -3099,7 +2900,7 @@ class Ui_MainWindow(object):
         self.label_Kistler.setObjectName("label_Kistler")
         self.line_11 = QtWidgets.QFrame(self.frame_Kistler)
         self.line_11.setGeometry(QtCore.QRect(140, 10, 5, 881))
-        self.line_11.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_11.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_11.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_11.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_11.setObjectName("line_11")
@@ -3167,7 +2968,7 @@ class Ui_MainWindow(object):
         self.label_Datenlogger.setObjectName("label_Datenlogger")
         self.line_12 = QtWidgets.QFrame(self.frame_Datenlogger)
         self.line_12.setGeometry(QtCore.QRect(140, 10, 5, 881))
-        self.line_12.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_12.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_12.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_12.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_12.setObjectName("line_12")
@@ -3286,7 +3087,7 @@ class Ui_MainWindow(object):
         self.lineEdit_IGBTtemp_VL.setObjectName("lineEdit_IGBTtemp_VL")
         self.line_14 = QtWidgets.QFrame(self.frame_VL)
         self.line_14.setGeometry(QtCore.QRect(270, 10, 5, 881))
-        self.line_14.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_14.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_14.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_14.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_14.setObjectName("line_14")
@@ -3409,11 +3210,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_System_bereit_VL.setText("")
         self.btn_LED_System_bereit_VL.setObjectName("btn_LED_System_bereit_VL")
         self.btn_LED_Warnung_VL = QtWidgets.QPushButton(self.frame_VL)
@@ -3423,11 +3220,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Warnung_VL.setText("")
         self.btn_LED_Warnung_VL.setObjectName("btn_LED_Warnung_VL")
         self.btn_LED_Fehler_VL = QtWidgets.QPushButton(self.frame_VL)
@@ -3437,11 +3230,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fehler_VL.setText("")
         self.btn_LED_Fehler_VL.setObjectName("btn_LED_Fehler_VL")
         self.btn_LED_Derating_VL = QtWidgets.QPushButton(self.frame_VL)
@@ -3451,11 +3240,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Derating_VL.setText("")
         self.btn_LED_Derating_VL.setObjectName("btn_LED_Derating_VL")
         self.btn_LED_Spiegel_HV_VL = QtWidgets.QPushButton(self.frame_VL)
@@ -3465,11 +3250,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Spiegel_HV_VL.setText("")
         self.btn_LED_Spiegel_HV_VL.setObjectName("btn_LED_Spiegel_HV_VL")
         self.btn_LED_Quit_HV_VL = QtWidgets.QPushButton(self.frame_VL)
@@ -3479,11 +3260,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Quit_HV_VL.setText("")
         self.btn_LED_Quit_HV_VL.setObjectName("btn_LED_Quit_HV_VL")
         self.btn_LED_Spiegel_Regelerfeigabe_VL = QtWidgets.QPushButton(self.frame_VL)
@@ -3493,11 +3270,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Spiegel_Regelerfeigabe_VL.setText("")
         self.btn_LED_Spiegel_Regelerfeigabe_VL.setObjectName("btn_LED_Spiegel_Regelerfeigabe_VL")
         self.btn_LED_Quit_Reglerfreigabe_VL = QtWidgets.QPushButton(self.frame_VL)
@@ -3507,11 +3280,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Quit_Reglerfreigabe_VL.setText("")
         self.btn_LED_Quit_Reglerfreigabe_VL.setObjectName("btn_LED_Quit_Reglerfreigabe_VL")
         self.frame_VR = QtWidgets.QFrame(self.page_inverter)
@@ -3626,7 +3395,7 @@ class Ui_MainWindow(object):
         self.lineEdit_IGBTtemp_VR.setObjectName("lineEdit_IGBTtemp_VR")
         self.line_13 = QtWidgets.QFrame(self.frame_VR)
         self.line_13.setGeometry(QtCore.QRect(270, 10, 5, 881))
-        self.line_13.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_13.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_13.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_13.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_13.setObjectName("line_13")
@@ -3750,11 +3519,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_System_bereit_VR.setText("")
         self.btn_LED_System_bereit_VR.setObjectName("btn_LED_System_bereit_VR")
         self.btn_LED_Warnung_VR = QtWidgets.QPushButton(self.frame_VR)
@@ -3764,11 +3529,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Warnung_VR.setText("")
         self.btn_LED_Warnung_VR.setObjectName("btn_LED_Warnung_VR")
         self.btn_LED_Fehler_VR = QtWidgets.QPushButton(self.frame_VR)
@@ -3778,11 +3539,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fehler_VR.setText("")
         self.btn_LED_Fehler_VR.setObjectName("btn_LED_Fehler_VR")
         self.btn_LED_Derating_VR = QtWidgets.QPushButton(self.frame_VR)
@@ -3792,11 +3549,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Derating_VR.setText("")
         self.btn_LED_Derating_VR.setObjectName("btn_LED_Derating_VR")
         self.btn_LED_Spiegel_HV_VR = QtWidgets.QPushButton(self.frame_VR)
@@ -3806,11 +3559,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Spiegel_HV_VR.setText("")
         self.btn_LED_Spiegel_HV_VR.setObjectName("btn_LED_Spiegel_HV_VR")
         self.btn_LED_Quit_HV_VR = QtWidgets.QPushButton(self.frame_VR)
@@ -3820,11 +3569,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Quit_HV_VR.setText("")
         self.btn_LED_Quit_HV_VR.setObjectName("btn_LED_Quit_HV_VR")
         self.btn_LED_Spiegel_Regelerfeigabe_VR = QtWidgets.QPushButton(self.frame_VR)
@@ -3834,11 +3579,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Spiegel_Regelerfeigabe_VR.setText("")
         self.btn_LED_Spiegel_Regelerfeigabe_VR.setObjectName("btn_LED_Spiegel_Regelerfeigabe_VR")
         self.btn_LED_Quit_Reglerfreigabe_VR = QtWidgets.QPushButton(self.frame_VR)
@@ -3848,11 +3589,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Quit_Reglerfreigabe_VR.setText("")
         self.btn_LED_Quit_Reglerfreigabe_VR.setObjectName("btn_LED_Quit_Reglerfreigabe_VR")
         self.frame_HR = QtWidgets.QFrame(self.page_inverter)
@@ -3966,7 +3703,7 @@ class Ui_MainWindow(object):
         self.lineEdit_IGBTtemp_HR.setObjectName("lineEdit_IGBTtemp_HR")
         self.line_15 = QtWidgets.QFrame(self.frame_HR)
         self.line_15.setGeometry(QtCore.QRect(270, 10, 5, 881))
-        self.line_15.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_15.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_15.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_15.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_15.setObjectName("line_15")
@@ -4089,11 +3826,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_System_bereit_HR.setText("")
         self.btn_LED_System_bereit_HR.setObjectName("btn_LED_System_bereit_HR")
         self.btn_LED_Warnung_HR = QtWidgets.QPushButton(self.frame_HR)
@@ -4103,11 +3836,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Warnung_HR.setText("")
         self.btn_LED_Warnung_HR.setObjectName("btn_LED_Warnung_HR")
         self.btn_LED_Fehler_HR = QtWidgets.QPushButton(self.frame_HR)
@@ -4117,11 +3846,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fehler_HR.setText("")
         self.btn_LED_Fehler_HR.setObjectName("btn_LED_Fehler_HR")
         self.btn_LED_Derating_HR = QtWidgets.QPushButton(self.frame_HR)
@@ -4131,11 +3856,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Derating_HR.setText("")
         self.btn_LED_Derating_HR.setObjectName("btn_LED_Derating_HR")
         self.btn_LED_Spiegel_HV_HR = QtWidgets.QPushButton(self.frame_HR)
@@ -4145,11 +3866,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Spiegel_HV_HR.setText("")
         self.btn_LED_Spiegel_HV_HR.setObjectName("btn_LED_Spiegel_HV_HR")
         self.btn_LED_Quit_HV_HR = QtWidgets.QPushButton(self.frame_HR)
@@ -4159,11 +3876,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Quit_HV_HR.setText("")
         self.btn_LED_Quit_HV_HR.setObjectName("btn_LED_Quit_HV_HR")
         self.btn_LED_Spiegel_Regelerfeigabe_HR = QtWidgets.QPushButton(self.frame_HR)
@@ -4173,11 +3886,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Spiegel_Regelerfeigabe_HR.setText("")
         self.btn_LED_Spiegel_Regelerfeigabe_HR.setObjectName("btn_LED_Spiegel_Regelerfeigabe_HR")
         self.btn_LED_Quit_Reglerfreigabe_HR = QtWidgets.QPushButton(self.frame_HR)
@@ -4187,11 +3896,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Quit_Reglerfreigabe_HR.setText("")
         self.btn_LED_Quit_Reglerfreigabe_HR.setObjectName("btn_LED_Quit_Reglerfreigabe_HR")
         self.frame_HL = QtWidgets.QFrame(self.page_inverter)
@@ -4305,7 +4010,7 @@ class Ui_MainWindow(object):
         self.lineEdit_IGBTtemp_HL.setObjectName("lineEdit_IGBTtemp_HL")
         self.line_16 = QtWidgets.QFrame(self.frame_HL)
         self.line_16.setGeometry(QtCore.QRect(270, 10, 5, 881))
-        self.line_16.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_16.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_16.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_16.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_16.setObjectName("line_16")
@@ -4428,11 +4133,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_System_bereit_HL.setText("")
         self.btn_LED_System_bereit_HL.setObjectName("btn_LED_System_bereit_HL")
         self.btn_LED_Warnung_HL = QtWidgets.QPushButton(self.frame_HL)
@@ -4442,11 +4143,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Warnung_HL.setText("")
         self.btn_LED_Warnung_HL.setObjectName("btn_LED_Warnung_HL")
         self.btn_LED_Fehler_HL = QtWidgets.QPushButton(self.frame_HL)
@@ -4456,11 +4153,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Fehler_HL.setText("")
         self.btn_LED_Fehler_HL.setObjectName("btn_LED_Fehler_HL")
         self.btn_LED_Derating_HL = QtWidgets.QPushButton(self.frame_HL)
@@ -4470,11 +4163,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Derating_HL.setText("")
         self.btn_LED_Derating_HL.setObjectName("btn_LED_Derating_HL")
         self.btn_LED_Spiegel_HV_HL = QtWidgets.QPushButton(self.frame_HL)
@@ -4484,11 +4173,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Spiegel_HV_HL.setText("")
         self.btn_LED_Spiegel_HV_HL.setObjectName("btn_LED_Spiegel_HV_HL")
         self.btn_LED_Quit_HV_HL = QtWidgets.QPushButton(self.frame_HL)
@@ -4498,11 +4183,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Quit_HV_HL.setText("")
         self.btn_LED_Quit_HV_HL.setObjectName("btn_LED_Quit_HV_HL")
         self.btn_LED_Spiegel_Regelerfeigabe_HL = QtWidgets.QPushButton(self.frame_HL)
@@ -4512,11 +4193,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Spiegel_Regelerfeigabe_HL.setText("")
         self.btn_LED_Spiegel_Regelerfeigabe_HL.setObjectName("btn_LED_Spiegel_Regelerfeigabe_HL")
         self.btn_LED_Quit_Reglerfreigabe_HL = QtWidgets.QPushButton(self.frame_HL)
@@ -4526,11 +4203,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Quit_Reglerfreigabe_HL.setText("")
         self.btn_LED_Quit_Reglerfreigabe_HL.setObjectName("btn_LED_Quit_Reglerfreigabe_HL")
         self.Pages.addWidget(self.page_inverter)
@@ -4657,11 +4330,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Pedale_implausibel_Wert.setText("")
         self.btn_LED_Pedale_implausibel_Wert.setObjectName("btn_LED_Pedale_implausibel_Wert")
         self.btn_LED_APPS_implausibel_Wert = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4671,11 +4340,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_APPS_implausibel_Wert.setText("")
         self.btn_LED_APPS_implausibel_Wert.setObjectName("btn_LED_APPS_implausibel_Wert")
         self.btn_LED_APPS1_Wert = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4685,11 +4350,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_APPS1_Wert.setText("")
         self.btn_LED_APPS1_Wert.setObjectName("btn_LED_APPS1_Wert")
         self.btn_LED_APPS2_Wert = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4699,11 +4360,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_APPS2_Wert.setText("")
         self.btn_LED_APPS2_Wert.setObjectName("btn_LED_APPS2_Wert")
         self.btn_LED_Bremsdruck_vorne = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4713,11 +4370,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Bremsdruck_vorne.setText("")
         self.btn_LED_Bremsdruck_vorne.setObjectName("btn_LED_Bremsdruck_vorne")
         self.btn_LED_Bremsdruck_hinten = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4727,11 +4380,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Bremsdruck_hinten.setText("")
         self.btn_LED_Bremsdruck_hinten.setObjectName("btn_LED_Bremsdruck_hinten")
         self.btn_LED_Bremskraftsensor = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4741,11 +4390,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Bremskraftsensor.setText("")
         self.btn_LED_Bremskraftsensor.setObjectName("btn_LED_Bremskraftsensor")
         self.btn_LED_Lenkwinkel = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4755,11 +4400,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Lenkwinkel.setText("")
         self.btn_LED_Lenkwinkel.setObjectName("btn_LED_Lenkwinkel")
         self.btn_LED_ACC_X = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4769,11 +4410,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_ACC_X.setText("")
         self.btn_LED_ACC_X.setObjectName("btn_LED_ACC_X")
         self.btn_LED_ACC_Y = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4783,11 +4420,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_ACC_Y.setText("")
         self.btn_LED_ACC_Y.setObjectName("btn_LED_ACC_Y")
         self.btn_LED_ROT_Z = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4797,11 +4430,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_ROT_Z.setText("")
         self.btn_LED_ROT_Z.setObjectName("btn_LED_ROT_Z")
         self.btn_LED_V_GPS = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4811,11 +4440,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_V_GPS.setText("")
         self.btn_LED_V_GPS.setObjectName("btn_LED_V_GPS")
         self.btn_LED_Invertertemp_FrR = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4825,11 +4450,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Invertertemp_FrR.setText("")
         self.btn_LED_Invertertemp_FrR.setObjectName("btn_LED_Invertertemp_FrR")
         self.btn_LED_Invertertemp_FrL = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4839,11 +4460,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Invertertemp_FrL.setText("")
         self.btn_LED_Invertertemp_FrL.setObjectName("btn_LED_Invertertemp_FrL")
         self.btn_LED_Invertertemp_ReR = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4853,11 +4470,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Invertertemp_ReR.setText("")
         self.btn_LED_Invertertemp_ReR.setObjectName("btn_LED_Invertertemp_ReR")
         self.btn_LED_Invertertemp_ReL = QtWidgets.QPushButton(self.frame_Wert_2)
@@ -4867,16 +4480,12 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Invertertemp_ReL.setText("")
         self.btn_LED_Invertertemp_ReL.setObjectName("btn_LED_Invertertemp_ReL")
         self.line_18 = QtWidgets.QFrame(self.frame_Wert)
         self.line_18.setGeometry(QtCore.QRect(140, 10, 5, 881))
-        self.line_18.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_18.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_18.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_18.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_18.setObjectName("line_18")
@@ -4929,11 +4538,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Pedale_implausibel_Latching.setText("")
         self.btn_LED_Pedale_implausibel_Latching.setObjectName("btn_LED_Pedale_implausibel_Latching")
         self.btn_LED_APPS_implausibel_Latching = QtWidgets.QPushButton(self.frame_Latching_2)
@@ -4943,11 +4548,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_APPS_implausibel_Latching.setText("")
         self.btn_LED_APPS_implausibel_Latching.setObjectName("btn_LED_APPS_implausibel_Latching")
         self.btn_LED_APPS1_Latching = QtWidgets.QPushButton(self.frame_Latching_2)
@@ -4957,11 +4558,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_APPS1_Latching.setText("")
         self.btn_LED_APPS1_Latching.setObjectName("btn_LED_APPS1_Latching")
         self.btn_LED_APPS2_Latching = QtWidgets.QPushButton(self.frame_Latching_2)
@@ -4971,16 +4568,12 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_APPS2_Latching.setText("")
         self.btn_LED_APPS2_Latching.setObjectName("btn_LED_APPS2_Latching")
         self.line_19 = QtWidgets.QFrame(self.frame_Latching)
         self.line_19.setGeometry(QtCore.QRect(140, 10, 5, 881))
-        self.line_19.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_19.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_19.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_19.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_19.setObjectName("line_19")
@@ -5129,11 +4722,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_SSB_Front.setText("")
         self.btn_LED_SSB_Front.setObjectName("btn_LED_SSB_Front")
         self.btn_LED_BSE = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5143,11 +4732,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_BSE.setText("")
         self.btn_LED_BSE.setObjectName("btn_LED_BSE")
         self.btn_LED_SSB_Rear = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5157,11 +4742,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_SSB_Rear.setText("")
         self.btn_LED_SSB_Rear.setObjectName("btn_LED_SSB_Rear")
         self.btn_LED_GPS_Front = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5171,11 +4752,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_GPS_Front.setText("")
         self.btn_LED_GPS_Front.setObjectName("btn_LED_GPS_Front")
         self.btn_LED_9_Achs_ACC_Front = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5185,11 +4762,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_9_Achs_ACC_Front.setText("")
         self.btn_LED_9_Achs_ACC_Front.setObjectName("btn_LED_9_Achs_ACC_Front")
         self.btn_LED_9_Achs_ROT_Front = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5199,11 +4772,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_9_Achs_ROT_Front.setText("")
         self.btn_LED_9_Achs_ROT_Front.setObjectName("btn_LED_9_Achs_ROT_Front")
         self.btn_LED_9_Achs_MAG_Front = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5213,11 +4782,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_9_Achs_MAG_Front.setText("")
         self.btn_LED_9_Achs_MAG_Front.setObjectName("btn_LED_9_Achs_MAG_Front")
         self.btn_LED_GPS_Rear = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5227,11 +4792,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_GPS_Rear.setText("")
         self.btn_LED_GPS_Rear.setObjectName("btn_LED_GPS_Rear")
         self.btn_LED_9_Achs_ACC_Rear = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5241,11 +4802,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_9_Achs_ACC_Rear.setText("")
         self.btn_LED_9_Achs_ACC_Rear.setObjectName("btn_LED_9_Achs_ACC_Rear")
         self.btn_LED_9_Achs_ROT_Rear = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5255,11 +4812,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_9_Achs_ROT_Rear.setText("")
         self.btn_LED_9_Achs_ROT_Rear.setObjectName("btn_LED_9_Achs_ROT_Rear")
         self.btn_LED_9_Achs_MAG_Rear = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5269,11 +4822,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_9_Achs_MAG_Rear.setText("")
         self.btn_LED_9_Achs_MAG_Rear.setObjectName("btn_LED_9_Achs_MAG_Rear")
         self.btn_LED_AMS = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5283,11 +4832,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_AMS.setText("")
         self.btn_LED_AMS.setObjectName("btn_LED_AMS")
         self.btn_LED_Energymeter = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5297,11 +4842,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Energymeter.setText("")
         self.btn_LED_Energymeter.setObjectName("btn_LED_Energymeter")
         self.btn_LED_PDU = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5311,11 +4852,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_PDU.setText("")
         self.btn_LED_PDU.setObjectName("btn_LED_PDU")
         self.btn_LED_DIS = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5325,11 +4862,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_DIS.setText("")
         self.btn_LED_DIS.setObjectName("btn_LED_DIS")
         self.btn_LED_DIS_Param = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5339,11 +4872,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_DIS_Param.setText("")
         self.btn_LED_DIS_Param.setObjectName("btn_LED_DIS_Param")
         self.btn_LED_Inverter_FR = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5353,11 +4882,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Inverter_FR.setText("")
         self.btn_LED_Inverter_FR.setObjectName("btn_LED_Inverter_FR")
         self.btn_LED_Inverter_FL = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5367,11 +4892,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Inverter_FL.setText("")
         self.btn_LED_Inverter_FL.setObjectName("btn_LED_Inverter_FL")
         self.btn_LED_Inverter_RR = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5381,11 +4902,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Inverter_RR.setText("")
         self.btn_LED_Inverter_RR.setObjectName("btn_LED_Inverter_RR")
         self.btn_LED_Inverter_RL = QtWidgets.QPushButton(self.frame_Timeout_CAN_2)
@@ -5395,16 +4912,12 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Inverter_RL.setText("")
         self.btn_LED_Inverter_RL.setObjectName("btn_LED_Inverter_RL")
         self.line_17 = QtWidgets.QFrame(self.frame_Timeout_CAN)
         self.line_17.setGeometry(QtCore.QRect(140, 10, 5, 881))
-        self.line_17.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_17.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_17.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_17.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_17.setObjectName("line_17")
@@ -5535,7 +5048,7 @@ class Ui_MainWindow(object):
         self.label_General.setObjectName("label_General")
         self.line_21 = QtWidgets.QFrame(self.frame_General)
         self.line_21.setGeometry(QtCore.QRect(140, 10, 5, 881))
-        self.line_21.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_21.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_21.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_21.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_21.setObjectName("line_21")
@@ -5552,11 +5065,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_Energiesparmodus_General.setText("")
         self.btn_LED_Energiesparmodus_General.setObjectName("btn_LED_Energiesparmodus_General")
         self.frame_TV_KF = QtWidgets.QFrame(self.page_math)
@@ -5683,7 +5192,7 @@ class Ui_MainWindow(object):
         self.label_TV_KF.setObjectName("label_TV_KF")
         self.line_22 = QtWidgets.QFrame(self.frame_TV_KF)
         self.line_22.setGeometry(QtCore.QRect(140, 10, 5, 881))
-        self.line_22.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_22.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_22.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_22.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_22.setObjectName("line_22")
@@ -5871,7 +5380,7 @@ class Ui_MainWindow(object):
         self.label_Energy_Control.setObjectName("label_Energy_Control")
         self.line_23 = QtWidgets.QFrame(self.frame_Energy_Control)
         self.line_23.setGeometry(QtCore.QRect(140, 10, 5, 881))
-        self.line_23.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_23.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_23.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_23.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_23.setObjectName("line_23")
@@ -6007,11 +5516,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_1A_1_RTDS.setText("")
         self.btn_LED_1A_1_RTDS.setObjectName("btn_LED_1A_1_RTDS")
         self.btn_LED_1A_2_Brakelight = QtWidgets.QPushButton(self.frame_Switches_grey)
@@ -6021,11 +5526,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_1A_2_Brakelight.setText("")
         self.btn_LED_1A_2_Brakelight.setObjectName("btn_LED_1A_2_Brakelight")
         self.btn_LED_1A_3_Switches = QtWidgets.QPushButton(self.frame_Switches_grey)
@@ -6035,11 +5536,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_1A_3_Switches.setText("")
         self.btn_LED_1A_3_Switches.setObjectName("btn_LED_1A_3_Switches")
         self.btn_LED_1A_4_Switches = QtWidgets.QPushButton(self.frame_Switches_grey)
@@ -6049,11 +5546,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_1A_4_Switches.setText("")
         self.btn_LED_1A_4_Switches.setObjectName("btn_LED_1A_4_Switches")
         self.btn_LED_6A_1_Motor_Fans = QtWidgets.QPushButton(self.frame_Switches_grey)
@@ -6063,11 +5556,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_6A_1_Motor_Fans.setText("")
         self.btn_LED_6A_1_Motor_Fans.setObjectName("btn_LED_6A_1_Motor_Fans")
         self.btn_LED_6A_2_DRS = QtWidgets.QPushButton(self.frame_Switches_grey)
@@ -6077,11 +5566,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_6A_2_DRS.setText("")
         self.btn_LED_6A_2_DRS.setObjectName("btn_LED_6A_2_DRS")
         self.btn_LED_6A_3_SC = QtWidgets.QPushButton(self.frame_Switches_grey)
@@ -6091,11 +5576,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_6A_3_SC.setText("")
         self.btn_LED_6A_3_SC.setObjectName("btn_LED_6A_3_SC")
         self.btn_LED_6A_4_Vectorbox = QtWidgets.QPushButton(self.frame_Switches_grey)
@@ -6105,11 +5586,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_6A_4_Vectorbox.setText("")
         self.btn_LED_6A_4_Vectorbox.setObjectName("btn_LED_6A_4_Vectorbox")
         self.btn_LED_6A_5_Motor_Pump = QtWidgets.QPushButton(self.frame_Switches_grey)
@@ -6119,11 +5596,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_6A_5_Motor_Pump.setText("")
         self.btn_LED_6A_5_Motor_Pump.setObjectName("btn_LED_6A_5_Motor_Pump")
         self.btn_LED_6A_6_Switches = QtWidgets.QPushButton(self.frame_Switches_grey)
@@ -6133,11 +5606,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_6A_6_Switches.setText("")
         self.btn_LED_6A_6_Switches.setObjectName("btn_LED_6A_6_Switches")
         self.btn_LED_12A_1_Inv_Fans_Fr = QtWidgets.QPushButton(self.frame_Switches_grey)
@@ -6147,11 +5616,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_12A_1_Inv_Fans_Fr.setText("")
         self.btn_LED_12A_1_Inv_Fans_Fr.setObjectName("btn_LED_12A_1_Inv_Fans_Fr")
         self.btn_LED_12A_2_Inv_Fans_Re = QtWidgets.QPushButton(self.frame_Switches_grey)
@@ -6161,11 +5626,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_12A_2_Inv_Fans_Re.setText("")
         self.btn_LED_12A_2_Inv_Fans_Re.setObjectName("btn_LED_12A_2_Inv_Fans_Re")
         self.label_Vehicle_State = QtWidgets.QLabel(self.frame_sc_messung_6)
@@ -6227,11 +5688,7 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_HV_Freigabe.setText("")
         self.btn_LED_HV_Freigabe.setObjectName("btn_LED_HV_Freigabe")
         self.btn_LED_IC_Voltage_OK = QtWidgets.QPushButton(self.frame_sc_messung_6)
@@ -6241,16 +5698,12 @@ class Ui_MainWindow(object):
 "    border-radius: 10px;\n"
 "    background-color:rgb(100, 100, 100);\n"
 "}\n"
-"QPushButton:hover {\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    background-color: rgb(38, 255, 0);\n"
-"}")
+"")
         self.btn_LED_IC_Voltage_OK.setText("")
         self.btn_LED_IC_Voltage_OK.setObjectName("btn_LED_IC_Voltage_OK")
         self.line_24 = QtWidgets.QFrame(self.frame_Switches)
         self.line_24.setGeometry(QtCore.QRect(140, 10, 5, 881))
-        self.line_24.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_24.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_24.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_24.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_24.setObjectName("line_24")
@@ -6305,7 +5758,7 @@ class Ui_MainWindow(object):
         self.lineEdit_Error_Counter.setObjectName("lineEdit_Error_Counter")
         self.line_25 = QtWidgets.QFrame(self.frame_akku_hv_7)
         self.line_25.setGeometry(QtCore.QRect(130, 10, 5, 881))
-        self.line_25.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_25.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_25.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_25.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_25.setObjectName("line_25")
@@ -6324,7 +5777,7 @@ class Ui_MainWindow(object):
         self.lineEdit_Timestamp_Timestamp.setObjectName("lineEdit_Timestamp_Timestamp")
         self.line_26 = QtWidgets.QFrame(self.frame_akku_hv_8)
         self.line_26.setGeometry(QtCore.QRect(130, 10, 5, 881))
-        self.line_26.setStyleSheet("background-color: rgb(255, 101, 24)")
+        self.line_26.setStyleSheet("background-color: rgb(233, 94, 15)")
         self.line_26.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_26.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_26.setObjectName("line_26")
@@ -6354,7 +5807,7 @@ class Ui_MainWindow(object):
         self.top_menu.setFrameShadow(QtWidgets.QFrame.Raised)
         self.top_menu.setObjectName("top_menu")
         self.btn_config_values = QtWidgets.QPushButton(self.top_menu)
-        self.btn_config_values.setGeometry(QtCore.QRect(0, 10, 75, 30))
+        self.btn_config_values.setGeometry(QtCore.QRect(0, 10, 111, 30))
         self.btn_config_values.setStyleSheet("QPushButton {\n"
 "background-color: none;\n"
 "border:  none;\n"
@@ -6367,7 +5820,7 @@ class Ui_MainWindow(object):
 "}")
         self.btn_config_values.setObjectName("btn_config_values")
         self.btn_sensors = QtWidgets.QPushButton(self.top_menu)
-        self.btn_sensors.setGeometry(QtCore.QRect(75, 10, 75, 30))
+        self.btn_sensors.setGeometry(QtCore.QRect(110, 10, 75, 30))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -6385,7 +5838,7 @@ class Ui_MainWindow(object):
 "}")
         self.btn_sensors.setObjectName("btn_sensors")
         self.btn_inverter = QtWidgets.QPushButton(self.top_menu)
-        self.btn_inverter.setGeometry(QtCore.QRect(150, 10, 75, 30))
+        self.btn_inverter.setGeometry(QtCore.QRect(184, 10, 81, 30))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -6403,7 +5856,7 @@ class Ui_MainWindow(object):
 "}")
         self.btn_inverter.setObjectName("btn_inverter")
         self.btn_errors = QtWidgets.QPushButton(self.top_menu)
-        self.btn_errors.setGeometry(QtCore.QRect(225, 10, 75, 30))
+        self.btn_errors.setGeometry(QtCore.QRect(264, 10, 61, 30))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -6421,7 +5874,7 @@ class Ui_MainWindow(object):
 "}")
         self.btn_errors.setObjectName("btn_errors")
         self.btn_math = QtWidgets.QPushButton(self.top_menu)
-        self.btn_math.setGeometry(QtCore.QRect(300, 10, 75, 30))
+        self.btn_math.setGeometry(QtCore.QRect(325, 10, 61, 30))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -6439,7 +5892,7 @@ class Ui_MainWindow(object):
 "}")
         self.btn_math.setObjectName("btn_math")
         self.btn_controls = QtWidgets.QPushButton(self.top_menu)
-        self.btn_controls.setGeometry(QtCore.QRect(375, 10, 75, 30))
+        self.btn_controls.setGeometry(QtCore.QRect(385, 10, 75, 30))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -6457,7 +5910,7 @@ class Ui_MainWindow(object):
 "}")
         self.btn_controls.setObjectName("btn_controls")
         self.btn_fpga_error = QtWidgets.QPushButton(self.top_menu)
-        self.btn_fpga_error.setGeometry(QtCore.QRect(450, 10, 75, 30))
+        self.btn_fpga_error.setGeometry(QtCore.QRect(460, 10, 91, 30))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -6475,7 +5928,7 @@ class Ui_MainWindow(object):
 "}")
         self.btn_fpga_error.setObjectName("btn_fpga_error")
         self.btn_timestamp = QtWidgets.QPushButton(self.top_menu)
-        self.btn_timestamp.setGeometry(QtCore.QRect(525, 10, 75, 30))
+        self.btn_timestamp.setGeometry(QtCore.QRect(550, 10, 91, 30))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -6500,6 +5953,26 @@ class Ui_MainWindow(object):
         self.label_APPS1_min_2.setStyleSheet("color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(255, 255, 255));\n"
 "background-color: none;")
         self.label_APPS1_min_2.setObjectName("label_APPS1_min_2")
+        self.btn_LED_Connection = QtWidgets.QPushButton(self.title_bar)
+        self.btn_LED_Connection.setGeometry(QtCore.QRect(170, 20, 21, 21))
+        self.btn_LED_Connection.setStyleSheet("QPushButton{\n"
+"    border: none;\n"
+"    border-radius: 10px;\n"
+"    background-color:rgb(100, 100, 100);\n"
+"}\n"
+"")
+        self.btn_LED_Connection.setText("")
+        self.btn_LED_Connection.setObjectName("btn_LED_Connection")
+        self.label_Connection = QtWidgets.QLabel(self.title_bar)
+        self.label_Connection.setGeometry(QtCore.QRect(150, 0, 61, 21))
+        self.label_Connection.setStyleSheet("color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(255, 255, 255));\n"
+"background-color: none;")
+        self.label_Connection.setObjectName("label_Connection")
+        self.label_APPS1_min_3 = QtWidgets.QLabel(self.frame)
+        self.label_APPS1_min_3.setGeometry(QtCore.QRect(1140, 1110, 131, 21))
+        self.label_APPS1_min_3.setStyleSheet("color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(255, 255, 255));\n"
+"background-color: none;")
+        self.label_APPS1_min_3.setObjectName("label_APPS1_min_3")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -6971,3 +6444,5 @@ class Ui_MainWindow(object):
         self.btn_fpga_error.setText(_translate("MainWindow", "FPGA Error"))
         self.btn_timestamp.setText(_translate("MainWindow", "Timestamp"))
         self.label_APPS1_min_2.setText(_translate("MainWindow", "GUI Refresh Interval[s]"))
+        self.label_Connection.setText(_translate("MainWindow", "Connection"))
+        self.label_APPS1_min_3.setText(_translate("MainWindow", "GUI Refresh Interval[s]"))

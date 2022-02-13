@@ -1,13 +1,9 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow
-from PyQt5.QtCore import QObject, QThread, pyqtSignal, Qt, QCoreApplication
+from PyQt5.QtCore import QObject, QThread, pyqtSignal
 import time
 import socket
 import json
-from monitoring import Ui_MainWindow
 import xmltodict
 from typing import OrderedDict
-import concurrent.futures
 import multiprocessing
 from collections import OrderedDict
 import struct
@@ -43,6 +39,8 @@ class WorkerUDP(QObject):
         self.fpga_error_i = 0
         self.jsonTimestamp_i = 0
         self.timestapmp_i = 0
+        self.gotStructure = False
+        self.recievingStructure = False
 
         self.json_sensor_dict = []
 
@@ -102,13 +100,26 @@ class WorkerUDP(QObject):
         flag7 = False
         flag8 = False
 
+        start_time = time.time()
+        start_time_ok = time.time()
+        interval = 0.1
+
+
         while True:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             sock.bind((UDP_IP, UDP_PORT))
             data, addr = sock.recvfrom(8*2048)
-            sock.close()
             str = data.decode("utf-8", errors="ignore")
             self.analyseByteStream(data, str)
+            if str == "sending":
+                self.recievingStructure = True
+
+            if not self.gotStructure:
+                current_time = time.time()
+                if current_time - start_time >= interval:
+                    start_time = time.time()
+                    sock.sendto(bytes("send structure", "utf-8"), ("192.168.178.20", 2005))
+                    print("send structure")
 
             if (data[3] == 1):
                 flag1 = True
@@ -157,6 +168,16 @@ class WorkerUDP(QObject):
                 if (self.jsonTimestamp_i > 0 and self.timestapmp_i > 0 and flag8):
                     flag8 = False
                     self.conn.send(self.XML_timestamp_list)
+            if not self.gotStructure:
+                if self.config_i > 0 and self.jsonConfig_i > 0 and self.sensors_i > 0 and self.jsonSensor_i > 0 and \
+                        self.inverter_i > 0 and self.jsonInverter_i > 0 and self.errors_i > 0 and \
+                        self.jsonErrors_i and self.math_i > 0 and self.jsonMath_i > 0 and self.controls_i > 0 and \
+                        self.jsonControls_i > 0 and self.fpga_error_i > 0 and self.jsonFPGA_Error_i > 0:
+                    self.gotStructure = True
+                    for x in range(1000):
+                            sock.sendto(bytes("ok", "utf-8"), ("192.168.178.20", 2005))
+                            print("ok")
+            sock.close()
 
     def analyseByteStream(self, data, str):
         if(str[0] == "J"):

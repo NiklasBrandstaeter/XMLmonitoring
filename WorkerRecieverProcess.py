@@ -21,21 +21,18 @@ class WorkerRecieverProcess(QObject):
     signal_Controls = pyqtSignal(dict)
     signal_FPGA_Error = pyqtSignal(dict)
     signal_Timestamp = pyqtSignal(dict)
-
     signal_Config_Values_json = pyqtSignal(dict)  # Signal for setting new values JSON
     signal_Sensors_json = pyqtSignal(dict)
     signal_Inverter_json = pyqtSignal(dict)
-
     signal_Config_Values_serial = pyqtSignal(bytes)  # serial Values for monitoring
     signal_Config_Values_init = pyqtSignal(dict)  # for setting the structure of the cluster
     signal_Sensors_serial = pyqtSignal(bytes)
     signal_Sensors_init = pyqtSignal(dict)
     signal_Sensors_update = pyqtSignal(dict)
-
     signal_set_Text = pyqtSignal(tuple)
     signal_set_LED = pyqtSignal(tuple)
-
     signal_set_gui = pyqtSignal(list)
+    signal_connection = pyqtSignal(bool)
 
     def __init__(self, conn):
         super(WorkerRecieverProcess, self).__init__()
@@ -47,30 +44,53 @@ class WorkerRecieverProcess(QObject):
     def readFromReciever(self):
         start_time = time.time()
         interval = 5
+        start_time_connection = time.time()
+        interval_connection = 1
         while True:
             current_time = time.time()
             if current_time - start_time >= interval:
                 start_time = time.time()
                 self.setText = []
+            if current_time - start_time_connection >= interval_connection:
+                start_time_connection = time.time()
+                self.signal_connection.emit(False)
 
-            msg = self.conn.recv()
-            if isinstance(msg, dict):
-                if (msg['Cluster']['Name'] == 'Config-Values'):
-                    self.recieve_Config_Valuesx(msg)
-                elif (msg['Cluster']['Name'] == 'Sensors'):
-                    self.recieve_Sensorsx(msg)
-                elif (msg['Cluster']['Name'] == 'Inverter'):
-                    self.recieve_Inverterx(msg)
-                elif (msg['Cluster']['Name'] == 'Errors'):
-                    self.recieve_Errorsx(msg)
-                elif (msg['Cluster']['Name'] == 'Math'):
-                    self.recieve_Mathx(msg)
-                elif (msg['Cluster']['Name'] == 'Controls'):
-                    self.recieve_Controlsx(msg)
-                elif (msg['Cluster']['Name'] == 'FPGA Error'):
-                    self.recieve_FPGA_Errorx(msg)
-                elif (msg['Cluster']['Name'] == 'Timestamp'):
-                    self.recieve_Timestampx(msg)
+
+            if self.conn.poll():
+                msg = self.conn.recv()
+                if isinstance(msg, dict):
+                    if (msg['Cluster']['Name'] == 'Config-Values'):
+                        self.recieve_Config_Valuesx(msg)
+                        self.signal_connection.emit(True)
+                        start_time_connection = time.time()
+                    elif (msg['Cluster']['Name'] == 'Sensors'):
+                        self.recieve_Sensorsx(msg)
+                        self.signal_connection.emit(True)
+                        start_time_connection = time.time()
+                    elif (msg['Cluster']['Name'] == 'Inverter'):
+                        self.recieve_Inverterx(msg)
+                        self.signal_connection.emit(True)
+                        start_time_connection = time.time()
+                    elif (msg['Cluster']['Name'] == 'Errors'):
+                        self.recieve_Errorsx(msg)
+                        self.signal_connection.emit(True)
+                        start_time_connection = time.time()
+                    elif (msg['Cluster']['Name'] == 'Math'):
+                        self.recieve_Mathx(msg)
+                        self.signal_connection.emit(True)
+                        start_time_connection = time.time()
+                    elif (msg['Cluster']['Name'] == 'Controls'):
+                        self.recieve_Controlsx(msg)
+                        self.signal_connection.emit(True)
+                        start_time_connection = time.time()
+                    elif (msg['Cluster']['Name'] == 'FPGA Error'):
+                        self.recieve_FPGA_Errorx(msg)
+                        self.signal_connection.emit(True)
+                        start_time_connection = time.time()
+                    elif (msg['Cluster']['Name'] == 'Timestamp'):
+                        self.recieve_Timestampx(msg)
+                        self.signal_connection.emit(True)
+                        start_time_connection = time.time()
 
     def recieve_Config_Valuesx(self, json_config):
         self.set_lineEdit("lineEdit_Vehicle_Mode", json_config, 'Vehicle Mode')
